@@ -1,20 +1,29 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Ryan Wong | Portfolio
 
-# Run and deploy your AI Studio app
+A personal portfolio website showcasing my software engineering and data science projects.
 
-This contains everything you need to run your app locally.
+## About
 
-View your app in AI Studio: https://ai.studio/apps/drive/1wERju6NWFKQyAexG_LHLbPOobMuCaYVv
+I'm a Math, Statistics & CS student at the University of Toronto, passionate about designing innovative software and extracting insights from data.
 
-## Run Locally
+## Features
 
-**Prerequisites:**  Node.js
+- **Dashboard View** - Overview with skills chart, career timeline, and featured projects
+- **Projects View** - Detailed project browser with category filtering
+- **Responsive Design** - Works on desktop and mobile devices
 
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Projects Featured
+
+- Lakers Performance Analytics
+- House of Data (NBA Evolution)
+- Java Solitaire Engine
+- Assembly Tetris
+- Smart Travel Planner
+- AI Grocery Assistant
+
+## Contact
+
+- GitHub: [@RyannWongg](https://github.com/RyannWongg)
+- LinkedIn: [Ip Fong Wong (Ryan)](https://www.linkedin.com/in/ip-fong-wong-ryan/)
+- Email: fong20040311@gmail.com
