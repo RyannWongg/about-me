@@ -14,7 +14,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className = "", currentView, o
       <div className="p-6 border-b border-slate-800 flex flex-col items-center text-center">
         <div className="w-20 h-20 rounded-full bg-slate-800 mb-4 overflow-hidden ring-2 ring-[#39ff14] ring-offset-2 ring-offset-slate-900 shadow-[0_0_15px_rgba(57,255,20,0.5)]">
           <img
-            src="/profile.png"
+            src={`${import.meta.env.BASE_URL}profile.png`}
             alt="Profile"
             className="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity"
           />
