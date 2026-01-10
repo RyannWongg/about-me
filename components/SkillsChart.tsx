@@ -10,7 +10,7 @@ import {
   ChartOptions
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
-import { Cpu, Terminal, Globe } from 'lucide-react';
+import { Cpu, Terminal, Globe, Sparkles, Cloud } from 'lucide-react';
 
 ChartJS.register(
   RadialLinearScale,
@@ -68,8 +68,10 @@ const radarOptions: ChartOptions<'radar'> = {
 };
 
 export const SkillsChart: React.FC = () => {
-  const languages = ['Python', 'C', 'Java', 'SQL', 'Assembly'];
-  const webTools = ['HTML5', 'CSS3', 'JavaScript', 'Git', 'React', 'VS Code'];
+  const languages = ['Python', 'C', 'Java', 'SQL', 'Assembly', 'TypeScript'];
+  const webTools = ['HTML5', 'CSS3', 'JavaScript', 'Git', 'React', 'D3.js'];
+  const librariesAI = ['Pandas', 'NumPy', 'OpenCV', 'OpenAI API'];
+  const cloudInfra = ['GCP', 'Firebase'];
 
   return (
     <div className="col-span-1 md:col-span-2 bg-slate-900 rounded-2xl shadow-lg border border-slate-800 p-6 flex flex-col relative overflow-hidden h-full">
@@ -117,6 +119,34 @@ export const SkillsChart: React.FC = () => {
                 <div className="flex flex-wrap gap-2">
                     {webTools.map(skill => (
                         <span key={skill} className="px-3 py-1.5 rounded-full bg-slate-950 border border-[#39ff14]/30 text-slate-300 text-xs font-medium hover:bg-[#39ff14]/10 hover:text-[#39ff14] hover:border-[#39ff14] hover:shadow-[0_0_15px_rgba(57,255,20,0.4)] transition-all cursor-default select-none transform hover:-translate-y-0.5">
+                           {skill}
+                        </span>
+                    ))}
+                </div>
+            </div>
+
+            {/* Libraries & AI Group */}
+            <div>
+                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                   <Sparkles size={14} className="text-[#39ff14]" /> Libraries & AI
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                    {librariesAI.map(skill => (
+                        <span key={skill} className="px-3 py-1.5 rounded-full bg-slate-950 border border-[#39ff14]/30 text-slate-300 text-xs font-medium hover:bg-[#39ff14]/10 hover:text-[#39ff14] hover:border-[#39ff14] hover:shadow-[0_0_15px_rgba(57,255,20,0.4)] transition-all cursor-default select-none transform hover:-translate-y-0.5">
+                           {skill}
+                        </span>
+                    ))}
+                </div>
+            </div>
+
+            {/* Cloud & Infrastructure Group */}
+            <div>
+                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                   <Cloud size={14} className="text-orange-400" /> Cloud & Infra
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                    {cloudInfra.map(skill => (
+                        <span key={skill} className="px-3 py-1.5 rounded-full bg-slate-950 border border-orange-400/30 text-slate-300 text-xs font-medium hover:bg-orange-400/10 hover:text-orange-400 hover:border-orange-400 hover:shadow-[0_0_15px_rgba(251,146,60,0.4)] transition-all cursor-default select-none transform hover:-translate-y-0.5">
                            {skill}
                         </span>
                     ))}
