@@ -74,16 +74,14 @@ export const SkillsChart: React.FC = () => {
   const cloudInfra = ['GCP', 'Firebase'];
 
   return (
-    <div className="col-span-1 md:col-span-2 bg-slate-900 rounded-2xl shadow-lg border border-slate-800 p-6 flex flex-col relative overflow-hidden h-full">
-      <div className="flex items-center justify-between mb-4 z-10">
-        <div>
-          <h3 className="text-lg font-bold text-white flex items-center gap-2">
-            Skill Matrix
-          </h3>
-          <p className="text-sm text-slate-400">Technical Competencies</p>
-        </div>
+    <div className="col-span-1 md:col-span-2 flex flex-col h-full">
+      <div className="flex items-center gap-3 mb-4 pl-1">
         <Cpu size={18} className="text-[#39ff14]" />
+        <h3 className="text-lg font-mono-tech text-slate-300 tracking-widest uppercase font-bold">Skill Matrix</h3>
+        <div className="h-[2px] w-8 bg-[#39ff14] rounded-full shadow-[0_0_8px_rgba(57,255,20,0.5)]"></div>
+        <div className="h-[1px] flex-1 bg-slate-800"></div>
       </div>
+      <div className="flex-1 bg-slate-900 rounded-2xl shadow-lg border border-slate-800 p-6 flex flex-col relative overflow-hidden">
 
       <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-6">
         {/* Radar Chart Section */}
@@ -154,6 +152,7 @@ export const SkillsChart: React.FC = () => {
             </div>
 
         </div>
+      </div>
       </div>
     </div>
   );

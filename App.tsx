@@ -19,7 +19,7 @@ const projects: Project[] = [
     techStack: ['Data Viz', 'Python', 'Analytics'],
     metrics: { label: 'Full Roster Analysis', value: 'Season 24-25', accentText: 'Player Efficiency Trends' },
     longDescription: "Leveraged historical game data to visualize and evaluate the LA Lakers' seasonal performance metrics vs. league averages.",
-    link: "https://github.com/RyannWongg/Lakers-Analysis",
+    link: "https://ryannwongg.github.io/Lakers-Analysis/",
     challenge: "Processing 82 games of raw play-by-play data to identify meaningful trends vs league averages.",
     solution: "Built a data pipeline to scrape, clean, and aggregate season stats, visualizing them with interactive charts.",
     features: [
@@ -36,7 +36,7 @@ const projects: Project[] = [
     techStack: ['Statistical Modeling', 'Data Mining'],
     metrics: { label: 'Players Tracked', value: '20 seasons', accentText: 'Multi-Decade Clustering' },
     longDescription: "A deep-dive analysis tracing the statistical evolution of NBA player roles and archetypes over decades.",
-    link: "https://github.com/RyannWongg/House-of-Data",
+    link: "https://ryannwongg.github.io/House-of-Data/",
     challenge: "Clustering 500+ players into non-obvious archetypes beyond standard positions.",
     solution: "Applied unsupervised machine learning algorithms to historical datasets to discover latent player roles.",
     features: [
