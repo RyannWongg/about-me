@@ -15,18 +15,76 @@
       }
       /* Custom scrollbar for dashboard feel */
       ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
+        width: 6px;
+        height: 6px;
       }
       ::-webkit-scrollbar-track {
-        background: #0f172a; /* slate-900 */
+        background: #020617; /* slate-950 */
       }
       ::-webkit-scrollbar-thumb {
-        background: #334155; /* slate-700 */
-        border-radius: 4px;
+        background: #1e293b; /* slate-800 */
+        border-radius: 3px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #475569; /* slate-600 */
+        background: #334155; /* slate-700 */
+      }
+      /* Smooth animations */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-in {
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+
+      /* Filter transition animations */
+      @keyframes filterSlideIn {
+        0% {
+          opacity: 0;
+          transform: translateY(20px) scale(0.98);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .filter-item {
+        animation: filterSlideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        opacity: 0;
+      }
+
+      /* Active filter button glow pulse */
+      @keyframes glowPulse {
+        0%, 100% {
+          box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+        }
+        50% {
+          box-shadow: 0 0 25px rgba(57, 255, 20, 0.35);
+        }
+      }
+
+      .filter-btn-active {
+        animation: glowPulse 2s ease-in-out infinite;
+      }
+
+      /* Respect reduced motion preference */
+      @media (prefers-reduced-motion: reduce) {
+        .filter-item {
+          animation: none;
+          opacity: 1;
+        }
+        .animate-in {
+          animation: none;
+        }
+      }
+
+      /* Line clamp utility */
+      .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
     </style>
   <script type="importmap">

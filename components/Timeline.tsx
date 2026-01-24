@@ -1,6 +1,6 @@
 import React from 'react';
 import { TimelineEvent } from '../types';
-import { Briefcase, Beaker, Terminal } from 'lucide-react';
+import { Briefcase, GraduationCap, Code2, ChevronRight } from 'lucide-react';
 
 const events: TimelineEvent[] = [
   {
@@ -38,50 +38,73 @@ const events: TimelineEvent[] = [
   }
 ];
 
+const getEventIcon = (event: TimelineEvent) => {
+  if (event.type === 'education') return GraduationCap;
+  if (event.subtitle.includes('SJM')) return Briefcase;
+  return Code2;
+};
+
 export const Timeline: React.FC = () => {
   return (
-    <div className="col-span-1 bg-slate-900 rounded-2xl shadow-lg border border-slate-800 flex flex-col h-full">
-      <div className="p-6 border-b border-slate-800 flex justify-between items-center">
+    <div className="col-span-1 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 rounded-2xl shadow-xl border border-slate-800/80 flex flex-col h-full overflow-hidden">
+      <div className="p-5 border-b border-slate-800/60 flex justify-between items-center bg-slate-900/50">
         <div>
-          <h3 className="text-lg font-bold text-white">Experience Log</h3>
-          <p className="text-sm text-slate-400">Career Trajectory</p>
+          <h3 className="text-base font-bold text-white">Experience Log</h3>
+          <p className="text-xs text-slate-500 mt-0.5">Career Trajectory</p>
         </div>
-        <Terminal size={18} className="text-[#39ff14]" />
+        <div className="p-2 rounded-lg bg-[#39ff14]/10 border border-[#39ff14]/20">
+          <Code2 size={16} className="text-[#39ff14]" />
+        </div>
       </div>
-      
-      <div className="p-6 flex-1 overflow-y-auto">
-        <div className="relative border-l-2 border-slate-800 ml-3 space-y-10 pb-2">
-          {events.map((event) => (
-            <div key={event.id} className="relative pl-8 group">
-              {/* Dot */}
-              <span className="absolute -left-[9px] top-0 h-4 w-4 rounded-full border-2 border-slate-900 shadow-[0_0_10px_rgba(0,0,0,0.5)] flex items-center justify-center transition-all duration-300 group-hover:scale-125 bg-[#39ff14] shadow-[0_0_8px_rgba(57,255,20,0.6)]">
-              </span>
 
-              {/* Icon floating */}
-              <div className="absolute -left-12 top-0 opacity-0 group-hover:opacity-100 transition-opacity -translate-x-full pr-2 text-[#39ff14]">
-                {event.subtitle.includes('SJM') ? <Briefcase size={16}/> : event.description.some(d => d.includes('iGEM')) ? <Beaker size={16} /> : <Terminal size={16} />}
-              </div>
+      <div className="p-5 flex-1 overflow-y-auto">
+        <div className="relative ml-4 space-y-8">
+          {/* Timeline line */}
+          <div className="absolute left-0 top-2 bottom-2 w-px bg-gradient-to-b from-[#39ff14]/50 via-slate-700 to-slate-800"></div>
 
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-1">
-                <span className="font-mono-tech text-[10px] font-bold text-[#39ff14] bg-[#39ff14]/10 border border-[#39ff14]/20 px-2 py-0.5 rounded-sm inline-block w-max mb-1 sm:mb-0">
-                  {event.year}
-                </span>
+          {events.map((event, index) => {
+            const Icon = getEventIcon(event);
+            return (
+              <div key={event.id} className="relative pl-8 group">
+                {/* Dot with icon */}
+                <div className="absolute -left-[14px] top-0 flex items-center justify-center">
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 ${
+                    index === 0
+                      ? 'bg-[#39ff14]/20 border-2 border-[#39ff14] shadow-[0_0_12px_rgba(57,255,20,0.4)] group-hover:shadow-[0_0_18px_rgba(57,255,20,0.6)]'
+                      : 'bg-slate-800 border-2 border-slate-700 group-hover:border-[#39ff14]/50 group-hover:bg-[#39ff14]/10'
+                  }`}>
+                    <Icon size={12} className={index === 0 ? 'text-[#39ff14]' : 'text-slate-500 group-hover:text-[#39ff14] transition-colors'} />
+                  </div>
+                </div>
+
+                {/* Content card */}
+                <div className="bg-slate-800/30 rounded-xl border border-slate-800/60 p-4 transition-all duration-300 group-hover:border-[#39ff14]/30 group-hover:bg-slate-800/50">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="font-mono text-[10px] font-semibold text-[#39ff14] bg-[#39ff14]/10 border border-[#39ff14]/20 px-2 py-0.5 rounded">
+                      {event.year}
+                    </span>
+                    {index === 0 && (
+                      <span className="text-[9px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded uppercase tracking-wider">
+                        Current
+                      </span>
+                    )}
+                  </div>
+
+                  <h4 className="text-sm font-bold text-white group-hover:text-[#39ff14] transition-colors">{event.title}</h4>
+                  <p className="text-xs font-medium text-slate-500 mb-3">{event.subtitle}</p>
+
+                  <ul className="space-y-1.5">
+                    {event.description.map((item, i) => (
+                      <li key={i} className="flex items-start gap-2 text-xs text-slate-400 leading-relaxed">
+                        <ChevronRight size={12} className="text-[#39ff14]/50 mt-0.5 shrink-0" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-              
-              <h4 className="text-sm font-bold text-slate-100 mt-1">{event.title}</h4>
-              <p className="text-xs font-semibold text-slate-400 mb-3">{event.subtitle}</p>
-              
-              <div className="bg-slate-800/50 p-3 rounded-xl border border-slate-700/50 group-hover:border-[#39ff14]/30 transition-colors">
-                <ul className="list-disc list-inside space-y-1">
-                  {event.description.map((item, i) => (
-                    <li key={i} className="text-xs text-slate-400 leading-relaxed">
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

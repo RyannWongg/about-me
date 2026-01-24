@@ -17,6 +17,7 @@ export interface Project {
   solution?: string;
   features?: string[];
   link?: string;
+  image?: string;
 }
 
 export interface Skill {

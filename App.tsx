@@ -7,7 +7,7 @@ import { DetailedProjectRow } from './components/DetailedProjectRow';
 import { Timeline } from './components/Timeline';
 import { ProjectModal } from './components/ProjectModal';
 import { Project } from './types';
-import { Menu, Terminal, FolderOpen, History } from 'lucide-react';
+import { Menu, Terminal, FolderOpen, History, Code2, Filter } from 'lucide-react';
 
 // Real Data for Projects with Extended Details
 const projects: Project[] = [
@@ -26,7 +26,8 @@ const projects: Project[] = [
         "Custom D3.js/Chart.js rendering logic.",
         "Interactive efficiency heatmaps.",
         "Comparative league analysis."
-    ]
+    ],
+    image: "lakers-preview.png"
   },
   {
     id: 'p2',
@@ -43,7 +44,8 @@ const projects: Project[] = [
         "K-Means Clustering implementation.",
         "PCA Dimensionality Reduction.",
         "20-year trend visualization."
-    ]
+    ],
+    image: "house-of-data-preview.png"
   },
   {
     id: 'p3',
@@ -60,7 +62,8 @@ const projects: Project[] = [
         "MVC Design Pattern.",
         "Custom Event Listener System.",
         "Undo/Redo Stack."
-    ]
+    ],
+    image: "java-solitaire-preview.png"
   },
   {
     id: 'p4',
@@ -77,7 +80,8 @@ const projects: Project[] = [
         "< 2KB Executable size.",
         "Direct Memory Management.",
         "Register-level Optimization."
-    ]
+    ],
+    image: "assembly-tetris-preview.png"
   },
   {
     id: 'p5',
@@ -159,83 +163,87 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-950 font-sans text-slate-200">
-      <ProjectModal 
-        isOpen={isModalOpen} 
-        project={selectedProject} 
-        onClose={() => setIsModalOpen(false)} 
+      <ProjectModal
+        isOpen={isModalOpen}
+        project={selectedProject}
+        onClose={() => setIsModalOpen(false)}
       />
 
       {/* Desktop Sidebar */}
       <div className="hidden md:block fixed inset-y-0 left-0 z-50 w-64">
         <Sidebar currentView={currentView} onNavigate={handleNavigate} />
       </div>
-      
+
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-slate-950/80 z-40 md:hidden backdrop-blur-sm transition-opacity"
+        <div
+          className="fixed inset-0 bg-slate-950/90 z-40 md:hidden backdrop-blur-md transition-opacity"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
-      
+
       {/* Mobile Sidebar Panel */}
-       <div className={`fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 md:hidden ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-         <Sidebar currentView={currentView} onNavigate={handleNavigate} />
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-out md:hidden ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <Sidebar currentView={currentView} onNavigate={handleNavigate} />
       </div>
 
       {/* Main Content Wrapper */}
       <div className="md:ml-64 min-h-screen flex flex-col">
-        
+
         {/* Mobile Menu Button */}
-        <header className="md:hidden sticky top-0 z-30 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800 px-6 py-4">
+        <header className="md:hidden sticky top-0 z-30 bg-slate-950/90 backdrop-blur-xl border-b border-slate-800/60 px-5 py-4">
           <button
-            className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+            className="p-2.5 text-slate-400 hover:text-[#39ff14] hover:bg-slate-800/80 rounded-xl transition-all duration-200 border border-slate-800 hover:border-[#39ff14]/30 cursor-pointer"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           >
-            <Menu size={24} />
+            <Menu size={22} />
           </button>
         </header>
 
         {/* Dynamic Main Content */}
-        <main className="flex-1 p-4 md:p-8">
+        <main className="flex-1 p-5 md:p-8 lg:p-10">
           
           {/* DASHBOARD VIEW */}
           {currentView === 'dashboard' && (
             <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-500">
               <HeroCard />
               <SkillsChart />
-              
+
               {/* Timeline Section with Header */}
               <div className="lg:row-span-2 flex flex-col h-full">
-                 <div className="flex items-center gap-3 mb-4 pl-1">
-                    <History size={18} className="text-[#39ff14]" />
-                    <h3 className="text-lg font-mono-tech text-slate-300 tracking-widest uppercase font-bold">Career Log</h3>
-                    <div className="h-[2px] w-8 bg-[#39ff14] rounded-full shadow-[0_0_8px_rgba(57,255,20,0.5)]"></div>
-                    <div className="h-[1px] flex-1 bg-slate-800"></div>
-                 </div>
-                 <div className="flex-1">
-                   <Timeline />
-                 </div>
+                <div className="flex items-center gap-3 mb-4 pl-1">
+                  <div className="p-1.5 rounded-lg bg-[#39ff14]/10">
+                    <History size={16} className="text-[#39ff14]" />
+                  </div>
+                  <h3 className="text-base font-mono-tech text-slate-200 tracking-widest uppercase font-bold">Career Log</h3>
+                  <div className="h-[2px] w-10 bg-gradient-to-r from-[#39ff14] to-[#39ff14]/30 rounded-full"></div>
+                  <div className="h-px flex-1 bg-slate-800/60"></div>
+                </div>
+                <div className="flex-1">
+                  <Timeline />
+                </div>
               </div>
-              
+
               {/* Projects Section with Header */}
               <div className="col-span-1 md:col-span-2 flex flex-col">
-                 <div className="flex items-center gap-3 mb-5 pl-1">
-                    <FolderOpen size={18} className="text-[#39ff14]" />
-                    <h3 className="text-lg font-mono-tech text-slate-300 tracking-widest uppercase font-bold">Finished Projects</h3>
-                    <div className="h-[2px] w-8 bg-[#39ff14] rounded-full shadow-[0_0_8px_rgba(57,255,20,0.5)]"></div>
-                    <div className="h-[1px] flex-1 bg-slate-800"></div>
-                 </div>
-                 
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                   {projects.filter(p => p.status === 'Completed').map(project => (
-                     <ProjectCard 
-                       key={project.id} 
-                       project={project} 
-                       onClick={handleProjectClick}
-                     />
-                   ))}
-                 </div>
+                <div className="flex items-center gap-3 mb-5 pl-1">
+                  <div className="p-1.5 rounded-lg bg-[#39ff14]/10">
+                    <FolderOpen size={16} className="text-[#39ff14]" />
+                  </div>
+                  <h3 className="text-base font-mono-tech text-slate-200 tracking-widest uppercase font-bold">Finished Projects</h3>
+                  <div className="h-[2px] w-10 bg-gradient-to-r from-[#39ff14] to-[#39ff14]/30 rounded-full"></div>
+                  <div className="h-px flex-1 bg-slate-800/60"></div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  {projects.filter(p => p.status === 'Completed').map(project => (
+                    <ProjectCard
+                      key={project.id}
+                      project={project}
+                      onClick={handleProjectClick}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           )}
@@ -243,44 +251,83 @@ const App: React.FC = () => {
           {/* PROJECTS VIEW */}
           {currentView === 'projects' && (
             <div id="projects-view" className="max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
-              
-              <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+
+              <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                  <h2 className="text-3xl font-bold text-white flex items-center gap-3">
-                    <Terminal className="text-[#39ff14]" />
-                    Code Repository
-                  </h2>
-                  <p className="text-slate-400 mt-1">Explore my software engineering and data science portfolio.</p>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 rounded-xl bg-[#39ff14]/10 border border-[#39ff14]/20">
+                      <Code2 size={22} className="text-[#39ff14]" />
+                    </div>
+                    <h2 className="text-2xl md:text-3xl font-bold text-white">
+                      Code Repository
+                    </h2>
+                  </div>
+                  <p className="text-slate-400 text-sm md:text-base">Explore my software engineering and data science portfolio.</p>
                 </div>
 
                 {/* Filter Buttons */}
-                <div className="flex flex-wrap gap-2">
-                  {(['All', 'Data Analysis', 'Game Dev', 'App'] as ProjectCategoryFilter[]).map((filter) => (
-                    <button
-                      key={filter}
-                      onClick={() => setActiveFilter(filter)}
-                      className={`
-                        px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider border transition-all duration-300
-                        ${activeFilter === filter 
-                          ? 'bg-[#39ff14]/10 text-[#39ff14] border-[#39ff14] shadow-[0_0_15px_rgba(57,255,20,0.3)]' 
-                          : 'bg-slate-900 text-slate-400 border-slate-700 hover:border-[#39ff14]/50 hover:text-slate-200'
-                        }
-                      `}
-                    >
-                      {filter}
-                    </button>
-                  ))}
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="flex items-center gap-1.5 text-slate-500 text-xs mr-2">
+                    <Filter size={12} />
+                    <span className="font-medium">Filter:</span>
+                  </div>
+                  {(['All', 'Data Analysis', 'Game Dev', 'App'] as ProjectCategoryFilter[]).map((filter) => {
+                    const count = filter === 'All' ? projects.length :
+                      filter === 'Data Analysis' ? projects.filter(p => ['Sports Analytics', 'Statistical Modeling'].includes(p.category)).length :
+                      filter === 'Game Dev' ? projects.filter(p => ['Game Development', 'Systems Programming'].includes(p.category)).length :
+                      projects.filter(p => p.category === 'Mobile App').length;
+
+                    return (
+                      <button
+                        key={filter}
+                        onClick={() => setActiveFilter(filter)}
+                        className={`
+                          group relative px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider border transition-all duration-300 cursor-pointer overflow-hidden
+                          ${activeFilter === filter
+                            ? 'filter-btn-active bg-[#39ff14]/15 text-[#39ff14] border-[#39ff14]/50'
+                            : 'bg-slate-900/80 text-slate-400 border-slate-700/50 hover:border-[#39ff14]/30 hover:text-slate-200 hover:bg-slate-800/80'
+                          }
+                        `}
+                      >
+                        {/* Active indicator pulse */}
+                        {activeFilter === filter && (
+                          <span className="absolute inset-0 bg-[#39ff14]/10 animate-pulse pointer-events-none"></span>
+                        )}
+                        <span className="relative flex items-center gap-2">
+                          {filter}
+                          <span className={`
+                            inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-md text-[10px] font-bold transition-all duration-300
+                            ${activeFilter === filter
+                              ? 'bg-[#39ff14]/30 text-[#39ff14]'
+                              : 'bg-slate-800 text-slate-500 group-hover:bg-slate-700 group-hover:text-slate-300'
+                            }
+                          `}>
+                            {count}
+                          </span>
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Detailed Row List */}
-              <div className="space-y-6">
+              {/* Detailed Row List with Filter Animation */}
+              <div key={activeFilter} className="space-y-5">
                 {filteredProjects.length > 0 ? (
-                  filteredProjects.map(project => (
-                    <DetailedProjectRow key={project.id} project={project} />
+                  filteredProjects.map((project, index) => (
+                    <div
+                      key={project.id}
+                      className="filter-item"
+                      style={{
+                        animationDelay: `${index * 80}ms`
+                      }}
+                    >
+                      <DetailedProjectRow project={project} />
+                    </div>
                   ))
                 ) : (
-                  <div className="text-center py-20 border border-dashed border-slate-800 rounded-2xl bg-slate-900/50">
+                  <div className="filter-item text-center py-20 border border-dashed border-slate-800/60 rounded-2xl bg-slate-900/30">
+                    <FolderOpen size={40} className="mx-auto text-slate-700 mb-3" />
                     <p className="text-slate-500">No projects found in this category yet.</p>
                   </div>
                 )}
