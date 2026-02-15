@@ -1,19 +1,18 @@
 # Ryan Wong | Portfolio
 
-A personal portfolio website showcasing my software engineering and data science projects.
+Welcome to my personal portfolio! This is where I showcase my journey as a software engineer and data scientist. Feel free to explore my projects and learn more about what I do.
 
-## About
+## About Me
 
-I'm a Math, Statistics & CS student at the University of Toronto, passionate about designing innovative software and extracting insights from data.
+I'm a Math, Statistics & CS student at the University of Toronto, passionate about designing innovative software and extracting insights from data. I love building things that make a difference and am always eager to learn new technologies.
 
-## Features
+## What You'll Find Here
 
-- **Dashboard View** - Overview with skills chart, career timeline, and featured projects
-- **Projects View** - Detailed project browser with category filtering
-- **Responsive Design** - Works on desktop and mobile devices
+- **Dashboard View** - An overview of my skills, career timeline, and featured projects
+- **Projects View** - A detailed look at my work with category filtering
+- **Responsive Design** - Browse comfortably on any device
 
-
-## Projects Featured
+## Featured Projects
 
 - Lakers Performance Analytics
 - House of Data (NBA Evolution)
@@ -22,7 +21,9 @@ I'm a Math, Statistics & CS student at the University of Toronto, passionate abo
 - Smart Travel Planner
 - AI Grocery Assistant
 
-## Contact
+## Let's Connect!
+
+I'm always open to new opportunities, collaborations, or just a friendly chat. Feel free to reach out!
 
 - GitHub: [@RyannWongg](https://github.com/RyannWongg)
 - LinkedIn: [Ip Fong Wong (Ryan)](https://www.linkedin.com/in/ip-fong-wong-ryan/)

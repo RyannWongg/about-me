@@ -40,3 +40,21 @@ export interface NavItem {
   id: string;
   icon: React.ReactNode;
 }
+
+// 3D Museum Types
+export type ViewState = 'museum' | 'dashboard' | 'projects';
+
+export interface MuseumRoom {
+  id: string;
+  name: string;
+  position: [number, number, number];
+  size: [number, number, number];
+}
+
+export interface ExhibitData {
+  projectId: string;
+  position: [number, number, number];
+  rotation: [number, number, number];
+}
+
+export type MuseumViewState = 'exploring' | 'viewing-exhibit' | 'transitioning';

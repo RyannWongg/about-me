@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, lazy, Suspense } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { HeroCard } from './components/HeroCard';
 import { SkillsChart } from './components/SkillsChart';
@@ -6,8 +6,11 @@ import { ProjectCard } from './components/ProjectCard';
 import { DetailedProjectRow } from './components/DetailedProjectRow';
 import { Timeline } from './components/Timeline';
 import { ProjectModal } from './components/ProjectModal';
-import { Project } from './types';
+import { Project, ViewState } from './types';
 import { Menu, Terminal, FolderOpen, History, Code2, Filter } from 'lucide-react';
+
+// Lazy load the Museum component for better initial load
+const Museum = lazy(() => import('./museum/Museum').then(m => ({ default: m.Museum })));
 
 // Real Data for Projects with Extended Details
 const projects: Project[] = [
@@ -117,12 +120,11 @@ const projects: Project[] = [
   }
 ];
 
-type ViewState = 'dashboard' | 'projects';
 type ProjectCategoryFilter = 'All' | 'Data Analysis' | 'Game Dev' | 'App';
 
 const App: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [currentView, setCurrentView] = useState<ViewState>('dashboard');
+  const [currentView, setCurrentView] = useState<ViewState>('museum');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
@@ -160,6 +162,21 @@ const App: React.FC = () => {
       return true;
     });
   }, [activeFilter]);
+
+  // Render Museum view
+  if (currentView === 'museum') {
+    return (
+      <Suspense fallback={
+        <div className="fixed inset-0 bg-slate-950 flex items-center justify-center">
+          <div className="text-[#39ff14] text-xl font-mono-tech tracking-widest animate-pulse">
+            LOADING MUSEUM...
+          </div>
+        </div>
+      }>
+        <Museum projects={projects} onExitMuseum={() => setCurrentView('dashboard')} />
+      </Suspense>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 font-sans text-slate-200">

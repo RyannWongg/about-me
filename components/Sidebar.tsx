@@ -1,10 +1,11 @@
 import React from 'react';
-import { LayoutDashboard, FolderKanban, Mail, Github, Linkedin, MapPin, Sparkles } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, Mail, Github, Linkedin, MapPin, Sparkles, Building2 } from 'lucide-react';
+import { ViewState } from '../types';
 
 interface SidebarProps {
   className?: string;
-  currentView: 'dashboard' | 'projects';
-  onNavigate: (view: 'dashboard' | 'projects') => void;
+  currentView: ViewState;
+  onNavigate: (view: ViewState) => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ className = "", currentView, onNavigate }) => {
@@ -102,6 +103,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ className = "", currentView, o
               </div>
               <span className="font-medium">Projects</span>
               {currentView === 'projects' && (
+                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#39ff14] shadow-[0_0_8px_rgba(57,255,20,0.8)]"></div>
+              )}
+            </button>
+          </li>
+          <li>
+            <button
+              onClick={() => onNavigate('museum')}
+              className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 group cursor-pointer ${
+                currentView === 'museum'
+                  ? 'bg-gradient-to-r from-[#39ff14]/15 to-[#39ff14]/5 text-[#39ff14] shadow-[inset_0_0_20px_rgba(57,255,20,0.1)] border border-[#39ff14]/30'
+                  : 'hover:bg-slate-800/60 hover:text-white border border-transparent hover:border-slate-700/50'
+              }`}
+            >
+              <div className={`p-2 rounded-lg transition-all duration-200 ${currentView === 'museum' ? 'bg-[#39ff14]/20' : 'bg-slate-800/50 group-hover:bg-slate-700/50'}`}>
+                <Building2 size={18} className={currentView === 'museum' ? 'text-[#39ff14]' : 'text-slate-400 group-hover:text-[#39ff14] transition-colors'} />
+              </div>
+              <span className="font-medium">3D Museum</span>
+              {currentView === 'museum' && (
                 <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#39ff14] shadow-[0_0_8px_rgba(57,255,20,0.8)]"></div>
               )}
             </button>
