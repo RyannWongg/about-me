@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, useTexture } from '@react-three/drei';
+import { Text, useGLTF } from '@react-three/drei';
 
 interface ContactButtonProps {
   position: [number, number, number];
@@ -53,14 +53,12 @@ const ContactButton: React.FC<ContactButtonProps> = ({
 };
 
 export const AboutArea: React.FC = () => {
-  const [profileHovered, setProfileHovered] = useState(false);
-
-  // Load profile image
-  const profileTexture = useTexture(`${import.meta.env.BASE_URL}profile.png`);
+  // Load the GLB statue model
+  const { scene } = useGLTF(`${import.meta.env.BASE_URL}statue.glb`);
 
   return (
     <group position={[0, 0, -12]}>
-      {/* Section title - centered above profile picture */}
+      {/* Section title */}
       <Text
         position={[0, 5.5, -2]}
         fontSize={1}
@@ -81,73 +79,11 @@ export const AboutArea: React.FC = () => {
         />
       </mesh>
 
-      {/* Profile picture on back wall - under section title */}
-      <group
-        position={[0, 3, -2]}
-        onPointerEnter={() => setProfileHovered(true)}
-        onPointerLeave={() => setProfileHovered(false)}
-      >
-        {/* Ornate frame - outer border */}
-        <mesh position={[0, 0, 0]} castShadow>
-          <boxGeometry args={[3.8, 3.8, 0.2]} />
-          <meshStandardMaterial
-            color={profileHovered ? '#fbbf24' : '#78716c'}
-            emissive={profileHovered ? '#fbbf24' : '#39ff14'}
-            emissiveIntensity={profileHovered ? 0.3 : 0.1}
-            metalness={0.9}
-            roughness={0.1}
-          />
-        </mesh>
-
-        {/* Frame inner border */}
-        <mesh position={[0, 0, 0.1]}>
-          <boxGeometry args={[3.4, 3.4, 0.1]} />
-          <meshStandardMaterial
-            color="#1c1917"
-            metalness={0.5}
-            roughness={0.5}
-          />
-        </mesh>
-
-        {/* Profile image - using basic material for guaranteed visibility */}
-        <mesh position={[0, 0, 0.16]}>
-          <planeGeometry args={[3, 3]} />
-          <meshBasicMaterial map={profileTexture} />
-        </mesh>
-
-        {/* Direct point light in front of portrait */}
-        <pointLight
-          position={[0, 0, 2]}
-          intensity={3}
-          color="#ffffff"
-          distance={8}
-        />
-
-        {/* Spotlight on portrait from above */}
-        <spotLight
-          position={[0, 4, 3]}
-          angle={0.6}
-          penumbra={0.5}
-          intensity={4}
-          color="#ffffff"
-        />
-
-        {/* Ambient glow when hovered */}
-        {profileHovered && (
-          <pointLight
-            position={[0, 0, 1]}
-            intensity={2}
-            color="#fbbf24"
-            distance={5}
-          />
-        )}
-      </group>
-
-      {/* Half-body bust statue on pedestal */}
-      <group position={[0, 0, 0]}>
-        {/* Grand pedestal base */}
+      {/* === LEFT STATUE PEDESTAL === */}
+      <group position={[-2, 0, -2]}>
+        {/* Pedestal base */}
         <mesh position={[0, 0.15, 0]} castShadow>
-          <cylinderGeometry args={[2.2, 2.5, 0.3, 32]} />
+          <cylinderGeometry args={[1.3, 1.5, 0.3, 32]} />
           <meshStandardMaterial
             color="#e8e8e8"
             metalness={0.3}
@@ -157,7 +93,7 @@ export const AboutArea: React.FC = () => {
 
         {/* Pedestal middle section */}
         <mesh position={[0, 0.6, 0]} castShadow>
-          <cylinderGeometry args={[1.8, 2.2, 0.6, 32]} />
+          <cylinderGeometry args={[1.1, 1.3, 0.6, 32]} />
           <meshStandardMaterial
             color="#e8e8e8"
             metalness={0.3}
@@ -167,7 +103,7 @@ export const AboutArea: React.FC = () => {
 
         {/* Pedestal top platform */}
         <mesh position={[0, 1.1, 0]} castShadow>
-          <cylinderGeometry args={[2, 1.8, 0.4, 32]} />
+          <cylinderGeometry args={[1.2, 1.1, 0.4, 32]} />
           <meshStandardMaterial
             color="#e8e8e8"
             metalness={0.3}
@@ -176,8 +112,8 @@ export const AboutArea: React.FC = () => {
         </mesh>
 
         {/* Decorative ring on pedestal */}
-        <mesh position={[0, 1.35, 0]}>
-          <torusGeometry args={[2, 0.05, 8, 32]} />
+        <mesh position={[0, 1.35, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[1.2, 0.05, 8, 32]} />
           <meshStandardMaterial
             color="#39ff14"
             emissive="#39ff14"
@@ -185,7 +121,7 @@ export const AboutArea: React.FC = () => {
           />
         </mesh>
 
-        {/* === STYLIZED BUST STATUE === */}
+        {/* STYLIZED BUST STATUE */}
         <group position={[0, 1.3, 0]}>
           {/* Torso/Chest base - wider at shoulders */}
           <mesh position={[0, 0.6, 0]} castShadow>
@@ -247,16 +183,6 @@ export const AboutArea: React.FC = () => {
             />
           </mesh>
 
-          {/* Face front - slightly flattened */}
-          <mesh position={[0, 1.95, 0.25]} castShadow>
-            <sphereGeometry args={[0.45, 32, 32]} />
-            <meshStandardMaterial
-              color="#d4a574"
-              metalness={0.2}
-              roughness={0.7}
-            />
-          </mesh>
-
           {/* Hair - top */}
           <mesh position={[0, 2.35, -0.05]} castShadow>
             <sphereGeometry args={[0.5, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />
@@ -268,7 +194,7 @@ export const AboutArea: React.FC = () => {
           </mesh>
 
           {/* Hair - front bangs */}
-          <mesh position={[0, 2.25, 0.35]} castShadow>
+          <mesh position={[0, 2.25, 0.4]} castShadow>
             <boxGeometry args={[0.9, 0.3, 0.2]} />
             <meshStandardMaterial
               color="#1a1a1a"
@@ -278,7 +204,7 @@ export const AboutArea: React.FC = () => {
           </mesh>
 
           {/* Glasses - left lens */}
-          <mesh position={[-0.22, 2, 0.5]} castShadow>
+          <mesh position={[-0.22, 2, 0.55]} castShadow>
             <torusGeometry args={[0.15, 0.02, 8, 16]} />
             <meshStandardMaterial
               color="#4a4a4a"
@@ -288,7 +214,7 @@ export const AboutArea: React.FC = () => {
           </mesh>
 
           {/* Glasses - right lens */}
-          <mesh position={[0.22, 2, 0.5]} castShadow>
+          <mesh position={[0.22, 2, 0.55]} castShadow>
             <torusGeometry args={[0.15, 0.02, 8, 16]} />
             <meshStandardMaterial
               color="#4a4a4a"
@@ -298,7 +224,7 @@ export const AboutArea: React.FC = () => {
           </mesh>
 
           {/* Glasses - bridge */}
-          <mesh position={[0, 2, 0.5]} castShadow>
+          <mesh position={[0, 2, 0.55]} castShadow>
             <boxGeometry args={[0.12, 0.02, 0.02]} />
             <meshStandardMaterial
               color="#4a4a4a"
@@ -316,7 +242,7 @@ export const AboutArea: React.FC = () => {
           />
         </group>
 
-        {/* Spotlight from above on statue */}
+        {/* Spotlight from above */}
         <spotLight
           position={[0, 6, 2]}
           angle={0.4}
@@ -324,31 +250,115 @@ export const AboutArea: React.FC = () => {
           intensity={3}
           color="#ffffff"
         />
+      </group>
 
-        {/* Museum plaque */}
-        <mesh position={[0, 1.5, 1.2]} castShadow>
-          <boxGeometry args={[2.5, 0.5, 0.08]} />
+      {/* === RIGHT STATUE PEDESTAL (GLB) === */}
+      <group position={[2, 0, -2]}>
+        {/* Pedestal base */}
+        <mesh position={[0, 0.15, 0]} castShadow>
+          <cylinderGeometry args={[1.3, 1.5, 0.3, 32]} />
+          <meshStandardMaterial
+            color="#e8e8e8"
+            metalness={0.3}
+            roughness={0.4}
+          />
+        </mesh>
+
+        {/* Pedestal middle section */}
+        <mesh position={[0, 0.6, 0]} castShadow>
+          <cylinderGeometry args={[1.1, 1.3, 0.6, 32]} />
+          <meshStandardMaterial
+            color="#e8e8e8"
+            metalness={0.3}
+            roughness={0.4}
+          />
+        </mesh>
+
+        {/* Pedestal top platform */}
+        <mesh position={[0, 1.1, 0]} castShadow>
+          <cylinderGeometry args={[1.2, 1.1, 0.4, 32]} />
+          <meshStandardMaterial
+            color="#e8e8e8"
+            metalness={0.3}
+            roughness={0.4}
+          />
+        </mesh>
+
+        {/* Decorative ring on pedestal */}
+        <mesh position={[0, 1.35, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[1.2, 0.05, 8, 32]} />
+          <meshStandardMaterial
+            color="#39ff14"
+            emissive="#39ff14"
+            emissiveIntensity={0.4}
+          />
+        </mesh>
+
+        {/* GLB STATUE */}
+        <group position={[0, 2.5, 0]}>
+          <primitive
+            object={scene.clone()}
+            scale={[1.5, 1.5, 1.5]}
+            rotation={[0, 0, 0]}
+          />
+          {/* Subtle glow effect around GLB statue */}
+          <pointLight
+            position={[0, 1.5, 1]}
+            intensity={0.5}
+            color="#39ff14"
+            distance={4}
+          />
+        </group>
+
+        {/* Spotlight from above */}
+        <spotLight
+          position={[0, 6, 2]}
+          angle={0.4}
+          penumbra={0.5}
+          intensity={3}
+          color="#ffffff"
+        />
+      </group>
+
+      {/* === COMBINED FLOOR PLAQUE (CENTER) === */}
+      <group position={[0, 0.3, 0]} rotation={[Math.PI / 6, 0, 0]}>
+        {/* Plaque base */}
+        <mesh castShadow>
+          <boxGeometry args={[4, 0.1, 1.5]} />
           <meshStandardMaterial
             color="#78716c"
             metalness={0.9}
             roughness={0.1}
           />
         </mesh>
+        {/* Title text */}
         <Text
-          position={[0, 1.5, 1.25]}
-          fontSize={0.12}
+          position={[0, 0.06, -0.35]}
+          rotation={[-Math.PI / 2, 0, 0]}
+          fontSize={0.25}
           color="#fbbf24"
           anchorX="center"
           anchorY="middle"
         >
           FOUNDER & DEVELOPER
         </Text>
+        {/* Location text */}
+        <Text
+          position={[0, 0.06, 0.25]}
+          rotation={[-Math.PI / 2, 0, 0]}
+          fontSize={0.2}
+          color="#fbbf24"
+          anchorX="center"
+          anchorY="middle"
+        >
+          Toronto, Canada
+        </Text>
       </group>
 
       {/* Name panel - floating 3D style - RIGHT SIDE */}
-      <group position={[5.5, 3.1, 0]} rotation={[0, -Math.PI / 6, 0]}>
+      <group position={[6.2, 3.1, 0]} rotation={[0, -Math.PI / 6, 0]}>
         <mesh>
-          <boxGeometry args={[5.5, 1.2, 0.2]} />
+          <boxGeometry args={[5.9, 1.2, 0.2]} />
           <meshStandardMaterial
             color="#06003a"
             emissive="#070150"
@@ -370,9 +380,9 @@ export const AboutArea: React.FC = () => {
       </group>
 
       {/* Title panel - floating 3D style - RIGHT SIDE */}
-      <group position={[5.5, 2.1, 0]} rotation={[0, -Math.PI / 6, 0]}>
+      <group position={[6.2, 2.1, 0]} rotation={[0, -Math.PI / 6, 0]}>
         <mesh>
-          <boxGeometry args={[5.5, 0.8, 0.2]} />
+          <boxGeometry args={[5.9, 0.8, 0.2]} />
           <meshStandardMaterial
             color="#06003a"
             emissive="#070150"
@@ -393,9 +403,9 @@ export const AboutArea: React.FC = () => {
       </group>
 
       {/* Description panel - floating 3D style - RIGHT SIDE */}
-      <group position={[5.5, 1, 0]} rotation={[0, -Math.PI / 6, 0]}>
+      <group position={[6.2, 1, 0]} rotation={[0, -Math.PI / 6, 0]}>
         <mesh>
-          <boxGeometry args={[5.5, 1.5, 0.2]} />
+          <boxGeometry args={[5.9, 1.5, 0.2]} />
           <meshStandardMaterial
             color="#06003a"
             emissive="#070150"
@@ -425,27 +435,6 @@ export const AboutArea: React.FC = () => {
           Building tools that turn complex data into clear insights.
         </Text>
       </group>
-
-      {/* Contact info pedestal */}
-      <mesh position={[0, 0.2, 2]} castShadow>
-        <cylinderGeometry args={[2, 2.2, 0.4, 16]} />
-        <meshStandardMaterial
-          color="#0f172a"
-          metalness={0.6}
-          roughness={0.4}
-        />
-      </mesh>
-
-      {/* Location */}
-      <Text
-        position={[0, 0.45, 2]}
-        rotation={[-Math.PI / 2, 0, 0]}
-        fontSize={0.5}
-        color="#1eff00"
-        anchorX="center"
-      >
-        Toronto, Canada
-      </Text>
 
       {/* Contact buttons - ALL ON LEFT SIDE */}
       <group position={[-5.5, 0, 0]} rotation={[0, Math.PI / 6, 0]}>
@@ -484,3 +473,6 @@ export const AboutArea: React.FC = () => {
     </group>
   );
 };
+
+// Preload the GLB model for better performance
+useGLTF.preload(`${import.meta.env.BASE_URL}statue.glb`);

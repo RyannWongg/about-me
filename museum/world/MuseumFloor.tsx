@@ -6,7 +6,7 @@ export const MuseumFloor: React.FC = () => {
     <RigidBody type="fixed" colliders="cuboid">
       {/* Main floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
-        <planeGeometry args={[70, 80]} />
+        <planeGeometry args={[50, 60]} />
         <meshStandardMaterial
           color="#0a0f1a"
           roughness={0.3}

@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Physics } from '@react-three/rapier';
+import { Physics, RigidBody, CuboidCollider } from '@react-three/rapier';
 import { Text } from '@react-three/drei';
 import { MuseumFloor } from './world/MuseumFloor';
 import { MuseumWalls } from './world/MuseumWalls';
@@ -47,6 +47,27 @@ export const MuseumScene: React.FC<MuseumSceneProps> = ({
       <Suspense fallback={null}>
         <AboutArea />
       </Suspense>
+
+      {/* About Area Collision Boxes */}
+      {/* Left pedestal collision */}
+      <RigidBody type="fixed" position={[-2, 2, -14]} colliders={false}>
+        <CuboidCollider args={[1.5, 2.5, 1.5]} />
+      </RigidBody>
+
+      {/* Right pedestal collision */}
+      <RigidBody type="fixed" position={[2, 2.5, -14]} colliders={false}>
+        <CuboidCollider args={[1.5, 3, 1.5]} />
+      </RigidBody>
+
+      {/* Right panels collision */}
+      <RigidBody type="fixed" position={[6, 2, -12]} rotation={[0, -Math.PI / 6, 0]} colliders={false}>
+        <CuboidCollider args={[3, 2, 0.5]} />
+      </RigidBody>
+
+      {/* Left contact buttons collision */}
+      <RigidBody type="fixed" position={[-5.5, 1.5, -12]} rotation={[0, Math.PI / 6, 0]} colliders={false}>
+        <CuboidCollider args={[2, 2, 0.5]} />
+      </RigidBody>
 
 
       {/* Welcome Sign */}

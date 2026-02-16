@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { useTexture, Text } from '@react-three/drei';
-import { Mesh, Group } from 'three';
+import { Mesh, Group, Vector3 } from 'three';
 import { Project } from '../../types';
 
 interface ProjectFrameProps {
@@ -18,9 +18,11 @@ export const ProjectFrame: React.FC<ProjectFrameProps> = ({
   onSelect,
 }) => {
   const [hovered, setHovered] = useState(false);
+  const [inSpotlight, setInSpotlight] = useState(false);
   const groupRef = useRef<Group>(null);
   const glowRef = useRef<Mesh>(null);
   const frameGroupRef = useRef<Group>(null);
+  const { camera } = useThree();
 
   // Load project image as texture
   const imagePath = project.image
@@ -29,16 +31,44 @@ export const ProjectFrame: React.FC<ProjectFrameProps> = ({
 
   const texture = useTexture(imagePath);
 
-  // Animate glow and rotation on hover
+  // Spotlight detection radius (player standing on pedestal)
+  const spotlightRadius = 1.5;
+
+  // Combined active state for hover or spotlight
+  const isActive = hovered || inSpotlight;
+
+  // Animate glow and rotation on hover or in spotlight
   useFrame((state, delta) => {
+    // Pedestal position is 3 units in front of the frame (towards negative X from frame perspective)
+    // Offset Z by -1 to better align with the visual spotlight
+    const pedestalWorldPos = new Vector3(position[0] - 3, 0, position[2] + 1);
+
+    // Get player position from camera (camera offset is [0, 8, 12] from player)
+    const playerPos = new Vector3(
+      camera.position.x,
+      0,
+      camera.position.z - 12
+    );
+
+    // Check if player is near the pedestal
+    const distanceToPedestal = playerPos.distanceTo(pedestalWorldPos);
+    const nowInSpotlight = distanceToPedestal < spotlightRadius;
+
+    // Only update state if changed to avoid unnecessary re-renders
+    if (nowInSpotlight !== inSpotlight) {
+      setInSpotlight(nowInSpotlight);
+    }
+
+    const currentlyActive = hovered || nowInSpotlight;
+
     if (glowRef.current) {
-      const scale = hovered ? 1.05 + Math.sin(state.clock.elapsedTime * 3) * 0.02 : 1;
+      const scale = currentlyActive ? 1.05 + Math.sin(state.clock.elapsedTime * 3) * 0.02 : 1;
       glowRef.current.scale.setScalar(scale);
     }
 
-    // Rotate to face camera on hover (90 degrees = Math.PI / 2)
+    // Rotate to face camera on hover or in spotlight (90 degrees = Math.PI / 2)
     if (frameGroupRef.current) {
-      const targetRotation = hovered ? Math.PI / 2 : 0;
+      const targetRotation = currentlyActive ? Math.PI / 2 : 0;
       frameGroupRef.current.rotation.y += (targetRotation - frameGroupRef.current.rotation.y) * 5 * delta;
     }
   });
@@ -78,7 +108,7 @@ export const ProjectFrame: React.FC<ProjectFrameProps> = ({
           <meshBasicMaterial
             color="#39ff14"
             transparent
-            opacity={hovered ? 0.3 : 0}
+            opacity={isActive ? 0.3 : 0}
           />
         </mesh>
 
@@ -86,23 +116,57 @@ export const ProjectFrame: React.FC<ProjectFrameProps> = ({
         <mesh castShadow position={[0, 0, 0]}>
           <boxGeometry args={[frameWidth + borderWidth * 2, frameHeight + borderWidth * 2, frameDepth]} />
           <meshStandardMaterial
-            color={hovered ? '#39ff14' : '#334155'}
+            color={isActive ? '#39ff14' : '#334155'}
             metalness={0.8}
             roughness={0.2}
-            emissive={hovered ? '#39ff14' : '#000000'}
-            emissiveIntensity={hovered ? 0.3 : 0}
+            emissive={isActive ? '#39ff14' : '#000000'}
+            emissiveIntensity={isActive ? 0.3 : 0}
           />
         </mesh>
 
-        {/* Project image */}
-        <mesh position={[0, 0, frameDepth / 2 + 0.01]}>
-          <planeGeometry args={[frameWidth, frameHeight]} />
-          <meshStandardMaterial
-            map={texture}
-            roughness={0.5}
-            metalness={0.1}
-          />
-        </mesh>
+        {/* Project image or In Progress placeholder */}
+        {project.status === 'Completed' && project.image ? (
+          <mesh position={[0, 0, frameDepth / 2 + 0.01]}>
+            <planeGeometry args={[frameWidth, frameHeight]} />
+            <meshStandardMaterial
+              map={texture}
+              roughness={0.5}
+              metalness={0.1}
+            />
+          </mesh>
+        ) : (
+          <group position={[0, 0, frameDepth / 2 + 0.01]}>
+            {/* Dark background */}
+            <mesh>
+              <planeGeometry args={[frameWidth, frameHeight]} />
+              <meshStandardMaterial
+                color="#1e293b"
+                roughness={0.8}
+                metalness={0.2}
+              />
+            </mesh>
+            {/* In Progress text */}
+            <Text
+              position={[0, 0.2, 0.01]}
+              fontSize={0.35}
+              color="#f59e0b"
+              anchorX="center"
+              anchorY="middle"
+            >
+              IN PROGRESS
+            </Text>
+            {/* Decorative icon/symbol */}
+            <Text
+              position={[0, -0.3, 0.01]}
+              fontSize={0.5}
+              color="#f59e0b"
+              anchorX="center"
+              anchorY="middle"
+            >
+              🚧
+            </Text>
+          </group>
+        )}
 
         {/* Project title label - 3D text box */}
         <group position={[0, -frameHeight / 2 - 0.8, 0]}>
@@ -110,9 +174,9 @@ export const ProjectFrame: React.FC<ProjectFrameProps> = ({
           <mesh position={[0, 0, 0]}>
             <boxGeometry args={[frameWidth + 0.5, 1.2, 0.1]} />
             <meshStandardMaterial
-              color={hovered ? '#39ff14' : '#0f172a'}
-              emissive={hovered ? '#39ff14' : '#000000'}
-              emissiveIntensity={hovered ? 0.2 : 0}
+              color={isActive ? '#39ff14' : '#0f172a'}
+              emissive={isActive ? '#39ff14' : '#000000'}
+              emissiveIntensity={isActive ? 0.2 : 0}
               metalness={0.3}
               roughness={0.7}
             />
@@ -122,7 +186,7 @@ export const ProjectFrame: React.FC<ProjectFrameProps> = ({
           <Text
             position={[0, 0.25, 0.06]}
             fontSize={0.18}
-            color={hovered ? '#0f172a' : '#ffffff'}
+            color={isActive ? '#0f172a' : '#ffffff'}
             anchorX="center"
             anchorY="middle"
             textAlign="center"
@@ -135,15 +199,15 @@ export const ProjectFrame: React.FC<ProjectFrameProps> = ({
           <Text
             position={[0, -0.15, 0.06]}
             fontSize={0.12}
-            color={hovered ? '#1e293b' : '#94a3b8'}
+            color={isActive ? '#1e293b' : '#94a3b8'}
             anchorX="center"
             anchorY="middle"
           >
             {project.category}
           </Text>
 
-          {/* Click hint when hovered */}
-          {hovered && project.status === 'Completed' && (
+          {/* Click hint when active */}
+          {isActive && project.status === 'Completed' && (
             <Text
               position={[0, -0.4, 0.06]}
               fontSize={0.1}

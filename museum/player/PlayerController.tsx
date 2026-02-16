@@ -116,7 +116,7 @@ export const PlayerController: React.FC<PlayerControllerProps> = ({
 
       // Idle floating animation when not moving
       if (!isMoving.current) {
-        characterRef.current.position.y = Math.sin(time * 2) * 0.05;
+        characterRef.current.position.y = Math.sin(time * 6) * 0.08;
       } else {
         // Bobbing when moving
         characterRef.current.position.y = Math.sin(time * 8) * 0.08;
