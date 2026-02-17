@@ -105,6 +105,12 @@ const SkillOrb: React.FC<SkillOrbProps> = ({ category, angle, radius, baseY, onH
         onHover(false);
         document.body.style.cursor = 'default';
       }}
+      onClick={(e) => {
+        e.stopPropagation();
+        const newHovered = !hovered;
+        setHovered(newHovered);
+        onHover(newHovered);
+      }}
     >
       {/* Main orb */}
       <mesh>
@@ -155,7 +161,7 @@ const SkillOrb: React.FC<SkillOrbProps> = ({ category, angle, radius, baseY, onH
 
       {/* Expanded skill list on hover */}
       {hovered && (
-        <Html position={[0, 0, orbSize + 0.5]} center>
+        <Html position={[0, 0, orbSize + 0.5]} center zIndexRange={[0, 5000]}>
           <div
             className="p-4 rounded-xl min-w-[180px]"
             style={{

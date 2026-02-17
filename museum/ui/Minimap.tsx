@@ -17,8 +17,14 @@ const waypoints: Waypoint[] = [
   { id: 'about', name: 'About Me', position: [0, -20], color: '#c084fc', icon: '👤' },
 ];
 
-export const Minimap: React.FC = () => {
+interface MinimapProps {
+  hidden?: boolean;
+}
+
+export const Minimap: React.FC<MinimapProps> = ({ hidden = false }) => {
   const { playerPosition } = useGame();
+
+  if (hidden) return null;
 
   // Scale factor for minimap (museum is 50x60, minimap is ~120x144)
   const scale = 2.4;

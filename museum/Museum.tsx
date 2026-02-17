@@ -47,7 +47,7 @@ export const Museum: React.FC<MuseumProps> = ({ projects, onExitMuseum }) => {
         <TouchControls onMove={handleTouchMove} />
 
         {/* New UI Components */}
-        <Minimap />
+        <Minimap hidden={isModalOpen} />
         <ProximityHUD />
         <MusicPlayer />
 

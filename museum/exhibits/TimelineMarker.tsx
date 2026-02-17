@@ -73,6 +73,7 @@ export const TimelineMarker: React.FC<TimelineMarkerProps> = ({
         center
         distanceFactor={6}
         transform
+        zIndexRange={[0, 5000]}
         style={{ pointerEvents: 'none' }}
       >
         <div
