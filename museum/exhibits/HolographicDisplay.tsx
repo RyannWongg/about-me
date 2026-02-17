@@ -155,7 +155,7 @@ const SkillOrb: React.FC<SkillOrbProps> = ({ category, angle, radius, baseY, onH
 
       {/* Expanded skill list on hover */}
       {hovered && (
-        <Html position={[0, 0, orbSize + 0.5]} center distanceFactor={8}>
+        <Html position={[0, 0, orbSize + 0.5]} center>
           <div
             className="p-4 rounded-xl min-w-[180px]"
             style={{

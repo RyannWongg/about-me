@@ -4,6 +4,10 @@ import { LoadingScreen } from './ui/LoadingScreen';
 import { QuickViewButton } from './ui/QuickViewButton';
 import { ExhibitModal } from './ui/ExhibitModal';
 import { TouchControls } from './player/TouchControls';
+import { Minimap } from './ui/Minimap';
+import { ProximityHUD } from './ui/ProximityHUD';
+import { MusicPlayer } from './ui/MusicPlayer';
+import { GameProvider } from './context/GameContext';
 import { Project } from '../types';
 
 interface MuseumProps {
@@ -31,39 +35,46 @@ export const Museum: React.FC<MuseumProps> = ({ projects, onExitMuseum }) => {
   }, []);
 
   return (
-    <div className="fixed inset-0 w-full h-full">
-      <LoadingScreen />
-      <QuickViewButton onExit={onExitMuseum} />
-      <ExhibitModal
-        project={selectedProject}
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-      />
-      <TouchControls onMove={handleTouchMove} />
+    <GameProvider>
+      <div className="fixed inset-0 w-full h-full">
+        <LoadingScreen />
+        <QuickViewButton onExit={onExitMuseum} />
+        <ExhibitModal
+          project={selectedProject}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+        />
+        <TouchControls onMove={handleTouchMove} />
 
-      {/* Controls hint - hidden on mobile */}
-      <div className="fixed bottom-4 left-4 z-40 bg-slate-900/80 backdrop-blur-sm border border-slate-700 rounded-xl px-4 py-3 hidden md:block">
-        <div className="text-slate-400 text-xs font-mono space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="text-[#39ff14] font-bold">WASD</span>
-            <span>or</span>
-            <span className="text-[#39ff14] font-bold">Arrow Keys</span>
-            <span>- Move</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-[#39ff14] font-bold">Click</span>
-            <span>- View project details</span>
+        {/* New UI Components */}
+        <Minimap />
+        <ProximityHUD />
+        <MusicPlayer />
+
+        {/* Controls hint - hidden on mobile */}
+        <div className="fixed bottom-4 left-4 z-40 bg-slate-900/80 backdrop-blur-sm border border-slate-700 rounded-xl px-4 py-3 hidden md:block">
+          <div className="text-slate-400 text-xs font-mono space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="text-[#39ff14] font-bold">WASD</span>
+              <span>or</span>
+              <span className="text-[#39ff14] font-bold">Arrow Keys</span>
+              <span>- Move</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[#39ff14] font-bold">Click</span>
+              <span>- View project details</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <Suspense fallback={<LoadingScreen />}>
-        <MuseumCanvas
-          projects={projects}
-          onSelectProject={handleSelectProject}
-          touchInput={touchInput}
-        />
-      </Suspense>
-    </div>
+        <Suspense fallback={<LoadingScreen />}>
+          <MuseumCanvas
+            projects={projects}
+            onSelectProject={handleSelectProject}
+            touchInput={touchInput}
+          />
+        </Suspense>
+      </div>
+    </GameProvider>
   );
 };

@@ -1,9 +1,13 @@
 import React from 'react';
-import { RigidBody } from '@react-three/rapier';
+import { RigidBody, CuboidCollider } from '@react-three/rapier';
+import { Grid } from '@react-three/drei';
 
 export const MuseumFloor: React.FC = () => {
   return (
-    <RigidBody type="fixed" colliders="cuboid">
+    <RigidBody type="fixed" colliders={false}>
+      {/* Floor collider - thin box */}
+      <CuboidCollider args={[25, 0.1, 30]} position={[0, -0.1, 0]} />
+
       {/* Main floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
         <planeGeometry args={[50, 60]} />
@@ -13,6 +17,22 @@ export const MuseumFloor: React.FC = () => {
           metalness={0.7}
         />
       </mesh>
+
+      {/* Floor grid */}
+      <Grid
+        position={[0, 0.01, 0]}
+        args={[50, 60]}
+        cellSize={2}
+        cellThickness={0.5}
+        cellColor="#39ff14"
+        sectionSize={10}
+        sectionThickness={1}
+        sectionColor="#00ffff"
+        fadeDistance={50}
+        fadeStrength={1}
+        followCamera={false}
+        infiniteGrid={false}
+      />
 
 
       {/* Lobby area highlight */}

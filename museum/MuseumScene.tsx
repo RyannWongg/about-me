@@ -9,6 +9,7 @@ import { SkillsRoom } from './world/SkillsRoom';
 import { TimelineHallway } from './world/TimelineHallway';
 import { AboutArea } from './world/AboutArea';
 import { PlayerController } from './player/PlayerController';
+import { Jukebox } from './exhibits/Jukebox';
 import { Project } from '../types';
 
 interface MuseumSceneProps {
@@ -50,23 +51,23 @@ export const MuseumScene: React.FC<MuseumSceneProps> = ({
 
       {/* About Area Collision Boxes */}
       {/* Left pedestal collision */}
-      <RigidBody type="fixed" position={[-2, 2, -14]} colliders={false}>
-        <CuboidCollider args={[1.5, 2.5, 1.5]} />
+      <RigidBody type="fixed" position={[-2, 1.5, -14]} colliders={false}>
+        <CuboidCollider args={[1.2, 2, 1.2]} />
       </RigidBody>
 
       {/* Right pedestal collision */}
-      <RigidBody type="fixed" position={[2, 2.5, -14]} colliders={false}>
-        <CuboidCollider args={[1.5, 3, 1.5]} />
+      <RigidBody type="fixed" position={[2, 2, -14]} colliders={false}>
+        <CuboidCollider args={[1.2, 2.5, 1.2]} />
       </RigidBody>
 
       {/* Right panels collision */}
       <RigidBody type="fixed" position={[6, 2, -12]} rotation={[0, -Math.PI / 6, 0]} colliders={false}>
-        <CuboidCollider args={[3, 2, 0.5]} />
+        <CuboidCollider args={[2.5, 2, 0.3]} />
       </RigidBody>
 
       {/* Left contact buttons collision */}
       <RigidBody type="fixed" position={[-5.5, 1.5, -12]} rotation={[0, Math.PI / 6, 0]} colliders={false}>
-        <CuboidCollider args={[2, 2, 0.5]} />
+        <CuboidCollider args={[1.5, 2, 0.3]} />
       </RigidBody>
 
 
@@ -107,6 +108,11 @@ export const MuseumScene: React.FC<MuseumSceneProps> = ({
           Use WASD to explore
         </Text>
       </group>
+
+      {/* Jukebox - right side of welcome lobby */}
+      <Suspense fallback={null}>
+        <Jukebox position={[6, 0, 2]} />
+      </Suspense>
 
       {/* Player */}
       <PlayerController touchInput={touchInput} />
