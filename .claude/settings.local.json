@@ -5,7 +5,12 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "mcp__ide__getDiagnostics",
+      "Skill(ui-ux-pro-max)",
+      "Bash(python3:*)",
+      "Bash(python:*)",
+      "Skill(frontend-design)"
     ]
   }
 }

@@ -1,13 +1,13 @@
 import React, { useState, useMemo, lazy, Suspense } from 'react';
-import { Sidebar } from './components/Sidebar';
-import { HeroCard } from './components/HeroCard';
+import { Navbar } from './components/Navbar';
+import { Hero } from './components/Hero';
 import { SkillsChart } from './components/SkillsChart';
 import { ProjectCard } from './components/ProjectCard';
 import { DetailedProjectRow } from './components/DetailedProjectRow';
 import { Timeline } from './components/Timeline';
 import { ProjectModal } from './components/ProjectModal';
 import { Project, ViewState } from './types';
-import { Menu, Terminal, FolderOpen, History, Code2, Filter } from 'lucide-react';
+import { FolderOpen, Code2, Filter } from 'lucide-react';
 
 // Lazy load the Museum component for better initial load
 const Museum = lazy(() => import('./museum/Museum').then(m => ({ default: m.Museum })));
@@ -123,8 +123,7 @@ const projects: Project[] = [
 type ProjectCategoryFilter = 'All' | 'Data Analysis' | 'Game Dev' | 'App';
 
 const App: React.FC = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [currentView, setCurrentView] = useState<ViewState>('museum');
+  const [currentView, setCurrentView] = useState<ViewState>('dashboard');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
@@ -140,9 +139,23 @@ const App: React.FC = () => {
   };
 
   const handleNavigate = (view: ViewState) => {
-    setCurrentView(view);
-    setIsSidebarOpen(false); // Close sidebar on mobile when navigating
-    window.scrollTo(0, 0);
+    if (view === 'museum') {
+      setCurrentView('museum');
+      window.scrollTo(0, 0);
+    } else {
+      // For dashboard/projects, ensure we're on the main page then scroll to section
+      if (currentView === 'museum') {
+        setCurrentView('dashboard');
+        // Wait for render then scroll
+        setTimeout(() => {
+          const element = document.getElementById(view);
+          element?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      } else {
+        const element = document.getElementById(view);
+        element?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   };
 
   // Filter Logic
@@ -178,6 +191,7 @@ const App: React.FC = () => {
     );
   }
 
+
   return (
     <div className="min-h-screen bg-slate-950 font-sans text-slate-200">
       <ProjectModal
@@ -186,171 +200,158 @@ const App: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
       />
 
-      {/* Desktop Sidebar */}
-      <div className="hidden md:block fixed inset-y-0 left-0 z-50 w-64">
-        <Sidebar currentView={currentView} onNavigate={handleNavigate} />
-      </div>
+      {/* Fixed Navigation Bar */}
+      <Navbar currentView={currentView} onNavigate={handleNavigate} />
 
-      {/* Mobile Sidebar Overlay */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-slate-950/90 z-40 md:hidden backdrop-blur-md transition-opacity"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
+      {/* Hero Section - Full Viewport */}
+      <Hero />
 
-      {/* Mobile Sidebar Panel */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-out md:hidden ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <Sidebar currentView={currentView} onNavigate={handleNavigate} />
-      </div>
+      {/* CAREER LOG SECTION - Full Width Horizontal Timeline */}
+      <section id="career" className="w-full">
+        <Timeline />
+      </section>
 
       {/* Main Content Wrapper */}
-      <div className="md:ml-64 min-h-screen flex flex-col">
+      <div className="flex flex-col">
 
-        {/* Mobile Menu Button */}
-        <header className="md:hidden sticky top-0 z-30 bg-slate-950/90 backdrop-blur-xl border-b border-slate-800/60 px-5 py-4">
-          <button
-            className="p-2.5 text-slate-400 hover:text-[#39ff14] hover:bg-slate-800/80 rounded-xl transition-all duration-200 border border-slate-800 hover:border-[#39ff14]/30 cursor-pointer"
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          >
-            <Menu size={22} />
-          </button>
-        </header>
+        {/* Scrollable Main Content */}
+        <main className="flex-1">
 
-        {/* Dynamic Main Content */}
-        <main className="flex-1 p-5 md:p-8 lg:p-10">
-          
-          {/* DASHBOARD VIEW */}
-          {currentView === 'dashboard' && (
-            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-500">
-              <HeroCard />
+          {/* SKILLS SECTION */}
+          <section id="skills" className="py-20 px-6 md:px-12 lg:px-16">
+            <div className="max-w-5xl mx-auto">
+              {/* Section Header - Centered */}
+              <div className="text-center mb-14">
+                <p className="font-mono-refined text-[10px] font-semibold text-[#39ff14] tracking-[0.35em] uppercase mb-5 opacity-90">
+                  Technical Expertise
+                </p>
+                <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-5 tracking-[-0.02em] leading-[1.1]">
+                  Skill Matrix
+                </h2>
+                <p className="font-body-refined text-slate-500 text-sm md:text-base font-normal tracking-wide max-w-md mx-auto leading-relaxed">
+                  Technologies and tools I work with
+                </p>
+              </div>
+
+              {/* Skills Content */}
               <SkillsChart />
+            </div>
+          </section>
 
-              {/* Timeline Section with Header */}
-              <div className="lg:row-span-2 flex flex-col h-full">
-                <div className="flex items-center gap-3 mb-4 pl-1">
-                  <div className="p-1.5 rounded-lg bg-[#39ff14]/10">
-                    <History size={16} className="text-[#39ff14]" />
-                  </div>
-                  <h3 className="text-base font-mono-tech text-slate-200 tracking-widest uppercase font-bold">Career Log</h3>
-                  <div className="h-[2px] w-10 bg-gradient-to-r from-[#39ff14] to-[#39ff14]/30 rounded-full"></div>
-                  <div className="h-px flex-1 bg-slate-800/60"></div>
-                </div>
-                <div className="flex-1">
-                  <Timeline />
-                </div>
+          {/* FINISHED PROJECTS SECTION */}
+          <section id="featured" className="py-20 px-6 md:px-12 lg:px-16 bg-slate-900/30">
+            <div className="max-w-6xl mx-auto">
+              {/* Section Header - Centered */}
+              <div className="text-center mb-14">
+                <p className="font-mono-refined text-[10px] font-semibold text-[#39ff14] tracking-[0.35em] uppercase mb-5 opacity-90">
+                  Portfolio Highlights
+                </p>
+                <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-5 tracking-[-0.02em] leading-[1.1]">
+                  Featured Projects
+                </h2>
+                <p className="font-body-refined text-slate-500 text-sm md:text-base font-normal tracking-wide max-w-md mx-auto leading-relaxed">
+                  Completed works showcasing my expertise
+                </p>
               </div>
 
-              {/* Projects Section with Header */}
-              <div className="col-span-1 md:col-span-2 flex flex-col">
-                <div className="flex items-center gap-3 mb-5 pl-1">
-                  <div className="p-1.5 rounded-lg bg-[#39ff14]/10">
-                    <FolderOpen size={16} className="text-[#39ff14]" />
-                  </div>
-                  <h3 className="text-base font-mono-tech text-slate-200 tracking-widest uppercase font-bold">Finished Projects</h3>
-                  <div className="h-[2px] w-10 bg-gradient-to-r from-[#39ff14] to-[#39ff14]/30 rounded-full"></div>
-                  <div className="h-px flex-1 bg-slate-800/60"></div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  {projects.filter(p => p.status === 'Completed').map(project => (
-                    <ProjectCard
-                      key={project.id}
-                      project={project}
-                      onClick={handleProjectClick}
-                    />
-                  ))}
-                </div>
+              {/* Projects Grid - Centered */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                {projects.filter(p => p.status === 'Completed').map(project => (
+                  <ProjectCard
+                    key={project.id}
+                    project={project}
+                    onClick={handleProjectClick}
+                  />
+                ))}
               </div>
             </div>
-          )}
+          </section>
 
-          {/* PROJECTS VIEW */}
-          {currentView === 'projects' && (
-            <div id="projects-view" className="max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+          {/* PROJECTS SECTION */}
+          <section id="repository" className="py-20 px-6 md:px-12 lg:px-16 scroll-mt-24">
+            <div className="max-w-5xl mx-auto">
 
-              <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2 rounded-xl bg-[#39ff14]/10 border border-[#39ff14]/20">
-                      <Code2 size={22} className="text-[#39ff14]" />
-                    </div>
-                    <h2 className="text-2xl md:text-3xl font-bold text-white">
-                      Code Repository
-                    </h2>
-                  </div>
-                  <p className="text-slate-400 text-sm md:text-base">Explore my software engineering and data science portfolio.</p>
-                </div>
-
-                {/* Filter Buttons */}
-                <div className="flex flex-wrap items-center gap-2">
-                  <div className="flex items-center gap-1.5 text-slate-500 text-xs mr-2">
-                    <Filter size={12} />
-                    <span className="font-medium">Filter:</span>
-                  </div>
-                  {(['All', 'Data Analysis', 'Game Dev', 'App'] as ProjectCategoryFilter[]).map((filter) => {
-                    const count = filter === 'All' ? projects.length :
-                      filter === 'Data Analysis' ? projects.filter(p => ['Sports Analytics', 'Statistical Modeling'].includes(p.category)).length :
-                      filter === 'Game Dev' ? projects.filter(p => ['Game Development', 'Systems Programming'].includes(p.category)).length :
-                      projects.filter(p => p.category === 'Mobile App').length;
-
-                    return (
-                      <button
-                        key={filter}
-                        onClick={() => setActiveFilter(filter)}
-                        className={`
-                          group relative px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider border transition-all duration-300 cursor-pointer overflow-hidden
-                          ${activeFilter === filter
-                            ? 'filter-btn-active bg-[#39ff14]/15 text-[#39ff14] border-[#39ff14]/50'
-                            : 'bg-slate-900/80 text-slate-400 border-slate-700/50 hover:border-[#39ff14]/30 hover:text-slate-200 hover:bg-slate-800/80'
-                          }
-                        `}
-                      >
-                        {/* Active indicator pulse */}
-                        {activeFilter === filter && (
-                          <span className="absolute inset-0 bg-[#39ff14]/10 animate-pulse pointer-events-none"></span>
-                        )}
-                        <span className="relative flex items-center gap-2">
-                          {filter}
-                          <span className={`
-                            inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-md text-[10px] font-bold transition-all duration-300
-                            ${activeFilter === filter
-                              ? 'bg-[#39ff14]/30 text-[#39ff14]'
-                              : 'bg-slate-800 text-slate-500 group-hover:bg-slate-700 group-hover:text-slate-300'
-                            }
-                          `}>
-                            {count}
-                          </span>
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Detailed Row List with Filter Animation */}
-              <div key={activeFilter} className="space-y-5">
-                {filteredProjects.length > 0 ? (
-                  filteredProjects.map((project, index) => (
-                    <div
-                      key={project.id}
-                      className="filter-item"
-                      style={{
-                        animationDelay: `${index * 80}ms`
-                      }}
-                    >
-                      <DetailedProjectRow project={project} />
-                    </div>
-                  ))
-                ) : (
-                  <div className="filter-item text-center py-20 border border-dashed border-slate-800/60 rounded-2xl bg-slate-900/30">
-                    <FolderOpen size={40} className="mx-auto text-slate-700 mb-3" />
-                    <p className="text-slate-500">No projects found in this category yet.</p>
-                  </div>
-                )}
-              </div>
+            {/* Section Header */}
+            <div className="text-center mb-14">
+              <p className="font-mono-refined text-[10px] font-semibold text-[#39ff14] tracking-[0.35em] uppercase mb-5 opacity-90">
+                All Projects
+              </p>
+              <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-5 tracking-[-0.02em] leading-[1.1]">
+                Code Repository
+              </h2>
+              <p className="font-body-refined text-slate-500 text-sm md:text-base font-normal tracking-wide max-w-md mx-auto leading-relaxed">
+                Explore my software engineering and data science portfolio
+              </p>
             </div>
-          )}
+
+            {/* Filter Buttons */}
+            <div className="flex flex-wrap items-center justify-center gap-2.5 mb-10">
+              <div className="flex items-center gap-1.5 text-slate-500 text-xs mr-2">
+                <Filter size={11} />
+                <span className="font-mono-refined font-semibold tracking-[0.1em] text-[10px] uppercase">Filter:</span>
+              </div>
+              {(['All', 'Data Analysis', 'Game Dev', 'App'] as ProjectCategoryFilter[]).map((filter) => {
+                const count = filter === 'All' ? projects.length :
+                  filter === 'Data Analysis' ? projects.filter(p => ['Sports Analytics', 'Statistical Modeling'].includes(p.category)).length :
+                  filter === 'Game Dev' ? projects.filter(p => ['Game Development', 'Systems Programming'].includes(p.category)).length :
+                  projects.filter(p => p.category === 'Mobile App').length;
+
+                return (
+                  <button
+                    key={filter}
+                    onClick={() => setActiveFilter(filter)}
+                    className={`
+                      group relative px-3.5 py-2 rounded-lg font-mono-refined text-[10px] font-bold uppercase tracking-[0.15em] border transition-all duration-300 cursor-pointer overflow-hidden
+                      ${activeFilter === filter
+                        ? 'filter-btn-active bg-[#39ff14]/15 text-[#39ff14] border-[#39ff14]/50'
+                        : 'bg-slate-900/80 text-slate-400 border-slate-700/50 hover:border-[#39ff14]/30 hover:text-slate-200 hover:bg-slate-800/80'
+                      }
+                    `}
+                  >
+                    {/* Active indicator pulse */}
+                    {activeFilter === filter && (
+                      <span className="absolute inset-0 bg-[#39ff14]/10 animate-pulse pointer-events-none"></span>
+                    )}
+                    <span className="relative flex items-center gap-2">
+                      {filter}
+                      <span className={`
+                        font-mono-refined inline-flex items-center justify-center min-w-[16px] h-[16px] px-1 rounded text-[8px] font-bold transition-all duration-300
+                        ${activeFilter === filter
+                          ? 'bg-[#39ff14]/30 text-[#39ff14]'
+                          : 'bg-slate-800 text-slate-500 group-hover:bg-slate-700 group-hover:text-slate-300'
+                        }
+                      `}>
+                        {count}
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Detailed Row List with Filter Animation */}
+            <div key={activeFilter} className="space-y-8">
+              {filteredProjects.length > 0 ? (
+                filteredProjects.map((project, index) => (
+                  <div
+                    key={project.id}
+                    className="filter-item"
+                    style={{
+                      animationDelay: `${index * 80}ms`
+                    }}
+                  >
+                    <DetailedProjectRow project={project} index={index} />
+                  </div>
+                ))
+              ) : (
+                <div className="filter-item text-center py-20 border border-dashed border-slate-800/60 rounded-2xl bg-slate-900/30">
+                  <FolderOpen size={40} className="mx-auto text-slate-700 mb-3" />
+                  <p className="font-body-refined text-slate-500">No projects found in this category yet.</p>
+                </div>
+              )}
+            </div>
+            </div>
+          </section>
 
         </main>
       </div>
