@@ -77,6 +77,105 @@
         animation: glowPulse 2s ease-in-out infinite;
       }
 
+      /* Scroll-triggered entrance animations */
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-60px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(60px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes scaleIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .scroll-animate-up {
+        opacity: 0;
+      }
+      .scroll-animate-up.visible {
+        animation: slideUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      }
+
+      .scroll-animate-left {
+        opacity: 0;
+      }
+      .scroll-animate-left.visible {
+        animation: slideInLeft 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      }
+
+      .scroll-animate-right {
+        opacity: 0;
+      }
+      .scroll-animate-right.visible {
+        animation: slideInRight 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      }
+
+      .scroll-animate-scale {
+        opacity: 0;
+      }
+      .scroll-animate-scale.visible {
+        animation: scaleIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      }
+
+      .scroll-animate-fade-up {
+        opacity: 0;
+      }
+      .scroll-animate-fade-up.visible {
+        animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      }
+
+      /* Stagger delay utilities */
+      .delay-100 { animation-delay: 100ms !important; }
+      .delay-200 { animation-delay: 200ms !important; }
+      .delay-300 { animation-delay: 300ms !important; }
+      .delay-400 { animation-delay: 400ms !important; }
+      .delay-500 { animation-delay: 500ms !important; }
+      .delay-600 { animation-delay: 600ms !important; }
+
       /* Respect reduced motion preference */
       @media (prefers-reduced-motion: reduce) {
         .filter-item {
@@ -85,6 +184,14 @@
         }
         .animate-in {
           animation: none;
+        }
+        .scroll-animate-up,
+        .scroll-animate-left,
+        .scroll-animate-right,
+        .scroll-animate-scale,
+        .scroll-animate-fade-up {
+          animation: none;
+          opacity: 1;
         }
       }
 
@@ -110,7 +217,7 @@
   }
 }
 </script>
-  <script type="module" crossorigin src="/about-me/assets/index-XDSLeZjM.js"></script>
+  <script type="module" crossorigin src="/about-me/assets/index-8T-_uqT4.js"></script>
 </head>
   <body class="bg-slate-950 text-slate-200 antialiased selection:bg-[#39ff14]/30 selection:text-[#39ff14]">
     <div id="root"></div>
