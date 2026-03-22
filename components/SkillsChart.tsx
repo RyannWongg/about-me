@@ -11,6 +11,7 @@ import {
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import { Terminal, Globe, Sparkles, Cloud } from 'lucide-react';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 ChartJS.register(
   RadialLinearScale,
@@ -93,13 +94,18 @@ const SkillBadge: React.FC<SkillBadgeProps> = ({ skill, variant = 'primary' }) =
 };
 
 export const SkillsChart: React.FC = () => {
+  const { ref: containerRef, isVisible } = useScrollAnimation({ threshold: 0.15 });
+
   const languages = ['Python', 'C', 'Java', 'SQL', 'Assembly', 'TypeScript'];
   const webTools = ['HTML5', 'CSS3', 'JavaScript', 'Git', 'React', 'D3.js'];
   const librariesAI = ['Pandas', 'NumPy', 'OpenCV', 'OpenAI API'];
   const cloudInfra = ['GCP', 'Firebase'];
 
   return (
-    <div className="bg-slate-900/60 backdrop-blur-xl rounded-3xl shadow-2xl border border-slate-700/50 p-8 md:p-10 relative overflow-hidden group hover:border-slate-600/50 transition-colors duration-500">
+    <div
+      ref={containerRef}
+      className={`bg-slate-900/60 backdrop-blur-xl rounded-3xl shadow-2xl border border-slate-700/50 p-8 md:p-10 relative overflow-hidden group hover:border-slate-600/50 transition-colors duration-500 scroll-animate-scale ${isVisible ? 'visible' : ''}`}
+    >
       {/* Ambient glow effects */}
       <div className="absolute -top-20 -left-20 w-60 h-60 bg-[#39ff14]/5 rounded-full blur-3xl pointer-events-none group-hover:bg-[#39ff14]/8 transition-colors duration-700"></div>
       <div className="absolute -bottom-20 -right-20 w-48 h-48 bg-emerald-500/3 rounded-full blur-3xl pointer-events-none"></div>
@@ -120,7 +126,7 @@ export const SkillsChart: React.FC = () => {
         <div className="flex flex-col justify-center space-y-7">
 
           {/* Languages Group */}
-          <div className="group/section">
+          <div className={`group/section scroll-animate-fade-up ${isVisible ? 'visible delay-100' : ''}`}>
             <h4 className="font-mono-refined text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-3 group-hover/section:text-slate-200 transition-colors">
               <div className="p-1.5 rounded-lg bg-slate-800/60 border border-slate-700/50 group-hover/section:border-[#39ff14]/30 transition-colors">
                 <Terminal size={12} className="text-[#39ff14]" />
@@ -133,7 +139,7 @@ export const SkillsChart: React.FC = () => {
           </div>
 
           {/* Web & Tools Group */}
-          <div className="group/section">
+          <div className={`group/section scroll-animate-fade-up ${isVisible ? 'visible delay-200' : ''}`}>
             <h4 className="font-mono-refined text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-3 group-hover/section:text-slate-200 transition-colors">
               <div className="p-1.5 rounded-lg bg-slate-800/60 border border-slate-700/50 group-hover/section:border-[#39ff14]/30 transition-colors">
                 <Globe size={12} className="text-[#39ff14]" />
@@ -146,7 +152,7 @@ export const SkillsChart: React.FC = () => {
           </div>
 
           {/* Libraries & AI Group */}
-          <div className="group/section">
+          <div className={`group/section scroll-animate-fade-up ${isVisible ? 'visible delay-300' : ''}`}>
             <h4 className="font-mono-refined text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-3 group-hover/section:text-slate-200 transition-colors">
               <div className="p-1.5 rounded-lg bg-slate-800/60 border border-slate-700/50 group-hover/section:border-[#39ff14]/30 transition-colors">
                 <Sparkles size={12} className="text-[#39ff14]" />
@@ -159,7 +165,7 @@ export const SkillsChart: React.FC = () => {
           </div>
 
           {/* Cloud & Infrastructure Group */}
-          <div className="group/section">
+          <div className={`group/section scroll-animate-fade-up ${isVisible ? 'visible delay-400' : ''}`}>
             <h4 className="font-mono-refined text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-3 group-hover/section:text-slate-200 transition-colors">
               <div className="p-1.5 rounded-lg bg-slate-800/60 border border-orange-500/30 group-hover/section:border-orange-400/50 transition-colors">
                 <Cloud size={12} className="text-orange-400" />

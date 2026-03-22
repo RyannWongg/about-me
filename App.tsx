@@ -8,6 +8,7 @@ import { Timeline } from './components/Timeline';
 import { ProjectModal } from './components/ProjectModal';
 import { Project, ViewState } from './types';
 import { FolderOpen, Code2, Filter } from 'lucide-react';
+import { useScrollAnimation } from './hooks/useScrollAnimation';
 
 // Lazy load the Museum component for better initial load
 const Museum = lazy(() => import('./museum/Museum').then(m => ({ default: m.Museum })));
@@ -158,10 +159,13 @@ const App: React.FC = () => {
     }
   };
 
+  // Scroll animation for featured projects section
+  const { ref: featuredRef, isVisible: featuredVisible } = useScrollAnimation({ threshold: 0.1 });
+
   // Filter Logic
   const filteredProjects = useMemo(() => {
     if (activeFilter === 'All') return projects;
-    
+
     return projects.filter(p => {
       if (activeFilter === 'Data Analysis') {
         return ['Sports Analytics', 'Statistical Modeling'].includes(p.category);
@@ -255,13 +259,18 @@ const App: React.FC = () => {
               </div>
 
               {/* Projects Grid - Centered */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                {projects.filter(p => p.status === 'Completed').map(project => (
-                  <ProjectCard
+              <div ref={featuredRef} className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                {projects.filter(p => p.status === 'Completed').map((project, index) => (
+                  <div
                     key={project.id}
-                    project={project}
-                    onClick={handleProjectClick}
-                  />
+                    className={`scroll-animate-fade-up ${featuredVisible ? 'visible' : ''}`}
+                    style={{ animationDelay: featuredVisible ? `${index * 100}ms` : '0ms' }}
+                  >
+                    <ProjectCard
+                      project={project}
+                      onClick={handleProjectClick}
+                    />
+                  </div>
                 ))}
               </div>
             </div>

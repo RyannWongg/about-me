@@ -1,6 +1,7 @@
 import React from 'react';
 import { Project } from '../types';
 import { ExternalLink, Layers, ChevronRight, AlertTriangle, Lightbulb, Clock, CheckCircle2, Hammer, Code2 } from 'lucide-react';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 interface DetailedProjectRowProps {
   project: Project;
@@ -8,11 +9,18 @@ interface DetailedProjectRowProps {
 }
 
 export const DetailedProjectRow: React.FC<DetailedProjectRowProps> = ({ project, index = 0 }) => {
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.15 });
   const isInProgress = project.status === 'In Progress';
   const isReversed = index % 2 === 1;
 
+  // Alternate animation direction based on row index
+  const animationClass = isReversed ? 'scroll-animate-right' : 'scroll-animate-left';
+
   return (
-    <div className={`flex flex-col ${isReversed ? 'md:flex-row-reverse' : 'md:flex-row'} gap-8 md:gap-12 lg:gap-16 items-center group`}>
+    <div
+      ref={ref}
+      className={`flex flex-col ${isReversed ? 'md:flex-row-reverse' : 'md:flex-row'} gap-8 md:gap-12 lg:gap-16 items-center group ${animationClass} ${isVisible ? 'visible' : ''}`}
+    >
 
       {/* Image Section */}
       <div className="w-full md:w-1/2 relative">

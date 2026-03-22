@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TimelineEvent } from '../types';
-import { Briefcase, GraduationCap, Code2, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
+import { StudentStudyingIcon, ITSupportIcon, WebDeveloperIcon } from './AnimatedIcons';
 
 const events: TimelineEvent[] = [
   {
@@ -38,10 +39,14 @@ const events: TimelineEvent[] = [
   }
 ];
 
-const getEventIcon = (event: TimelineEvent) => {
-  if (event.type === 'education') return GraduationCap;
-  if (event.subtitle.includes('SJM')) return Briefcase;
-  return Code2;
+const getEventIcon = (event: TimelineEvent, isActive: boolean) => {
+  if (event.type === 'education') {
+    return <StudentStudyingIcon className="w-full h-full" isActive={isActive} />;
+  }
+  if (event.subtitle.includes('SJM')) {
+    return <ITSupportIcon className="w-full h-full" isActive={isActive} />;
+  }
+  return <WebDeveloperIcon className="w-full h-full" isActive={isActive} />;
 };
 
 export const Timeline: React.FC = () => {
@@ -99,7 +104,7 @@ export const Timeline: React.FC = () => {
         <div className="relative flex flex-wrap justify-center gap-8">
           {/* Connecting Line - animates from right to left */}
           <div
-            className="hidden sm:block absolute top-7 left-1/2 -translate-x-1/2 h-[2px] bg-gradient-to-r from-[#39ff14]/60 via-slate-600 to-slate-700 transition-all duration-1000 ease-out origin-right"
+            className="hidden sm:block absolute top-12 md:top-14 left-1/2 -translate-x-1/2 h-[2px] bg-gradient-to-r from-[#39ff14]/60 via-slate-600 to-slate-700 transition-all duration-1000 ease-out origin-right"
             style={{
               width: 'calc(100% - 120px)',
               transform: `translateX(-50%) scaleX(${animatedItems.length === events.length ? 1 : 0})`,
@@ -107,7 +112,6 @@ export const Timeline: React.FC = () => {
           />
 
           {events.map((event, index) => {
-            const Icon = getEventIcon(event);
             const isFirst = index === 0;
             const isAnimated = animatedItems.includes(index);
 
@@ -120,19 +124,18 @@ export const Timeline: React.FC = () => {
                     : 'opacity-0 translate-y-12'
                 }`}
               >
-                {/* Node */}
+                {/* Animated Icon Node */}
                 <div className={`relative mb-6 z-10 transition-all duration-500 ${
                   isAnimated ? 'scale-100' : 'scale-0'
                 }`}>
-                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 backdrop-blur-sm ${
+                  <div className={`w-24 h-24 md:w-28 md:h-28 rounded-2xl flex items-center justify-center transition-all duration-500 backdrop-blur-sm overflow-hidden ${
                     isFirst
-                      ? 'bg-[#39ff14]/20 border-2 border-[#39ff14] shadow-[0_0_25px_rgba(57,255,20,0.5)] rotate-45'
-                      : 'bg-slate-800/80 border-2 border-slate-600 group-hover:border-[#39ff14]/50 group-hover:bg-[#39ff14]/10 group-hover:shadow-[0_0_20px_rgba(57,255,20,0.3)] rotate-45'
+                      ? 'bg-[#39ff14]/10 border-2 border-[#39ff14] shadow-[0_0_30px_rgba(57,255,20,0.4)]'
+                      : 'bg-slate-800/80 border-2 border-slate-600 group-hover:border-[#39ff14]/50 group-hover:bg-[#39ff14]/10 group-hover:shadow-[0_0_25px_rgba(57,255,20,0.3)]'
                   }`}>
-                    <Icon
-                      size={20}
-                      className={`${isFirst ? 'text-[#39ff14]' : 'text-slate-400 group-hover:text-[#39ff14]'} transition-colors -rotate-45`}
-                    />
+                    <div className={`w-20 h-20 md:w-24 md:h-24 ${isFirst ? 'text-[#39ff14]' : 'text-slate-400 group-hover:text-[#39ff14]'} transition-colors`}>
+                      {getEventIcon(event, isFirst)}
+                    </div>
                   </div>
                 </div>
 
