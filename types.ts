@@ -41,8 +41,8 @@ export interface NavItem {
   icon: React.ReactNode;
 }
 
-// 3D Museum Types
-export type ViewState = 'museum' | 'dashboard' | 'projects';
+// View States
+export type ViewState = 'museum' | 'dashboard' | 'projects' | 'pokemon';
 
 export interface MuseumRoom {
   id: string;
@@ -58,3 +58,53 @@ export interface ExhibitData {
 }
 
 export type MuseumViewState = 'exploring' | 'viewing-exhibit' | 'transitioning';
+
+// Pokemon 2D World Types
+export type Direction = 'up' | 'down' | 'left' | 'right';
+
+export interface Position {
+  tileX: number;
+  tileY: number;
+  pixelX: number;
+  pixelY: number;
+}
+
+export interface PokemonCollectible {
+  id: string;
+  name: string;
+  position: { tileX: number; tileY: number };
+  collected: boolean;
+  sprite: string;
+}
+
+export interface PokemonAchievement {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  unlocked: boolean;
+}
+
+export interface DialogMessage {
+  speaker?: string;
+  text: string;
+  avatar?: string;
+}
+
+export interface NPC {
+  id: string;
+  name: string;
+  position: { tileX: number; tileY: number };
+  direction: Direction;
+  sprite: string;
+  dialogs: DialogMessage[];
+}
+
+export interface InteractiveObject {
+  id: string;
+  type: 'project' | 'skill' | 'timeline' | 'sign' | 'door';
+  position: { tileX: number; tileY: number };
+  data?: Project | Skill | TimelineEvent | string;
+}
+
+export type PokemonGameState = 'exploring' | 'dialog' | 'menu' | 'minigame' | 'paused';

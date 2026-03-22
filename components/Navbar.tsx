@@ -6,7 +6,7 @@ interface NavbarProps {
   onNavigate: (view: ViewState) => void;
 }
 
-type SectionId = 'career' | 'skills' | 'featured' | 'repository' | 'museum';
+type SectionId = 'career' | 'skills' | 'featured' | 'repository' | 'museum' | 'pokemon';
 
 const navItems: { id: SectionId; label: string }[] = [
   { id: 'career', label: 'Career' },
@@ -14,6 +14,7 @@ const navItems: { id: SectionId; label: string }[] = [
   { id: 'featured', label: 'Projects' },
   { id: 'repository', label: 'Repository' },
   { id: 'museum', label: '3D Museum' },
+  { id: 'pokemon', label: '2D World' },
 ];
 
 export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
@@ -77,6 +78,11 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
       return;
     }
 
+    if (sectionId === 'pokemon') {
+      onNavigate('pokemon');
+      return;
+    }
+
     const doScroll = () => {
       // For career section, use slow smooth scroll to match hero down arrow
       if (sectionId === 'career') {
@@ -90,8 +96,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
       }
     };
 
-    // If we're in museum view, switch to dashboard first
-    if (currentView === 'museum') {
+    // If we're in museum or pokemon view, switch to dashboard first
+    if (currentView === 'museum' || currentView === 'pokemon') {
       onNavigate('dashboard');
       setTimeout(doScroll, 100);
     } else {
@@ -122,7 +128,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
               onClick={() => scrollToSection(item.id)}
               className={`font-body-refined text-[13px] font-medium tracking-wide transition-colors cursor-pointer ${
                 (item.id === 'museum' && currentView === 'museum') ||
-                (item.id !== 'museum' && activeSection === item.id)
+                (item.id === 'pokemon' && currentView === 'pokemon') ||
+                (item.id !== 'museum' && item.id !== 'pokemon' && activeSection === item.id)
                   ? 'text-[#39ff14]'
                   : 'text-slate-300 hover:text-[#39ff14]'
               }`}

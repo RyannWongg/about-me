@@ -6,12 +6,15 @@ import { ProjectCard } from './components/ProjectCard';
 import { DetailedProjectRow } from './components/DetailedProjectRow';
 import { Timeline } from './components/Timeline';
 import { ProjectModal } from './components/ProjectModal';
-import { Project, ViewState } from './types';
+import { Project, Skill, TimelineEvent, ViewState } from './types';
 import { FolderOpen, Code2, Filter } from 'lucide-react';
 import { useScrollAnimation } from './hooks/useScrollAnimation';
 
 // Lazy load the Museum component for better initial load
 const Museum = lazy(() => import('./museum/Museum').then(m => ({ default: m.Museum })));
+
+// Lazy load the Pokemon 2D World component
+const Pokemon = lazy(() => import('./pokemon/Pokemon').then(m => ({ default: m.Pokemon })));
 
 // Real Data for Projects with Extended Details
 const projects: Project[] = [
@@ -123,6 +126,65 @@ const projects: Project[] = [
 
 type ProjectCategoryFilter = 'All' | 'Data Analysis' | 'Game Dev' | 'App';
 
+// Skills data for Pokemon view
+const skills: Skill[] = [
+  { name: 'Python', proficiency: 90, category: 'Backend' },
+  { name: 'JavaScript', proficiency: 85, category: 'Frontend' },
+  { name: 'TypeScript', proficiency: 80, category: 'Frontend' },
+  { name: 'React', proficiency: 85, category: 'Frontend' },
+  { name: 'Java', proficiency: 75, category: 'Backend' },
+  { name: 'C', proficiency: 70, category: 'Backend' },
+  { name: 'Assembly', proficiency: 60, category: 'Backend' },
+  { name: 'SQL', proficiency: 75, category: 'Backend' },
+  { name: 'R', proficiency: 70, category: 'Tools' },
+  { name: 'Git', proficiency: 85, category: 'Tools' },
+  { name: 'Node.js', proficiency: 75, category: 'Backend' },
+  { name: 'HTML/CSS', proficiency: 90, category: 'Frontend' },
+  { name: 'Tailwind', proficiency: 85, category: 'Frontend' },
+  { name: 'Three.js', proficiency: 65, category: 'Frontend' },
+  { name: 'Pandas', proficiency: 85, category: 'Tools' },
+  { name: 'NumPy', proficiency: 80, category: 'Tools' },
+  { name: 'Matplotlib', proficiency: 80, category: 'Tools' },
+  { name: 'Firebase', proficiency: 70, category: 'Backend' },
+];
+
+// Timeline events for Pokemon view
+const timelineEvents: TimelineEvent[] = [
+  {
+    id: '3',
+    year: '2022 - Present',
+    title: 'Bachelor of Arts & Science',
+    subtitle: 'University of Toronto',
+    description: [
+      'Current: Specialist in Mathematics & Statistics, Major in Computer Science.',
+      'Focus: Data Analysis, C, Python, & Statistical Modeling.'
+    ],
+    type: 'education'
+  },
+  {
+    id: '1',
+    year: '2025.07 - 2025.08',
+    title: 'IT Support and Software Testing',
+    subtitle: 'SJM Macau',
+    description: [
+      'Executed Software QA Testing & Bug Documentation.',
+      'Resolved critical hardware/software system issues for end-users.'
+    ],
+    type: 'experience'
+  },
+  {
+    id: '2',
+    year: '2020.10 - 2021.03',
+    title: 'Website Developer',
+    subtitle: 'Macau Pui Ching Middle School',
+    description: [
+      'Architected the iGEM Research Portal (HTML/CSS/JS).',
+      'Optimized front-end performance and cross-browser compatibility.'
+    ],
+    type: 'experience'
+  }
+];
+
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewState>('dashboard');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -143,9 +205,12 @@ const App: React.FC = () => {
     if (view === 'museum') {
       setCurrentView('museum');
       window.scrollTo(0, 0);
+    } else if (view === 'pokemon') {
+      setCurrentView('pokemon');
+      window.scrollTo(0, 0);
     } else {
       // For dashboard/projects, ensure we're on the main page then scroll to section
-      if (currentView === 'museum') {
+      if (currentView === 'museum' || currentView === 'pokemon') {
         setCurrentView('dashboard');
         // Wait for render then scroll
         setTimeout(() => {
@@ -191,6 +256,26 @@ const App: React.FC = () => {
         </div>
       }>
         <Museum projects={projects} onExitMuseum={() => setCurrentView('dashboard')} />
+      </Suspense>
+    );
+  }
+
+  // Render Pokemon 2D World view
+  if (currentView === 'pokemon') {
+    return (
+      <Suspense fallback={
+        <div className="fixed inset-0 bg-slate-950 flex items-center justify-center">
+          <div className="text-[#39ff14] text-xl font-mono-tech tracking-widest animate-pulse">
+            LOADING 2D WORLD...
+          </div>
+        </div>
+      }>
+        <Pokemon
+          projects={projects}
+          skills={skills}
+          timelineEvents={timelineEvents}
+          onExit={() => setCurrentView('dashboard')}
+        />
       </Suspense>
     );
   }
