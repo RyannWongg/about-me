@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Menu, X } from 'lucide-react';
 import { ViewState } from '../types';
 
 interface NavbarProps {
@@ -20,6 +21,7 @@ const navItems: { id: SectionId; label: string }[] = [
 export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState<SectionId | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Smooth scroll animation with custom duration
   const smoothScrollTo = useCallback((targetY: number, duration: number = 1200) => {
@@ -105,46 +107,106 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
     }
   };
 
-  return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled
-        ? 'bg-slate-950/95 backdrop-blur-xl border-b border-slate-800/60 shadow-lg'
-        : 'bg-transparent'
-    }`}>
-      <div className="w-full px-6 md:px-12 lg:px-16 py-5 flex items-center justify-between">
-        {/* Logo / Signature */}
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="text-white font-display text-lg font-bold tracking-tight hover:text-[#39ff14] transition-colors cursor-pointer"
-        >
-          Ryan<span className="text-[#39ff14]">.</span>
-        </button>
+  const handleMobileNavClick = (sectionId: SectionId) => {
+    setIsMobileMenuOpen(false);
+    scrollToSection(sectionId);
+  };
 
-        {/* Navigation Links */}
-        <div className="flex items-center gap-5 md:gap-7">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => scrollToSection(item.id)}
-              className={`font-body-refined text-[13px] font-medium tracking-wide transition-colors cursor-pointer ${
-                (item.id === 'museum' && currentView === 'museum') ||
-                (item.id === 'pokemon' && currentView === 'pokemon') ||
-                (item.id !== 'museum' && item.id !== 'pokemon' && activeSection === item.id)
-                  ? 'text-[#39ff14]'
-                  : 'text-slate-300 hover:text-[#39ff14]'
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
-          <a
-            href="mailto:fong20040311@gmail.com"
-            className="font-body-refined text-[13px] font-medium tracking-wide text-slate-300 hover:text-[#39ff14] transition-colors"
+  return (
+    <>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled || isMobileMenuOpen
+          ? 'bg-slate-950/95 backdrop-blur-xl border-b border-slate-800/60 shadow-lg'
+          : 'bg-transparent'
+      }`}>
+        <div className="w-full px-4 sm:px-6 md:px-12 lg:px-16 py-4 md:py-5 flex items-center justify-between">
+          {/* Logo / Signature */}
+          <button
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              setIsMobileMenuOpen(false);
+            }}
+            className="text-white font-display text-lg font-bold tracking-tight hover:text-[#39ff14] transition-colors cursor-pointer"
           >
-            Contact
-          </a>
+            Ryan<span className="text-[#39ff14]">.</span>
+          </button>
+
+          {/* Desktop Navigation Links */}
+          <div className="hidden md:flex items-center gap-5 lg:gap-7">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className={`font-body-refined text-[13px] font-medium tracking-wide transition-colors cursor-pointer ${
+                  (item.id === 'museum' && currentView === 'museum') ||
+                  (item.id === 'pokemon' && currentView === 'pokemon') ||
+                  (item.id !== 'museum' && item.id !== 'pokemon' && activeSection === item.id)
+                    ? 'text-[#39ff14]'
+                    : 'text-slate-300 hover:text-[#39ff14]'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+            <a
+              href="mailto:fong20040311@gmail.com"
+              className="font-body-refined text-[13px] font-medium tracking-wide text-slate-300 hover:text-[#39ff14] transition-colors"
+            >
+              Contact
+            </a>
+          </div>
+
+          {/* Mobile Hamburger Button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 text-white hover:text-[#39ff14] transition-colors"
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Menu Overlay */}
+      <div className={`fixed inset-0 z-40 md:hidden transition-all duration-300 ${
+        isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+      }`}>
+        {/* Backdrop */}
+        <div
+          className="absolute inset-0 bg-slate-950/95 backdrop-blur-xl"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+
+        {/* Menu Content */}
+        <div className={`absolute inset-x-0 top-[60px] p-6 transition-transform duration-300 ${
+          isMobileMenuOpen ? 'translate-y-0' : '-translate-y-4'
+        }`}>
+          <div className="flex flex-col gap-2">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => handleMobileNavClick(item.id)}
+                className={`w-full text-left px-4 py-3 rounded-lg font-body-refined text-base font-medium tracking-wide transition-all ${
+                  (item.id === 'museum' && currentView === 'museum') ||
+                  (item.id === 'pokemon' && currentView === 'pokemon') ||
+                  (item.id !== 'museum' && item.id !== 'pokemon' && activeSection === item.id)
+                    ? 'text-[#39ff14] bg-[#39ff14]/10'
+                    : 'text-slate-300 hover:text-[#39ff14] hover:bg-slate-800/50'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+            <a
+              href="mailto:fong20040311@gmail.com"
+              className="w-full text-left px-4 py-3 rounded-lg font-body-refined text-base font-medium tracking-wide text-slate-300 hover:text-[#39ff14] hover:bg-slate-800/50 transition-all"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Contact
+            </a>
+          </div>
         </div>
       </div>
-    </nav>
+    </>
   );
 };

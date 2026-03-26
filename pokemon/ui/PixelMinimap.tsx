@@ -5,12 +5,12 @@ const MAP_WIDTH = 40;
 const MAP_HEIGHT = 30;
 const MINIMAP_SCALE = 4;
 
-// Area definitions for labels
+// Area definitions for labels (matching PokemonCanvas.tsx)
 const AREAS = [
-  { name: 'About', x: 5, y: 3, w: 8, h: 6 },
-  { name: 'Timeline', x: 28, y: 3, w: 8, h: 8 },
-  { name: 'Projects', x: 5, y: 20, w: 11, h: 7 },
-  { name: 'Skills', x: 25, y: 20, w: 11, h: 7 },
+  { name: 'About', x: 5, y: 3, w: 8, h: 7 },      // x:5-12, y:3-9
+  { name: 'Timeline', x: 27, y: 3, w: 11, h: 6 }, // x:27-37, y:3-8
+  { name: 'Projects', x: 7, y: 18, w: 9, h: 5 },  // x:7-15, y:18-22
+  { name: 'Skills', x: 25, y: 18, w: 9, h: 5 },   // x:25-33, y:18-22
 ];
 
 export const PixelMinimap: React.FC = () => {
@@ -46,87 +46,119 @@ export const PixelMinimap: React.FC = () => {
           {/* Background */}
           <div className="absolute inset-0 bg-[#4ade80]" />
 
-          {/* Paths */}
+          {/* Main vertical path: x:18-22, y:5-23 */}
           <div
             className="absolute bg-[#d4a574]"
             style={{
               left: `${(18 / MAP_WIDTH) * 100}%`,
               top: `${(5 / MAP_HEIGHT) * 100}%`,
               width: `${(5 / MAP_WIDTH) * 100}%`,
-              height: `${(21 / MAP_HEIGHT) * 100}%`,
+              height: `${(19 / MAP_HEIGHT) * 100}%`,
             }}
           />
+          {/* Main horizontal path: y:14-16, x:6-34 */}
           <div
             className="absolute bg-[#d4a574]"
             style={{
-              left: `${(5 / MAP_WIDTH) * 100}%`,
+              left: `${(6 / MAP_WIDTH) * 100}%`,
               top: `${(14 / MAP_HEIGHT) * 100}%`,
-              width: `${(31 / MAP_WIDTH) * 100}%`,
+              width: `${(29 / MAP_WIDTH) * 100}%`,
               height: `${(3 / MAP_HEIGHT) * 100}%`,
             }}
           />
-
-          {/* About House */}
+          {/* Path to About building: x:7-10, y:9-14 */}
           <div
-            className="absolute bg-slate-500 border border-slate-600"
+            className="absolute bg-[#d4a574]"
+            style={{
+              left: `${(7 / MAP_WIDTH) * 100}%`,
+              top: `${(9 / MAP_HEIGHT) * 100}%`,
+              width: `${(4 / MAP_WIDTH) * 100}%`,
+              height: `${(6 / MAP_HEIGHT) * 100}%`,
+            }}
+          />
+          {/* Path to Projects building: y:22-23, x:8-18 */}
+          <div
+            className="absolute bg-[#d4a574]"
+            style={{
+              left: `${(8 / MAP_WIDTH) * 100}%`,
+              top: `${(22 / MAP_HEIGHT) * 100}%`,
+              width: `${(11 / MAP_WIDTH) * 100}%`,
+              height: `${(2 / MAP_HEIGHT) * 100}%`,
+            }}
+          />
+          {/* Path to Skills building: y:22-23, x:22-32 */}
+          <div
+            className="absolute bg-[#d4a574]"
+            style={{
+              left: `${(22 / MAP_WIDTH) * 100}%`,
+              top: `${(22 / MAP_HEIGHT) * 100}%`,
+              width: `${(11 / MAP_WIDTH) * 100}%`,
+              height: `${(2 / MAP_HEIGHT) * 100}%`,
+            }}
+          />
+
+          {/* About House - cream/orange roof */}
+          <div
+            className="absolute bg-[#f5deb3] border border-[#d2691e]"
             style={{
               left: `${(5 / MAP_WIDTH) * 100}%`,
               top: `${(3 / MAP_HEIGHT) * 100}%`,
               width: `${(8 / MAP_WIDTH) * 100}%`,
+              height: `${(7 / MAP_HEIGHT) * 100}%`,
+            }}
+          />
+
+          {/* Timeline Area - monument: x:27-37, y:3-8 */}
+          <div
+            className="absolute bg-[#fbbf24]/50 border border-[#fbbf24]"
+            style={{
+              left: `${(27 / MAP_WIDTH) * 100}%`,
+              top: `${(3 / MAP_HEIGHT) * 100}%`,
+              width: `${(11 / MAP_WIDTH) * 100}%`,
               height: `${(6 / MAP_HEIGHT) * 100}%`,
             }}
           />
 
-          {/* Timeline Area */}
+          {/* Projects Building - brick/blue roof */}
           <div
-            className="absolute bg-[#fbbf24]/50 border border-[#fbbf24]"
+            className="absolute bg-[#8b4513]/70 border border-blue-400"
             style={{
-              left: `${(28 / MAP_WIDTH) * 100}%`,
-              top: `${(3 / MAP_HEIGHT) * 100}%`,
-              width: `${(8 / MAP_WIDTH) * 100}%`,
-              height: `${(8 / MAP_HEIGHT) * 100}%`,
+              left: `${(7 / MAP_WIDTH) * 100}%`,
+              top: `${(18 / MAP_HEIGHT) * 100}%`,
+              width: `${(9 / MAP_WIDTH) * 100}%`,
+              height: `${(5 / MAP_HEIGHT) * 100}%`,
             }}
           />
 
-          {/* Projects Building */}
+          {/* Skills Lab - stone/brown roof */}
           <div
-            className="absolute bg-blue-500/50 border border-blue-400"
-            style={{
-              left: `${(5 / MAP_WIDTH) * 100}%`,
-              top: `${(20 / MAP_HEIGHT) * 100}%`,
-              width: `${(11 / MAP_WIDTH) * 100}%`,
-              height: `${(7 / MAP_HEIGHT) * 100}%`,
-            }}
-          />
-
-          {/* Skills Lab */}
-          <div
-            className="absolute bg-purple-500/50 border border-purple-400"
+            className="absolute bg-[#708090]/70 border border-[#8b4513]"
             style={{
               left: `${(25 / MAP_WIDTH) * 100}%`,
-              top: `${(20 / MAP_HEIGHT) * 100}%`,
-              width: `${(11 / MAP_WIDTH) * 100}%`,
-              height: `${(7 / MAP_HEIGHT) * 100}%`,
+              top: `${(18 / MAP_HEIGHT) * 100}%`,
+              width: `${(9 / MAP_WIDTH) * 100}%`,
+              height: `${(5 / MAP_HEIGHT) * 100}%`,
             }}
           />
 
-          {/* Water */}
+          {/* Left pond: x:2-5, y:11-19 */}
           <div
             className="absolute bg-blue-400"
             style={{
               left: `${(2 / MAP_WIDTH) * 100}%`,
-              top: `${(12 / MAP_HEIGHT) * 100}%`,
-              width: `${(3 / MAP_WIDTH) * 100}%`,
-              height: `${(7 / MAP_HEIGHT) * 100}%`,
+              top: `${(11 / MAP_HEIGHT) * 100}%`,
+              width: `${(4 / MAP_WIDTH) * 100}%`,
+              height: `${(9 / MAP_HEIGHT) * 100}%`,
             }}
           />
+          {/* Right pond: x:35-38, y:11-19 */}
           <div
             className="absolute bg-blue-400"
             style={{
-              left: `${(36 / MAP_WIDTH) * 100}%`,
-              top: `${(12 / MAP_HEIGHT) * 100}%`,
-              width: `${(3 / MAP_WIDTH) * 100}%`,
-              height: `${(7 / MAP_HEIGHT) * 100}%`,
+              left: `${(35 / MAP_WIDTH) * 100}%`,
+              top: `${(11 / MAP_HEIGHT) * 100}%`,
+              width: `${(4 / MAP_WIDTH) * 100}%`,
+              height: `${(9 / MAP_HEIGHT) * 100}%`,
             }}
           />
 
@@ -158,15 +190,15 @@ export const PixelMinimap: React.FC = () => {
             <span>You</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-2 h-2 bg-slate-500" />
+            <div className="w-2 h-2 bg-[#f5deb3] border border-[#d2691e]" />
             <span>About</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-2 h-2 bg-blue-500/50" />
+            <div className="w-2 h-2 bg-[#8b4513]/70 border border-blue-400" />
             <span>Projects</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-2 h-2 bg-purple-500/50" />
+            <div className="w-2 h-2 bg-[#708090]/70 border border-[#8b4513]" />
             <span>Skills</span>
           </div>
         </div>

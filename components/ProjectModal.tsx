@@ -48,7 +48,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
             {project.longDescription}
           </p>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="p-4 bg-slate-950/60 rounded-xl border border-slate-800/60 flex flex-col justify-center hover:border-[#39ff14]/20 transition-colors">
               <div className="flex items-center gap-2 text-slate-500 text-[10px] uppercase tracking-wider font-semibold mb-2">
                 <Activity size={12} className="text-[#39ff14]" />

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { usePokemonGame } from '../context/PokemonGameContext';
 import { SoundManager } from '../audio/SoundManager';
 import { Direction } from '../../types';
@@ -10,6 +10,36 @@ interface GameBoyShellProps {
 
 export const GameBoyShell: React.FC<GameBoyShellProps> = ({ children, onExit }) => {
   const { state, dispatch } = usePokemonGame();
+  const [scale, setScale] = useState(1);
+
+  // Calculate scale based on viewport size - only scale down on small screens
+  useEffect(() => {
+    const calculateScale = () => {
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      // Shell width: 640px canvas + 40px bezel padding + 24px housing padding + 40px shell padding = 744px
+      const gameBoyWidth = 750;
+      const gameBoyHeight = 950; // Shell height including controls
+
+      // Only scale if viewport is smaller than Game Boy
+      if (viewportWidth >= gameBoyWidth && viewportHeight >= gameBoyHeight) {
+        setScale(1);
+        return;
+      }
+
+      // Calculate scale to fit within viewport with some padding
+      const horizontalScale = (viewportWidth - 16) / gameBoyWidth;
+      const verticalScale = (viewportHeight - 16) / gameBoyHeight;
+
+      // Use the smaller scale to ensure it fits
+      const newScale = Math.min(horizontalScale, verticalScale, 1);
+      setScale(Math.max(newScale, 0.3)); // Minimum scale of 0.3 for very small screens
+    };
+
+    calculateScale();
+    window.addEventListener('resize', calculateScale);
+    return () => window.removeEventListener('resize', calculateScale);
+  }, []);
 
   // D-pad handlers
   const handleDPadPress = useCallback((direction: Direction) => {
@@ -61,15 +91,16 @@ export const GameBoyShell: React.FC<GameBoyShellProps> = ({ children, onExit }) 
   }, [dispatch]);
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-b from-slate-800 to-slate-950 flex items-center justify-center overflow-auto p-4">
-      {/* Game Boy Container - Classic DMG style */}
+    <div className="fixed inset-0 bg-gradient-to-b from-slate-800 to-slate-950 flex items-center justify-center overflow-hidden">
+      {/* Game Boy Container - Classic DMG style with responsive scaling */}
       <div
-        className="relative flex flex-col"
+        className="relative flex flex-col origin-center"
         style={{
           background: 'linear-gradient(180deg, #c8c4bf 0%, #b8b4af 50%, #a8a4a0 100%)',
-          borderRadius: '12px 12px 12px 60px',
-          padding: '16px 16px 100px 16px',
-          minWidth: '380px',
+          borderRadius: '20px 20px 20px 80px',
+          padding: '20px 20px 150px 20px',
+          width: '750px',
+          transform: `scale(${scale})`,
           boxShadow: `
             inset 2px 2px 4px rgba(255,255,255,0.6),
             inset -2px -2px 4px rgba(0,0,0,0.15),
@@ -154,9 +185,9 @@ export const GameBoyShell: React.FC<GameBoyShellProps> = ({ children, onExit }) 
         </div>
 
         {/* Controls area */}
-        <div className="flex items-start justify-between px-4">
+        <div className="flex items-start justify-between px-8">
           {/* D-Pad */}
-          <div className="relative w-28 h-28">
+          <div className="relative w-32 h-32 touch-none">
             {/* D-pad shadow/base */}
             <div
               className="absolute inset-2 rounded-full"
@@ -189,44 +220,44 @@ export const GameBoyShell: React.FC<GameBoyShellProps> = ({ children, onExit }) 
 
               {/* Direction touch areas */}
               <button
-                className="absolute top-0 left-1/2 -translate-x-1/2 w-9 h-7 flex items-center justify-center transition-all active:brightness-150"
+                className="absolute top-0 left-1/2 -translate-x-1/2 w-9 h-7 flex items-center justify-center transition-all active:brightness-150 touch-none"
                 onMouseDown={() => handleDPadPress('up')}
                 onMouseUp={() => handleDPadRelease('up')}
                 onMouseLeave={() => handleDPadRelease('up')}
-                onTouchStart={(e) => { e.preventDefault(); handleDPadPress('up'); }}
+                onTouchStart={() => handleDPadPress('up')}
                 onTouchEnd={() => handleDPadRelease('up')}
                 style={{ background: 'transparent' }}
               >
                 <div className="w-3 h-3 border-t-2 border-l-2 border-gray-600 rotate-45 translate-y-1" />
               </button>
               <button
-                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-9 h-7 flex items-center justify-center transition-all active:brightness-150"
+                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-9 h-7 flex items-center justify-center transition-all active:brightness-150 touch-none"
                 onMouseDown={() => handleDPadPress('down')}
                 onMouseUp={() => handleDPadRelease('down')}
                 onMouseLeave={() => handleDPadRelease('down')}
-                onTouchStart={(e) => { e.preventDefault(); handleDPadPress('down'); }}
+                onTouchStart={() => handleDPadPress('down')}
                 onTouchEnd={() => handleDPadRelease('down')}
                 style={{ background: 'transparent' }}
               >
                 <div className="w-3 h-3 border-b-2 border-r-2 border-gray-600 rotate-45 -translate-y-1" />
               </button>
               <button
-                className="absolute left-0 top-1/2 -translate-y-1/2 w-7 h-9 flex items-center justify-center transition-all active:brightness-150"
+                className="absolute left-0 top-1/2 -translate-y-1/2 w-7 h-9 flex items-center justify-center transition-all active:brightness-150 touch-none"
                 onMouseDown={() => handleDPadPress('left')}
                 onMouseUp={() => handleDPadRelease('left')}
                 onMouseLeave={() => handleDPadRelease('left')}
-                onTouchStart={(e) => { e.preventDefault(); handleDPadPress('left'); }}
+                onTouchStart={() => handleDPadPress('left')}
                 onTouchEnd={() => handleDPadRelease('left')}
                 style={{ background: 'transparent' }}
               >
                 <div className="w-3 h-3 border-b-2 border-l-2 border-gray-600 rotate-45 translate-x-1" />
               </button>
               <button
-                className="absolute right-0 top-1/2 -translate-y-1/2 w-7 h-9 flex items-center justify-center transition-all active:brightness-150"
+                className="absolute right-0 top-1/2 -translate-y-1/2 w-7 h-9 flex items-center justify-center transition-all active:brightness-150 touch-none"
                 onMouseDown={() => handleDPadPress('right')}
                 onMouseUp={() => handleDPadRelease('right')}
                 onMouseLeave={() => handleDPadRelease('right')}
-                onTouchStart={(e) => { e.preventDefault(); handleDPadPress('right'); }}
+                onTouchStart={() => handleDPadPress('right')}
                 onTouchEnd={() => handleDPadRelease('right')}
                 style={{ background: 'transparent' }}
               >
@@ -245,8 +276,8 @@ export const GameBoyShell: React.FC<GameBoyShellProps> = ({ children, onExit }) 
           </div>
 
           {/* A/B Buttons area */}
-          <div className="relative mt-12" style={{ transform: 'rotate(-25deg)' }}>
-            <div className="flex gap-4">
+          <div className="relative mt-10 touch-none" style={{ transform: 'rotate(-25deg)' }}>
+            <div className="flex gap-5">
               {/* B Button */}
               <div className="flex flex-col items-center">
                 <button
@@ -302,9 +333,9 @@ export const GameBoyShell: React.FC<GameBoyShellProps> = ({ children, onExit }) 
 
         {/* Start/Select buttons - absolutely positioned */}
         <div
-          className="absolute left-1/2 -translate-x-1/2 flex gap-8"
+          className="absolute left-1/2 -translate-x-1/2 flex gap-10 touch-none"
           style={{
-            bottom: '50px',
+            bottom: '55px',
             transform: 'translateX(-50%) rotate(-25deg)',
           }}
         >
@@ -344,7 +375,7 @@ export const GameBoyShell: React.FC<GameBoyShellProps> = ({ children, onExit }) 
 
         {/* Speaker grille */}
         <div
-          className="absolute bottom-6 left-8 grid gap-1"
+          className="absolute bottom-8 left-10 grid gap-1.5"
           style={{
             gridTemplateColumns: 'repeat(6, 1fr)',
             transform: 'rotate(-25deg)',
@@ -364,7 +395,7 @@ export const GameBoyShell: React.FC<GameBoyShellProps> = ({ children, onExit }) 
 
         {/* Phones/headphone jack label (decorative) */}
         <div
-          className="absolute bottom-3 left-1/2 -translate-x-1/2 text-[6px] font-bold tracking-widest"
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 text-[7px] font-bold tracking-widest"
           style={{ color: '#8a8682' }}
         >
           🎧 PHONES
@@ -382,7 +413,7 @@ export const GameBoyShell: React.FC<GameBoyShellProps> = ({ children, onExit }) 
 
         {/* Right side volume slider (decorative) */}
         <div
-          className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-20 rounded-l"
+          className="absolute right-0 top-1/3 w-2 h-24 rounded-l"
           style={{
             background: 'linear-gradient(90deg, #908c88 0%, #a8a4a0 50%, #b8b4b0 100%)',
             boxShadow: 'inset 1px 0 2px rgba(0,0,0,0.3)',
@@ -400,7 +431,7 @@ export const GameBoyShell: React.FC<GameBoyShellProps> = ({ children, onExit }) 
 
         {/* Contrast dial area (decorative) */}
         <div
-          className="absolute left-0 top-32 w-3 h-8 rounded-r-full"
+          className="absolute left-0 top-36 w-3 h-10 rounded-r-full"
           style={{
             background: 'linear-gradient(270deg, #888480 0%, #a8a4a0 100%)',
             boxShadow: 'inset -1px 0 2px rgba(0,0,0,0.2)',

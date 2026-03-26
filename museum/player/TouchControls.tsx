@@ -67,21 +67,18 @@ export const TouchControls: React.FC<TouchControlsProps> = ({ onMove }) => {
   const handleMouseMove = (e: React.MouseEvent) => handleMove(e.clientX, e.clientY);
   const handleMouseUp = () => handleEnd();
 
-  // Touch events
+  // Touch events - using touch-none CSS class instead of preventDefault
   const handleTouchStart = (e: React.TouchEvent) => {
-    e.preventDefault();
     const touch = e.touches[0];
     handleStart(touch.clientX, touch.clientY);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    e.preventDefault();
     const touch = e.touches[0];
     handleMove(touch.clientX, touch.clientY);
   };
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    e.preventDefault();
+  const handleTouchEnd = () => {
     handleEnd();
   };
 
@@ -104,11 +101,11 @@ export const TouchControls: React.FC<TouchControlsProps> = ({ onMove }) => {
   if (!isMobile) return null;
 
   return (
-    <div className="fixed bottom-8 left-8 z-40 touch-none">
+    <div className="fixed bottom-20 sm:bottom-8 left-4 sm:left-8 z-40 touch-none">
       {/* Joystick base */}
       <div
         ref={joystickRef}
-        className="w-32 h-32 rounded-full bg-slate-900/80 border-2 border-[#39ff14]/50 flex items-center justify-center backdrop-blur-sm"
+        className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-slate-900/80 border-2 border-[#39ff14]/50 flex items-center justify-center backdrop-blur-sm"
         style={{
           boxShadow: '0 0 20px rgba(57, 255, 20, 0.2), inset 0 0 30px rgba(0, 0, 0, 0.5)',
         }}
@@ -128,7 +125,7 @@ export const TouchControls: React.FC<TouchControlsProps> = ({ onMove }) => {
 
         {/* Joystick knob */}
         <div
-          className="w-14 h-14 rounded-full bg-[#39ff14] transition-transform duration-75"
+          className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-[#39ff14] transition-transform duration-75"
           style={{
             transform: `translate(${knobPosition.x}px, ${knobPosition.y}px)`,
             boxShadow: isDragging

@@ -40,7 +40,7 @@ export const Minimap: React.FC<MinimapProps> = ({ hidden = false }) => {
   const playerMapPos = worldToMap(playerPosition.x, playerPosition.z);
 
   return (
-    <div className="fixed top-4 left-4 z-[9999]">
+    <div className="fixed top-4 left-4 z-[9999] hidden sm:block">
       {/* Minimap container */}
       <div
         className="relative bg-slate-900/90 backdrop-blur-sm border-2 border-[#39ff14]/50 rounded-xl overflow-hidden shadow-[0_0_20px_rgba(57,255,20,0.2)]"

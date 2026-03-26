@@ -37,12 +37,12 @@ export const ProximityHUD: React.FC = () => {
 
   return (
     <div
-      className={`fixed bottom-24 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
+      className={`fixed bottom-4 sm:bottom-24 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-[calc(100%-2rem)] sm:w-auto ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
       }`}
     >
       <div
-        className="relative bg-slate-900/95 backdrop-blur-md border-2 rounded-2xl px-6 py-4 min-w-[280px] max-w-[400px]"
+        className="relative bg-slate-900/95 backdrop-blur-md border-2 rounded-2xl px-4 sm:px-6 py-3 sm:py-4 min-w-0 sm:min-w-[280px] max-w-[400px] mx-auto"
         style={{ borderColor: `${color}66`, boxShadow: `0 0 30px ${color}33` }}
       >
         {/* Scanning line animation */}

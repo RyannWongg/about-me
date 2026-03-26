@@ -42,6 +42,9 @@ const PokemonInner: React.FC<{ onExit: () => void }> = ({ onExit }) => {
     // Victory handled in SkillBattle component
   }, []);
 
+  // Check if player is in overworld (not inside a building)
+  const isInOverworld = state.currentMap === 'overworld';
+
   return (
     <GameBoyShell onExit={onExit}>
       {/* Game Screen Content */}
@@ -49,11 +52,11 @@ const PokemonInner: React.FC<{ onExit: () => void }> = ({ onExit }) => {
         {/* Canvas */}
         <PokemonCanvas />
 
-        {/* HUD Overlay */}
-        <GameHUD />
+        {/* HUD Overlay - only show in overworld */}
+        {isInOverworld && <GameHUD />}
 
-        {/* Minimap */}
-        <PixelMinimap />
+        {/* Minimap - only show in overworld */}
+        {isInOverworld && <PixelMinimap />}
 
         {/* Dialog Box */}
         <DialogBox />

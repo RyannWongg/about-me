@@ -50,6 +50,9 @@ interface GameState {
 
   // Battle state
   battleRequested: boolean;
+
+  // Pixel mode - toggles entire world to pixel art style
+  isPixelMode: boolean;
 }
 
 // Initial collectibles - positioned on walkable grass/path tiles
@@ -95,6 +98,7 @@ const initialState: GameState = {
   showMinimap: true,
   showMenu: false,
   battleRequested: false,
+  isPixelMode: false,
 };
 
 // Action types
@@ -118,7 +122,8 @@ type GameAction =
   | { type: 'ENTER_BUILDING'; mapId: MapId; spawnPosition: Position }
   | { type: 'EXIT_BUILDING' }
   | { type: 'REQUEST_BATTLE' }
-  | { type: 'CLEAR_BATTLE_REQUEST' };
+  | { type: 'CLEAR_BATTLE_REQUEST' }
+  | { type: 'TOGGLE_PIXEL_MODE' };
 
 // Reducer
 function gameReducer(state: GameState, action: GameAction): GameState {
@@ -243,6 +248,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     case 'CLEAR_BATTLE_REQUEST':
       return { ...state, battleRequested: false };
 
+    case 'TOGGLE_PIXEL_MODE':
+      return { ...state, isPixelMode: !state.isPixelMode };
+
     default:
       return state;
   }
@@ -267,6 +275,7 @@ interface PokemonGameContextType {
   exitBuilding: () => void;
   requestBattle: () => void;
   clearBattleRequest: () => void;
+  togglePixelMode: () => void;
 
   // Portfolio data (passed from parent)
   projects: Project[];
@@ -352,6 +361,10 @@ export function PokemonGameProvider({
     dispatch({ type: 'CLEAR_BATTLE_REQUEST' });
   }, []);
 
+  const togglePixelMode = useCallback(() => {
+    dispatch({ type: 'TOGGLE_PIXEL_MODE' });
+  }, []);
+
   const value: PokemonGameContextType = {
     state,
     dispatch,
@@ -368,6 +381,7 @@ export function PokemonGameProvider({
     exitBuilding,
     requestBattle,
     clearBattleRequest,
+    togglePixelMode,
     projects,
     skills,
     timelineEvents,
