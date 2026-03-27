@@ -81,7 +81,7 @@ export const Hero: React.FC = () => {
       <div className="absolute inset-0 z-20">
         {/* Bottom Right - Last Name - slides left on scroll */}
         <div
-          className="absolute bottom-4 sm:bottom-0 md:bottom-8 right-4 sm:right-6 md:right-16 pointer-events-none will-change-transform"
+          className="absolute bottom-[25%] sm:bottom-0 md:bottom-8 right-4 sm:right-6 md:right-16 pointer-events-none will-change-transform"
           style={{ transform: `translateX(-${slideAmount}px)` }}
         >
           <h2 className="text-[25vw] sm:text-[20vw] md:text-[15vw] font-bold text-white/50 tracking-tight leading-none">

@@ -60,13 +60,16 @@ export const Timeline: React.FC = () => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && !isVisible) {
             setIsVisible(true);
-            // Animate items from past to present (reverse order: last to first)
             const totalItems = events.length;
+            // Check if mobile (sm breakpoint is 640px)
+            const isMobile = window.innerWidth < 640;
+
             events.forEach((_, index) => {
-              // Reverse the order: last item (past) appears first
-              const reverseIndex = totalItems - 1 - index;
+              // On mobile: animate first to last (most recent first, which is at top)
+              // On desktop: animate last to first (past to present, right to left)
+              const animateIndex = isMobile ? index : totalItems - 1 - index;
               setTimeout(() => {
-                setAnimatedItems((prev) => [...prev, reverseIndex]);
+                setAnimatedItems((prev) => [...prev, animateIndex]);
               }, index * 400); // 400ms delay between each item
             });
           }

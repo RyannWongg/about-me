@@ -94,37 +94,53 @@ export const GameHUD: React.FC = () => {
   );
 };
 
-// Helper to determine current area
+// Helper to determine current area based on actual map layout
 function getAreaName(tileX: number, tileY: number): string {
-  // About House
-  if (tileX >= 5 && tileX <= 12 && tileY >= 3 && tileY <= 8) {
+  // About House (x:5-12, y:3-9)
+  if (tileX >= 5 && tileX <= 12 && tileY >= 3 && tileY <= 9) {
     return 'ABOUT HOUSE';
   }
-  // Timeline Area
-  if (tileX >= 28 && tileX <= 35 && tileY >= 3 && tileY <= 10) {
-    return 'TIMELINE PATH';
+  // Timeline/Statue Area (x:27-36, y:3-9)
+  if (tileX >= 27 && tileX <= 36 && tileY >= 3 && tileY <= 9) {
+    return 'CAREER STATUES';
   }
-  // Projects Building
-  if (tileX >= 5 && tileX <= 15 && tileY >= 20 && tileY <= 26) {
-    return 'PROJECTS BUILDING';
+  // Projects Building (x:7-15, y:18-22)
+  if (tileX >= 7 && tileX <= 15 && tileY >= 18 && tileY <= 22) {
+    return 'PROJECTS GALLERY';
   }
-  // Skills Lab
-  if (tileX >= 25 && tileX <= 35 && tileY >= 20 && tileY <= 26) {
+  // Skills Lab (x:25-33, y:18-22)
+  if (tileX >= 25 && tileX <= 33 && tileY >= 18 && tileY <= 22) {
     return 'SKILLS LAB';
   }
-  // Main paths
-  if (
-    (tileX >= 18 && tileX <= 22 && tileY >= 5 && tileY <= 25) ||
-    (tileY >= 14 && tileY <= 16 && tileX >= 5 && tileX <= 35)
-  ) {
+  // Left pond area (x:2-5, y:11-19)
+  if (tileX >= 2 && tileX <= 5 && tileY >= 11 && tileY <= 19) {
+    return 'WEST POND';
+  }
+  // Right pond area (x:35-38, y:11-19)
+  if (tileX >= 35 && tileX <= 38 && tileY >= 11 && tileY <= 19) {
+    return 'EAST POND';
+  }
+  // Main vertical path (x:19-21)
+  if (tileX >= 19 && tileX <= 21 && tileY >= 3 && tileY <= 26) {
     return 'MAIN PATH';
   }
-  // Near water
-  if (
-    (tileX >= 2 && tileX <= 4 && tileY >= 12 && tileY <= 18) ||
-    (tileX >= 36 && tileX <= 38 && tileY >= 12 && tileY <= 18)
-  ) {
-    return 'LAKESIDE';
+  // East-west path near about (y:10)
+  if (tileY >= 9 && tileY <= 11 && tileX >= 5 && tileX <= 26) {
+    return 'NORTH PATH';
+  }
+  // Building entrance paths
+  if (tileY >= 23 && tileY <= 25) {
+    if (tileX >= 8 && tileX <= 14) return 'PROJECTS ENTRANCE';
+    if (tileX >= 26 && tileX <= 32) return 'SKILLS ENTRANCE';
+  }
+  // Southern area
+  if (tileY >= 24 && tileY <= 28) {
+    return 'SOUTH FIELD';
+  }
+  // Northern corners
+  if (tileY <= 5) {
+    if (tileX <= 4) return 'NW CORNER';
+    if (tileX >= 37) return 'NE CORNER';
   }
 
   return 'OPEN FIELD';

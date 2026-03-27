@@ -127,6 +127,32 @@ const TILE_WALL_POKECENTER = 93;    // Pokemon Center red/white wall
 const TILE_EXHIBIT_FRAME = 94;      // About: Picture frame display
 const TILE_EXHIBIT_MONITOR = 95;    // Projects: Monitor/screen display
 const TILE_EXHIBIT_ORB = 96;        // Skills: Glowing skill orb
+// Career Log statue tiles (2 wide x 3 tall each)
+// Education statue (2022)
+const TILE_STATUE_EDU_TL = 97;      // Top-left
+const TILE_STATUE_EDU_TR = 98;      // Top-right
+const TILE_STATUE_EDU_ML = 99;      // Middle-left
+const TILE_STATUE_EDU_MR = 100;     // Middle-right
+const TILE_STATUE_EDU_BL = 101;     // Bottom-left (pedestal)
+const TILE_STATUE_EDU_BR = 102;     // Bottom-right (pedestal)
+// Work statue (2025)
+const TILE_STATUE_WORK_TL = 103;
+const TILE_STATUE_WORK_TR = 104;
+const TILE_STATUE_WORK_ML = 105;
+const TILE_STATUE_WORK_MR = 106;
+const TILE_STATUE_WORK_BL = 107;
+const TILE_STATUE_WORK_BR = 108;
+// Web Dev statue (2020)
+const TILE_STATUE_WEB_TL = 109;
+const TILE_STATUE_WEB_TR = 110;
+const TILE_STATUE_WEB_ML = 111;
+const TILE_STATUE_WEB_MR = 112;
+const TILE_STATUE_WEB_BL = 113;
+const TILE_STATUE_WEB_BR = 114;
+// Building name signs
+const TILE_SIGN_ABOUT = 115;      // "RYAN'S HOUSE" sign
+const TILE_SIGN_PROJECTS = 116;   // "PROJECTS" sign
+const TILE_SIGN_SKILLS = 117;     // "SKILLS LAB" sign
 
 // Color palette
 const COLORS = {
@@ -263,21 +289,21 @@ interface InteractiveSign {
 const OVERWORLD_SIGNS: InteractiveSign[] = [
   {
     id: 'projects-sign',
-    position: { tileX: 8, tileY: 19 },
+    position: { tileX: 16, tileY: 21 },
     dialog: [
-      { speaker: 'Sign', text: "📁 PROJECTS BUILDING - Walk into the door to enter!", avatar: '🪧' },
+      { speaker: 'Sign', text: "📁 PROJECTS GALLERY - Walk into the door to enter!", avatar: '🪧' },
     ]
   },
   {
     id: 'skills-sign',
-    position: { tileX: 32, tileY: 19 },
+    position: { tileX: 24, tileY: 21 },
     dialog: [
       { speaker: 'Sign', text: "⚡ SKILLS LAB - Walk into the door to enter!", avatar: '🪧' },
     ]
   },
   {
     id: 'about-sign',
-    position: { tileX: 10, tileY: 9 },
+    position: { tileX: 6, tileY: 10 },
     dialog: [
       { speaker: 'Sign', text: "🏠 RYAN'S HOUSE - Walk into the door to enter!", avatar: '🪧' },
     ]
@@ -293,8 +319,8 @@ interface TimelineMonument {
 
 const TIMELINE_MONUMENTS: TimelineMonument[] = [
   {
-    id: 'timeline-1',
-    position: { tileX: 29, tileY: 5 },
+    id: 'timeline-edu-l',
+    position: { tileX: 28, tileY: 7 },
     year: '2022',
     dialog: [
       { speaker: '📜 2022 - Present', text: "Bachelor of Arts & Science at UofT", avatar: '🎓' },
@@ -302,16 +328,41 @@ const TIMELINE_MONUMENTS: TimelineMonument[] = [
     ]
   },
   {
-    id: 'timeline-2',
-    position: { tileX: 32, tileY: 5 },
+    id: 'timeline-edu-r',
+    position: { tileX: 29, tileY: 7 },
+    year: '2022',
+    dialog: [
+      { speaker: '📜 2022 - Present', text: "Bachelor of Arts & Science at UofT", avatar: '🎓' },
+      { speaker: '📜 Focus', text: "Math/Stats Specialist, CS Major", avatar: '🎓' },
+    ]
+  },
+  {
+    id: 'timeline-work-l',
+    position: { tileX: 31, tileY: 7 },
     year: '2025',
     dialog: [
       { speaker: '📜 2025', text: "IT Support & Software Testing at SJM Macau", avatar: '💼' },
     ]
   },
   {
-    id: 'timeline-3',
-    position: { tileX: 35, tileY: 5 },
+    id: 'timeline-work-r',
+    position: { tileX: 32, tileY: 7 },
+    year: '2025',
+    dialog: [
+      { speaker: '📜 2025', text: "IT Support & Software Testing at SJM Macau", avatar: '💼' },
+    ]
+  },
+  {
+    id: 'timeline-web-l',
+    position: { tileX: 34, tileY: 7 },
+    year: '2020',
+    dialog: [
+      { speaker: '📜 2020-2021', text: "Website Developer - iGEM Research Portal", avatar: '🌐' },
+    ]
+  },
+  {
+    id: 'timeline-web-r',
+    position: { tileX: 35, tileY: 7 },
     year: '2020',
     dialog: [
       { speaker: '📜 2020-2021', text: "Website Developer - iGEM Research Portal", avatar: '🌐' },
@@ -429,8 +480,8 @@ function generateOverworldMap(): number[][] {
   // Each pine occupies: (x,y), (x,y+1)
   const tallPinePositions = [
     // Left side (between water and buildings)
-    { x: 3, y: 9 },
-    { x: 3, y: 24 },
+    { x: 1, y: 6 },
+    { x: 1, y: 24 },
     // Right side
     { x: 37, y: 3 },
     { x: 37, y: 24 },
@@ -516,9 +567,30 @@ function generateOverworldMap(): number[][] {
           else row.push(TILE_GRASS);
         }
         else row.push(TILE_WALL_CREAM);
-      // ========== MONUMENT AREA (Top-right) ==========
-      } else if (x >= 27 && x <= 37 && y >= 3 && y <= 8) {
-        if (y === 5 && (x === 29 || x === 32 || x === 35)) row.push(TILE_MONUMENT);
+      // ========== CAREER LOG STATUES (Top-right) ==========
+      } else if (x >= 27 && x <= 37 && y >= 3 && y <= 10) {
+        // Three 2x3 statues representing career milestones
+        // Education statue (x:28-29, y:5-7)
+        if (x === 28 && y === 5) row.push(TILE_STATUE_EDU_TL);
+        else if (x === 29 && y === 5) row.push(TILE_STATUE_EDU_TR);
+        else if (x === 28 && y === 6) row.push(TILE_STATUE_EDU_ML);
+        else if (x === 29 && y === 6) row.push(TILE_STATUE_EDU_MR);
+        else if (x === 28 && y === 7) row.push(TILE_STATUE_EDU_BL);
+        else if (x === 29 && y === 7) row.push(TILE_STATUE_EDU_BR);
+        // Work statue (x:31-32, y:5-7)
+        else if (x === 31 && y === 5) row.push(TILE_STATUE_WORK_TL);
+        else if (x === 32 && y === 5) row.push(TILE_STATUE_WORK_TR);
+        else if (x === 31 && y === 6) row.push(TILE_STATUE_WORK_ML);
+        else if (x === 32 && y === 6) row.push(TILE_STATUE_WORK_MR);
+        else if (x === 31 && y === 7) row.push(TILE_STATUE_WORK_BL);
+        else if (x === 32 && y === 7) row.push(TILE_STATUE_WORK_BR);
+        // Web Dev statue (x:34-35, y:5-7)
+        else if (x === 34 && y === 5) row.push(TILE_STATUE_WEB_TL);
+        else if (x === 35 && y === 5) row.push(TILE_STATUE_WEB_TR);
+        else if (x === 34 && y === 6) row.push(TILE_STATUE_WEB_ML);
+        else if (x === 35 && y === 6) row.push(TILE_STATUE_WEB_MR);
+        else if (x === 34 && y === 7) row.push(TILE_STATUE_WEB_BL);
+        else if (x === 35 && y === 7) row.push(TILE_STATUE_WEB_BR);
         else row.push(TILE_PATH);
       // ========== PROJECTS BUILDING (Bottom-left, brick style) ==========
       // Building spans x:7-15, y:18-22 (narrower to avoid pond)
@@ -585,13 +657,16 @@ function generateOverworldMap(): number[][] {
           else row.push(TILE_GRASS);
         }
         else row.push(TILE_WALL_STONE);
-      // Signs near buildings
-      } else if (
-        (x === 6 && y === 10) ||   // About building sign
-        (x === 8 && y === 23) ||   // Projects building sign (on path to entrance)
-        (x === 32 && y === 23)     // Skills building sign (on path to entrance)
-      ) {
-        row.push(TILE_SIGN);
+      // Building name signs on grass (outside building boundaries)
+      } else if (x === 6 && y === 10) {
+        // About house sign - on grass near path
+        row.push(TILE_SIGN_ABOUT);
+      } else if (x === 16 && y === 21) {
+        // Projects building sign - on grass above path
+        row.push(TILE_SIGN_PROJECTS);
+      } else if (x === 24 && y === 21) {
+        // Skills lab sign - on grass above path
+        row.push(TILE_SIGN_SKILLS);
       // Left pond with natural borders (x: 2-5, y: 11-19)
       } else if (x === 2 && y === 11) {
         row.push(TILE_WATER_CORNER_TL);
@@ -640,6 +715,43 @@ function generateOverworldMap(): number[][] {
         } else {
           row.push(TILE_WATER);
         }
+      // ========== SOUTH GARDEN (x:8-15, y:25-28) ==========
+      // Fence border
+      } else if (
+        // Top fence row
+        (y === 25 && x >= 8 && x <= 15) ||
+        // Bottom fence row
+        (y === 28 && x >= 8 && x <= 15) ||
+        // Left fence column
+        (x === 8 && y >= 25 && y <= 28) ||
+        // Right fence column
+        (x === 15 && y >= 25 && y <= 28)
+      ) {
+        row.push(TILE_FENCE);
+      // Garden interior - flowers and bushes pattern
+      } else if (x >= 9 && x <= 14 && y >= 26 && y <= 27) {
+        // Create a nice garden pattern
+        // Row 26: flowers
+        if (y === 26) {
+          if (x === 9) row.push(TILE_RED_FLOWER);
+          else if (x === 10) row.push(TILE_WHITE_FLOWER);
+          else if (x === 11) row.push(TILE_FLOWER);
+          else if (x === 12) row.push(TILE_WHITE_FLOWER);
+          else if (x === 13) row.push(TILE_RED_FLOWER);
+          else if (x === 14) row.push(TILE_FLOWER);
+          else row.push(TILE_GRASS);
+        }
+        // Row 27: bushes and flowers mixed
+        else if (y === 27) {
+          if (x === 9) row.push(TILE_GREEN_BUSH);
+          else if (x === 10) row.push(TILE_FLOWER);
+          else if (x === 11) row.push(TILE_BUSH_BERRIES);
+          else if (x === 12) row.push(TILE_FLOWER);
+          else if (x === 13) row.push(TILE_GREEN_BUSH);
+          else if (x === 14) row.push(TILE_BUSH_BERRIES);
+          else row.push(TILE_GRASS);
+        }
+        else row.push(TILE_GRASS);
       // Berry bushes - near buildings
       } else if (
         // Near about building (x:5-12, y:3-9)
@@ -668,8 +780,7 @@ function generateOverworldMap(): number[][] {
         (x === 24 && y === 17) || (x === 34 && y === 17) ||
         // Scattered in grass (below buildings)
         (x === 14 && y === 11) || (x === 26 && y === 11) ||
-        (x === 10 && y === 25) || (x === 30 && y === 25) ||
-        (x === 14 && y === 26) || (x === 26 && y === 26)
+        (x === 30 && y === 25) || (x === 26 && y === 26)
       ) {
         row.push(TILE_GREEN_BUSH);
       // Red flowers - near paths and ponds
@@ -1163,12 +1274,18 @@ export const PokemonCanvas: React.FC = () => {
             ctx.fillRect(x + tuftX + px, y + tuftY - px * 2, px, px);
           }
         } else {
-          ctx.fillStyle = COLORS.grass;
+          // Classic 8-bit grass
+          const px = 3;
+          ctx.fillStyle = '#58c858';
           ctx.fillRect(x, y, size, size);
-          ctx.fillStyle = COLORS.grassDark;
-          const seed = (tileX * 7 + tileY * 13) % 5;
-          for (let i = 0; i < seed; i++) {
-            ctx.fillRect(x + ((tileX * 17 + i * 23) % size), y + ((tileY * 19 + i * 29) % size), 2, 4);
+          // Occasional grass tufts
+          const hasTuft = (tileX * 13 + tileY * 17) % 10 < 2;
+          if (hasTuft) {
+            ctx.fillStyle = '#38a838';
+            const tuftX = ((tileX * 7 + tileY * 11) % 8) * px + px * 3;
+            ctx.fillRect(x + tuftX, y + px * 6, px, px * 3);
+            ctx.fillRect(x + tuftX + px, y + px * 5, px, px * 4);
+            ctx.fillRect(x + tuftX + px * 2, y + px * 7, px, px * 2);
           }
         }
         break;
@@ -1182,7 +1299,11 @@ export const PokemonCanvas: React.FC = () => {
           const isPathTile = (tx: number, ty: number): boolean => {
             if (!map || ty < 0 || ty >= map.length || tx < 0 || tx >= map[0].length) return false;
             const t = map[ty][tx];
-            return t === TILE_PATH || t === TILE_DOOR || t === TILE_PORTAL;
+            // Path, door, portal, and statue tiles
+            if (t === TILE_PATH || t === TILE_DOOR || t === TILE_PORTAL || t === TILE_MONUMENT) return true;
+            // All statue tiles
+            if (t >= TILE_STATUE_EDU_TL && t <= TILE_STATUE_WEB_BR) return true;
+            return false;
           };
 
           // Check adjacent tiles for edge detection
@@ -1250,11 +1371,18 @@ export const PokemonCanvas: React.FC = () => {
             }
           }
         } else {
-          ctx.fillStyle = COLORS.path;
+          // Classic 8-bit path
+          const px = 3;
+          ctx.fillStyle = '#d0a050';
           ctx.fillRect(x, y, size, size);
-          ctx.fillStyle = COLORS.pathDark;
-          ctx.fillRect(x + 4, y + 4, 6, 6);
-          ctx.fillRect(x + size - 12, y + size - 12, 6, 6);
+          // Sandy texture spots
+          ctx.fillStyle = '#c09040';
+          ctx.fillRect(x + px * 3, y + px * 3, px * 2, px * 2);
+          ctx.fillRect(x + px * 9, y + px * 8, px * 2, px * 2);
+          // Light highlights
+          ctx.fillStyle = '#e0c070';
+          ctx.fillRect(x + px * 6, y + px * 5, px, px);
+          ctx.fillRect(x + px * 11, y + px * 3, px, px);
         }
         break;
       case TILE_WATER:
@@ -1283,8 +1411,18 @@ export const PokemonCanvas: React.FC = () => {
             ctx.fillRect(x + 27, y + waveY2 - px, px * 2, px);
           }
         } else {
-          ctx.fillStyle = COLORS.water;
+          // Classic 8-bit water
+          const px = 3;
+          ctx.fillStyle = '#4080c0';
           ctx.fillRect(x, y, size, size);
+          // Wave lines
+          ctx.fillStyle = '#3068a0';
+          ctx.fillRect(x + px * 2, y + px * 4, px * 4, px);
+          ctx.fillRect(x + px * 8, y + px * 10, px * 5, px);
+          // Highlights
+          ctx.fillStyle = '#60a0e0';
+          ctx.fillRect(x + px * 3, y + px * 3, px * 2, px);
+          ctx.fillRect(x + px * 10, y + px * 8, px * 2, px);
         }
         break;
 
@@ -1348,8 +1486,21 @@ export const PokemonCanvas: React.FC = () => {
             ctx.fillRect(x + size - edgeSize - px * 2, y + size - edgeSize - px * 2, px * 2, px * 2);
           }
         } else {
-          ctx.fillStyle = COLORS.water;
+          // Classic 8-bit water edge
+          const px = 3;
+          ctx.fillStyle = '#4080c0';
           ctx.fillRect(x, y, size, size);
+          // Grass edge based on tile type
+          ctx.fillStyle = '#58c858';
+          const edge = px * 4;
+          if (tile === TILE_WATER_EDGE_T) ctx.fillRect(x, y, size, edge);
+          else if (tile === TILE_WATER_EDGE_B) ctx.fillRect(x, y + size - edge, size, edge);
+          else if (tile === TILE_WATER_EDGE_L) ctx.fillRect(x, y, edge, size);
+          else if (tile === TILE_WATER_EDGE_R) ctx.fillRect(x + size - edge, y, edge, size);
+          else if (tile === TILE_WATER_CORNER_TL) { ctx.fillRect(x, y, size, edge); ctx.fillRect(x, y, edge, size); }
+          else if (tile === TILE_WATER_CORNER_TR) { ctx.fillRect(x, y, size, edge); ctx.fillRect(x + size - edge, y, edge, size); }
+          else if (tile === TILE_WATER_CORNER_BL) { ctx.fillRect(x, y + size - edge, size, edge); ctx.fillRect(x, y, edge, size); }
+          else if (tile === TILE_WATER_CORNER_BR) { ctx.fillRect(x, y + size - edge, size, edge); ctx.fillRect(x + size - edge, y, edge, size); }
         }
         break;
 
@@ -1378,8 +1529,16 @@ export const PokemonCanvas: React.FC = () => {
           ctx.fillStyle = '#3da85e';
           ctx.fillRect(x + 15, y + 18, px * 2, px * 2);
         } else {
-          ctx.fillStyle = COLORS.water;
+          // Classic 8-bit lilypad
+          const px = 3;
+          ctx.fillStyle = '#4080c0';
           ctx.fillRect(x, y, size, size);
+          // Lily pad
+          ctx.fillStyle = '#28a048';
+          ctx.fillRect(x + px * 4, y + px * 5, px * 8, px * 6);
+          // Notch
+          ctx.fillStyle = '#4080c0';
+          ctx.fillRect(x + px * 7, y + px * 5, px * 2, px * 3);
         }
         break;
 
@@ -1417,8 +1576,25 @@ export const PokemonCanvas: React.FC = () => {
           ctx.fillRect(x + 15, y + 36, px * 2, px * 2);
           ctx.fillRect(x + 27, y + 39, px * 2, px * 2);
         } else {
-          ctx.fillStyle = COLORS.grass;
+          // Classic 8-bit red flower
+          const px = 3;
+          // Grass background
+          ctx.fillStyle = '#58c858';
           ctx.fillRect(x, y, size, size);
+          // Red petals - cross pattern
+          ctx.fillStyle = '#e03030';
+          ctx.fillRect(x + px * 6, y + px * 5, px * 4, px * 2);
+          ctx.fillRect(x + px * 7, y + px * 4, px * 2, px * 4);
+          // Yellow center
+          ctx.fillStyle = '#f8d830';
+          ctx.fillRect(x + px * 7, y + px * 5, px * 2, px * 2);
+          // Green stem
+          ctx.fillStyle = '#30a030';
+          ctx.fillRect(x + px * 7, y + px * 8, px * 2, px * 5);
+          // Leaves
+          ctx.fillStyle = '#209020';
+          ctx.fillRect(x + px * 5, y + px * 10, px * 2, px);
+          ctx.fillRect(x + px * 9, y + px * 11, px * 2, px);
         }
         break;
 
@@ -1456,8 +1632,22 @@ export const PokemonCanvas: React.FC = () => {
           ctx.fillRect(x + 24, y + 21, px, px);
           ctx.fillRect(x + 18, y + 27, px, px);
         } else {
-          ctx.fillStyle = COLORS.grass;
+          // Classic 8-bit berry bush
+          const px = 3;
+          // Grass background
+          ctx.fillStyle = '#58c858';
           ctx.fillRect(x, y, size, size);
+          // Bush body - dark
+          ctx.fillStyle = '#186028';
+          ctx.fillRect(x + px * 3, y + px * 5, px * 10, px * 8);
+          // Bush body - main
+          ctx.fillStyle = '#28a048';
+          ctx.fillRect(x + px * 4, y + px * 5, px * 8, px * 7);
+          // Red berries
+          ctx.fillStyle = '#e03030';
+          ctx.fillRect(x + px * 5, y + px * 6, px * 2, px * 2);
+          ctx.fillRect(x + px * 9, y + px * 7, px * 2, px * 2);
+          ctx.fillRect(x + px * 6, y + px * 10, px * 2, px * 2);
         }
         break;
 
@@ -1504,8 +1694,24 @@ export const PokemonCanvas: React.FC = () => {
           // Leaf
           ctx.fillRect(x + 15, y + 39, px * 2, px * 2);
         } else {
-          ctx.fillStyle = COLORS.grass;
+          // Classic 8-bit white flower
+          const px = 3;
+          // Grass background
+          ctx.fillStyle = '#58c858';
           ctx.fillRect(x, y, size, size);
+          // White petals - cross pattern
+          ctx.fillStyle = '#f8f8f8';
+          ctx.fillRect(x + px * 6, y + px * 5, px * 4, px * 2);
+          ctx.fillRect(x + px * 7, y + px * 4, px * 2, px * 4);
+          // Yellow center
+          ctx.fillStyle = '#f8d830';
+          ctx.fillRect(x + px * 7, y + px * 5, px * 2, px * 2);
+          // Green stem
+          ctx.fillStyle = '#30a030';
+          ctx.fillRect(x + px * 7, y + px * 8, px * 2, px * 5);
+          // Leaf
+          ctx.fillStyle = '#209020';
+          ctx.fillRect(x + px * 5, y + px * 10, px * 2, px);
         }
         break;
 
@@ -1539,8 +1745,22 @@ export const PokemonCanvas: React.FC = () => {
           ctx.fillStyle = '#1b5e20';
           ctx.fillRect(x + 12, y + 33, px * 5, px);
         } else {
-          ctx.fillStyle = COLORS.grass;
+          // Classic 8-bit green bush
+          const px = 3;
+          // Grass background
+          ctx.fillStyle = '#58c858';
           ctx.fillRect(x, y, size, size);
+          // Bush - dark outline
+          ctx.fillStyle = '#186028';
+          ctx.fillRect(x + px * 4, y + px * 5, px * 8, px * 8);
+          ctx.fillRect(x + px * 3, y + px * 6, px * 10, px * 6);
+          // Bush - main fill
+          ctx.fillStyle = '#28a048';
+          ctx.fillRect(x + px * 4, y + px * 6, px * 8, px * 6);
+          ctx.fillRect(x + px * 5, y + px * 5, px * 6, px * 8);
+          // Highlight
+          ctx.fillStyle = '#58d858';
+          ctx.fillRect(x + px * 5, y + px * 6, px * 3, px * 2);
         }
         break;
 
@@ -1654,8 +1874,26 @@ export const PokemonCanvas: React.FC = () => {
           ctx.fillRect(x + px * 3, y + px, px * 2, px);
           ctx.fillRect(x + px * 8, y + px * 4, px, px);
         } else {
-          ctx.fillStyle = '#d4652a';
+          // Classic 8-bit orange roof - 3 colors
+          const px = 3;
+          const roofDark = '#a04010';
+          const roofMain = '#d86030';
+          const roofLight = '#f89858';
+
+          // Main fill
+          ctx.fillStyle = roofMain;
           ctx.fillRect(x, y, size, size);
+          // Row separations (dark)
+          ctx.fillStyle = roofDark;
+          for (let row = 0; row < 5; row++) {
+            ctx.fillRect(x, y + row * px * 3 + px * 2, size, px);
+          }
+          // Highlights
+          ctx.fillStyle = roofLight;
+          for (let row = 0; row < 5; row++) {
+            ctx.fillRect(x + px * 2, y + row * px * 3, px * 4, px);
+            ctx.fillRect(x + px * 10, y + row * px * 3, px * 3, px);
+          }
         }
         break;
 
@@ -1716,8 +1954,25 @@ export const PokemonCanvas: React.FC = () => {
           ctx.fillStyle = 'rgba(220, 220, 220, 0.3)';
           ctx.fillRect(x + px * 3 + smokeOffset2, y - px * 8, px * 4, px * 3);
         } else {
-          ctx.fillStyle = '#8b4513';
+          // Classic 8-bit chimney on roof
+          const px = 3;
+          // Roof background
+          ctx.fillStyle = '#d86030';
           ctx.fillRect(x, y, size, size);
+          // Roof row lines
+          ctx.fillStyle = '#a04010';
+          for (let row = 0; row < 5; row++) {
+            ctx.fillRect(x, y + row * px * 3 + px * 2, size, px);
+          }
+          // Chimney - dark outline
+          ctx.fillStyle = '#4a2810';
+          ctx.fillRect(x + px * 4, y, px * 6, px * 10);
+          // Chimney - main
+          ctx.fillStyle = '#6a4020';
+          ctx.fillRect(x + px * 5, y, px * 4, px * 9);
+          // Chimney - highlight
+          ctx.fillStyle = '#8a5830';
+          ctx.fillRect(x + px * 5, y + px, px * 2, px * 3);
         }
         break;
 
@@ -1756,8 +2011,19 @@ export const PokemonCanvas: React.FC = () => {
           ctx.fillRect(x + px * 3, y + px * 6, px * 4, px * 2);
           ctx.fillRect(x + px * 8, y + px * 10, px * 3, px * 2);
         } else {
-          ctx.fillStyle = '#f5deb3';
+          // Classic 8-bit cream wall
+          const px = 3;
+          // Main fill
+          ctx.fillStyle = '#f0d898';
           ctx.fillRect(x, y, size, size);
+          // Horizontal siding
+          ctx.fillStyle = '#d8c080';
+          for (let i = 0; i < 5; i++) {
+            ctx.fillRect(x, y + i * px * 3 + px * 2, size, px);
+          }
+          // Highlight
+          ctx.fillStyle = '#f8e8b0';
+          ctx.fillRect(x, y + px, size, px);
         }
         break;
 
@@ -1807,8 +2073,29 @@ export const PokemonCanvas: React.FC = () => {
           ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
           ctx.fillRect(x + px * 10, y + px * 5, px, px);
         } else {
-          ctx.fillStyle = '#4a90d9';
+          // Classic 8-bit window on cream wall
+          const px = 3;
+          // Wall background
+          ctx.fillStyle = '#f0d898';
           ctx.fillRect(x, y, size, size);
+          // Siding lines
+          ctx.fillStyle = '#d8c080';
+          for (let i = 0; i < 5; i++) {
+            ctx.fillRect(x, y + i * px * 3 + px * 2, size, px);
+          }
+          // Window frame - dark
+          ctx.fillStyle = '#183058';
+          ctx.fillRect(x + px * 3, y + px * 3, px * 10, px * 10);
+          // Glass - main
+          ctx.fillStyle = '#5090d0';
+          ctx.fillRect(x + px * 4, y + px * 4, px * 8, px * 8);
+          // Cross frame
+          ctx.fillStyle = '#183058';
+          ctx.fillRect(x + px * 7, y + px * 4, px * 2, px * 8);
+          ctx.fillRect(x + px * 4, y + px * 7, px * 8, px * 2);
+          // Highlight
+          ctx.fillStyle = '#80c0f0';
+          ctx.fillRect(x + px * 5, y + px * 5, px * 2, px);
         }
         break;
 
@@ -1883,8 +2170,27 @@ export const PokemonCanvas: React.FC = () => {
           ctx.fillRect(x + px * 4, y + px * 6, px, px);
           ctx.fillRect(x + px * 7, y + px * 5, px, px);
         } else {
-          ctx.fillStyle = '#f5deb3';
+          // Classic 8-bit flower box
+          const px = 3;
+          // Wall background
+          ctx.fillStyle = '#f0d898';
           ctx.fillRect(x, y, size, size);
+          // Window frame
+          ctx.fillStyle = '#183058';
+          ctx.fillRect(x + px * 3, y + px * 2, px * 10, px * 6);
+          // Glass
+          ctx.fillStyle = '#5090d0';
+          ctx.fillRect(x + px * 4, y + px * 3, px * 8, px * 4);
+          // Flower box
+          ctx.fillStyle = '#6a4020';
+          ctx.fillRect(x + px * 2, y + px * 9, px * 12, px * 4);
+          // Flowers - red
+          ctx.fillStyle = '#e03030';
+          ctx.fillRect(x + px * 4, y + px * 7, px * 2, px * 2);
+          ctx.fillRect(x + px * 10, y + px * 7, px * 2, px * 2);
+          // Flowers - yellow
+          ctx.fillStyle = '#f0c020';
+          ctx.fillRect(x + px * 7, y + px * 6, px * 2, px * 2);
         }
         break;
 
@@ -1938,8 +2244,20 @@ export const PokemonCanvas: React.FC = () => {
           ctx.fillStyle = plankColors.mid;
           ctx.fillRect(x, y + size - px * 3, size, px);
         } else {
-          ctx.fillStyle = '#8b7355';
+          // Classic 8-bit porch - wooden planks
+          const px = 3;
+          // Main plank color
+          ctx.fillStyle = '#a07050';
           ctx.fillRect(x, y, size, size);
+          // Plank separations
+          ctx.fillStyle = '#705030';
+          for (let i = 0; i < 5; i++) {
+            ctx.fillRect(x, y + i * px * 3 + px * 2, size, px);
+          }
+          // Highlight
+          ctx.fillStyle = '#c09070';
+          ctx.fillRect(x + px * 2, y + px, px * 4, px);
+          ctx.fillRect(x + px * 8, y + px * 4, px * 3, px);
         }
         break;
 
@@ -1983,8 +2301,26 @@ export const PokemonCanvas: React.FC = () => {
           ctx.fillStyle = '#4080c0';
           ctx.fillRect(x + px * 3, y + px * 2, px * 2, px);
         } else {
-          ctx.fillStyle = '#2c5aa0';
+          // Classic 8-bit blue roof - 3 colors
+          const px = 3;
+          const blueDark = '#183868';
+          const blueMain = '#3068a8';
+          const blueLight = '#5898d8';
+
+          // Main fill
+          ctx.fillStyle = blueMain;
           ctx.fillRect(x, y, size, size);
+          // Row separations (dark)
+          ctx.fillStyle = blueDark;
+          for (let row = 0; row < 5; row++) {
+            ctx.fillRect(x, y + row * px * 3 + px * 2, size, px);
+          }
+          // Highlights
+          ctx.fillStyle = blueLight;
+          for (let row = 0; row < 5; row++) {
+            ctx.fillRect(x + px * 2, y + row * px * 3, px * 4, px);
+            ctx.fillRect(x + px * 10, y + row * px * 3, px * 3, px);
+          }
         }
         break;
 
@@ -2016,8 +2352,23 @@ export const PokemonCanvas: React.FC = () => {
           ctx.fillRect(x + px * 2, y + px * 4, px * 3, px * 2);
           ctx.fillRect(x + px * 8, y + px * 10, px * 4, px * 2);
         } else {
-          ctx.fillStyle = '#b5503c';
+          // Classic 8-bit brick wall - 3 colors
+          const px = 3;
+          // Main brick color
+          ctx.fillStyle = '#c04030';
           ctx.fillRect(x, y, size, size);
+          // Mortar lines
+          ctx.fillStyle = '#e8d8c8';
+          for (let row = 0; row < 5; row++) {
+            ctx.fillRect(x, y + row * px * 3 + px * 2, size, px);
+          }
+          ctx.fillRect(x + px * 4, y, px, size);
+          ctx.fillRect(x + px * 10, y, px, size);
+          // Brick highlights
+          ctx.fillStyle = '#d05040';
+          ctx.fillRect(x + px * 1, y + px, px * 2, px);
+          ctx.fillRect(x + px * 6, y + px * 4, px * 2, px);
+          ctx.fillRect(x + px * 12, y + px * 7, px * 2, px);
         }
         break;
 
@@ -2063,8 +2414,29 @@ export const PokemonCanvas: React.FC = () => {
           ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
           ctx.fillRect(x + px * 5, y + px * 5, px * 2, px);
         } else {
-          ctx.fillStyle = '#5a9fe9';
+          // Classic 8-bit window on brick
+          const px = 3;
+          // Brick background
+          ctx.fillStyle = '#c04030';
           ctx.fillRect(x, y, size, size);
+          // Mortar
+          ctx.fillStyle = '#e8d8c8';
+          for (let row = 0; row < 5; row++) {
+            ctx.fillRect(x, y + row * px * 3 + px * 2, size, px);
+          }
+          // Window frame - dark
+          ctx.fillStyle = '#183058';
+          ctx.fillRect(x + px * 3, y + px * 3, px * 10, px * 10);
+          // Glass - main
+          ctx.fillStyle = '#5090d0';
+          ctx.fillRect(x + px * 4, y + px * 4, px * 8, px * 8);
+          // Cross frame
+          ctx.fillStyle = '#183058';
+          ctx.fillRect(x + px * 7, y + px * 4, px * 2, px * 8);
+          ctx.fillRect(x + px * 4, y + px * 7, px * 8, px * 2);
+          // Highlight
+          ctx.fillStyle = '#80c0f0';
+          ctx.fillRect(x + px * 5, y + px * 5, px * 2, px);
         }
         break;
 
@@ -2333,8 +2705,26 @@ export const PokemonCanvas: React.FC = () => {
           ctx.fillStyle = '#8b5a2b';
           ctx.fillRect(x + px * 4, y + px * 3, px * 2, px);
         } else {
-          ctx.fillStyle = '#6b4423';
+          // Classic 8-bit brown roof - 3 colors
+          const px = 3;
+          const brownDark = '#4a3018';
+          const brownMain = '#6b4423';
+          const brownLight = '#8b5a33';
+
+          // Main fill
+          ctx.fillStyle = brownMain;
           ctx.fillRect(x, y, size, size);
+          // Row separations (dark)
+          ctx.fillStyle = brownDark;
+          for (let row = 0; row < 5; row++) {
+            ctx.fillRect(x, y + row * px * 3 + px * 2, size, px);
+          }
+          // Highlights
+          ctx.fillStyle = brownLight;
+          for (let row = 0; row < 5; row++) {
+            ctx.fillRect(x + px * 2, y + row * px * 3, px * 4, px);
+            ctx.fillRect(x + px * 10, y + row * px * 3, px * 3, px);
+          }
         }
         break;
 
@@ -3051,6 +3441,970 @@ export const PokemonCanvas: React.FC = () => {
           }
         }
         break;
+
+      // ========== CAREER LOG STATUES ==========
+      // Education Statue (2022) - Scholar with graduation cap
+      case TILE_STATUE_EDU_TL:
+      case TILE_STATUE_EDU_TR:
+      case TILE_STATUE_EDU_ML:
+      case TILE_STATUE_EDU_MR:
+      case TILE_STATUE_EDU_BL:
+      case TILE_STATUE_EDU_BR:
+        {
+          // Education statue - Graduate with cap, seated like reference
+          const px = 3;
+          const isLeft = tile === TILE_STATUE_EDU_TL || tile === TILE_STATUE_EDU_ML || tile === TILE_STATUE_EDU_BL;
+          const isTop = tile === TILE_STATUE_EDU_TL || tile === TILE_STATUE_EDU_TR;
+          const isMid = tile === TILE_STATUE_EDU_ML || tile === TILE_STATUE_EDU_MR;
+          const isBot = tile === TILE_STATUE_EDU_BL || tile === TILE_STATUE_EDU_BR;
+
+          // Background
+          ctx.fillStyle = state.isPixelMode ? '#d4a855' : '#d0a050';
+          ctx.fillRect(x, y, size, size);
+
+          // 3D warm stone colors - light from top-left
+          const highlight = '#b8b5a8';  // brightest - top/left edges
+          const light = '#989590';
+          const mid = '#787570';
+          const dark = '#585550';
+          const shadow = '#404038';     // darkest - bottom/right edges
+          const pedHighlight = '#c0b8a8';
+          const pedLight = '#a09890';
+          const pedMid = '#807870';
+          const pedDark = '#605850';
+          const pedShadow = '#484040';
+
+          if (state.isPixelMode) {
+            if (isTop) {
+              if (isLeft) {
+                // Graduation cap - 3D with top highlight
+                ctx.fillStyle = highlight;
+                ctx.fillRect(x + px * 5, y + px * 2, px * 11, px);  // top edge highlight
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 5, y + px * 3, px * 11, px);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 6, y + px * 4, px * 10, px);  // bottom shadow
+                // Tassel with 3D
+                ctx.fillStyle = '#e8c040';
+                ctx.fillRect(x + px * 4, y + px * 3, px, px * 5);
+                ctx.fillStyle = '#a07820';
+                ctx.fillRect(x + px * 5, y + px * 4, px, px * 4);
+                // Head - 3D spherical shading
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 8, y + px * 5, px * 8, px * 6);
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 9, y + px * 5, px * 5, px * 4);
+                ctx.fillStyle = highlight;
+                ctx.fillRect(x + px * 10, y + px * 6, px * 3, px * 2);  // face highlight
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 14, y + px * 8, px * 2, px * 3);  // right shadow
+                ctx.fillRect(x + px * 9, y + px * 10, px * 6, px);      // bottom shadow
+                // Hair/cap base
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 8, y + px * 5, px * 8, px * 2);
+                // Neck - 3D cylinder
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 10, y + px * 11, px * 2, px * 3);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 12, y + px * 11, px * 2, px * 3);
+                // Shoulder - 3D curved
+                ctx.fillStyle = highlight;
+                ctx.fillRect(x + px * 6, y + px * 13, px * 10, px);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 6, y + px * 14, px * 10, px * 2);
+              } else {
+                // Graduation cap continuation - 3D
+                ctx.fillStyle = highlight;
+                ctx.fillRect(x, y + px * 2, px * 5, px);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y + px * 3, px * 5, px);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x, y + px * 4, px * 4, px);
+                // Head right - 3D with shadow side
+                ctx.fillStyle = dark;
+                ctx.fillRect(x, y + px * 5, px * 6, px * 6);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y + px * 5, px * 4, px * 5);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 5, y + px * 8, px, px * 3);  // edge shadow
+                // Hair/cap base right
+                ctx.fillStyle = dark;
+                ctx.fillRect(x, y + px * 5, px * 6, px * 2);
+                // Neck - shadow side
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 2, y + px * 11, px * 4, px * 3);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 5, y + px * 12, px, px * 2);
+                // Shoulder - shadow side
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y + px * 13, px * 10, px);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x, y + px * 14, px * 10, px * 2);
+                // Flowing robe/gown - 3D folds
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 10, y + px * 10, px * 3, px * 6);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 13, y + px * 11, px * 2, px * 5);
+              }
+            } else if (isMid) {
+              if (isLeft) {
+                // Torso in gown - 3D
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 6, y, px * 2, px * 8);  // left highlight
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 8, y, px * 6, px * 8);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 14, y + px, px * 2, px * 6);  // right shadow
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 9, y + px * 2, px * 4, px * 4);  // chest recess
+                // Left arm - 3D cylindrical
+                ctx.fillStyle = highlight;
+                ctx.fillRect(x + px * 2, y + px * 2, px, px * 5);
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 3, y + px * 2, px * 3, px * 5);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 6, y + px * 3, px, px * 4);
+                // Book - 3D
+                ctx.fillStyle = '#5a3820';
+                ctx.fillRect(x + px, y + px * 7, px * 6, px * 5);
+                ctx.fillStyle = '#8a6040';
+                ctx.fillRect(x + px, y + px * 7, px * 2, px * 4);
+                ctx.fillStyle = '#f8f0e0';
+                ctx.fillRect(x + px * 2, y + px * 8, px * 4, px * 3);
+                // Lap - 3D
+                ctx.fillStyle = highlight;
+                ctx.fillRect(x + px * 6, y + px * 8, px * 2, px * 7);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 8, y + px * 8, px * 6, px * 8);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 14, y + px * 9, px * 2, px * 6);
+              } else {
+                // Torso right - shadow side
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y, px * 8, px * 8);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 6, y + px, px * 4, px * 6);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 3, y + px * 2, px * 3, px * 4);
+                // Right arm - 3D
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 9, y + px * 2, px * 4, px * 5);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 12, y + px * 3, px * 2, px * 4);
+                // Diploma scroll - 3D
+                ctx.fillStyle = '#f8f0d8';
+                ctx.fillRect(x + px * 11, y + px * 7, px * 4, px);
+                ctx.fillStyle = '#d8d0c0';
+                ctx.fillRect(x + px * 11, y + px * 8, px * 4, px);
+                // Lap - shadow side
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y + px * 8, px * 8, px * 8);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 6, y + px * 9, px * 4, px * 6);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 3, y + px * 11, px * 4, px * 4);
+              }
+            } else if (isBot) {
+              if (isLeft) {
+                // Pedestal - 3D stepped with lighting
+                ctx.fillStyle = pedHighlight;
+                ctx.fillRect(x + px * 3, y, px * 13, px);  // top highlight
+                ctx.fillStyle = pedLight;
+                ctx.fillRect(x + px * 3, y + px, px * 13, px * 2);
+                ctx.fillStyle = pedMid;
+                ctx.fillRect(x + px * 2, y + px * 3, px * 14, px);
+                ctx.fillStyle = pedDark;
+                ctx.fillRect(x + px * 2, y + px * 4, px * 14, px * 2);
+                ctx.fillStyle = pedHighlight;
+                ctx.fillRect(x, y + px * 6, size, px);
+                ctx.fillStyle = pedMid;
+                ctx.fillRect(x, y + px * 7, size, px * 3);
+                ctx.fillStyle = pedShadow;
+                ctx.fillRect(x, y + px * 10, size, px);
+                ctx.fillStyle = pedDark;
+                ctx.fillRect(x, y + px * 11, size, px * 2);
+                // Grass
+                ctx.fillStyle = '#48a848';
+                ctx.fillRect(x, y + px * 13, size, px * 3);
+                ctx.fillStyle = '#68c868';
+                ctx.fillRect(x + px, y + px * 13, px * 3, px * 2);
+                ctx.fillRect(x + px * 8, y + px * 14, px * 4, px * 2);
+              } else {
+                // Pedestal right - shadow side
+                ctx.fillStyle = pedLight;
+                ctx.fillRect(x, y, px * 13, px);
+                ctx.fillStyle = pedMid;
+                ctx.fillRect(x, y + px, px * 13, px * 2);
+                ctx.fillStyle = pedDark;
+                ctx.fillRect(x, y + px * 3, px * 14, px * 3);
+                ctx.fillStyle = pedMid;
+                ctx.fillRect(x, y + px * 6, size, px);
+                ctx.fillStyle = pedDark;
+                ctx.fillRect(x, y + px * 7, size, px * 3);
+                ctx.fillStyle = pedShadow;
+                ctx.fillRect(x, y + px * 10, size, px * 3);
+                // Grass
+                ctx.fillStyle = '#48a848';
+                ctx.fillRect(x, y + px * 13, size, px * 3);
+                ctx.fillStyle = '#387838';
+                ctx.fillRect(x + px * 5, y + px * 13, px * 3, px * 2);
+                ctx.fillRect(x + px * 12, y + px * 14, px * 3, px * 2);
+              }
+            }
+          } else {
+            // 8-bit mode - 3D shading
+            if (isTop) {
+              if (isLeft) {
+                // Cap with 3D - top highlight
+                ctx.fillStyle = highlight;
+                ctx.fillRect(x + px * 5, y + px * 2, px * 11, px);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 5, y + px * 3, px * 11, px * 2);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 6, y + px * 5, px * 9, px);
+                // Tassel
+                ctx.fillStyle = '#e8c040';
+                ctx.fillRect(x + px * 4, y + px * 4, px, px * 4);
+                ctx.fillStyle = '#a07820';
+                ctx.fillRect(x + px * 5, y + px * 5, px, px * 3);
+                // Head - 3D
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 6, y + px * 5, px * 3, px * 10);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 9, y + px * 5, px * 5, px * 10);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 14, y + px * 6, px * 2, px * 9);
+                // Highlight on face
+                ctx.fillStyle = highlight;
+                ctx.fillRect(x + px * 7, y + px * 7, px * 2, px * 3);
+              } else {
+                // Cap continuation - shadow side
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y + px * 2, px * 5, px);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x, y + px * 3, px * 5, px * 2);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x, y + px * 5, px * 4, px);
+                // Head right - shadow side
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y + px * 5, px * 4, px * 10);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 4, y + px * 6, px * 4, px * 9);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 7, y + px * 7, px, px * 7);
+                // Flowing cloth
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 10, y + px * 8, px * 3, px * 8);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 13, y + px * 9, px * 2, px * 7);
+              }
+            } else if (isMid) {
+              if (isLeft) {
+                // Torso - 3D
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 4, y, px * 3, size);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 7, y, px * 6, size);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 13, y + px, px * 3, px * 14);
+                // Book - 3D
+                ctx.fillStyle = '#5a3820';
+                ctx.fillRect(x + px, y + px * 5, px * 6, px * 7);
+                ctx.fillStyle = '#8a6040';
+                ctx.fillRect(x + px, y + px * 5, px * 2, px * 6);
+                ctx.fillStyle = '#f0e8d0';
+                ctx.fillRect(x + px * 2, y + px * 6, px * 4, px * 5);
+              } else {
+                // Torso right - shadow side
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y, px * 6, size);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 6, y + px, px * 5, px * 14);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 10, y + px * 2, px * 2, px * 12);
+                // Diploma
+                ctx.fillStyle = '#f8f0d8';
+                ctx.fillRect(x + px * 12, y + px * 6, px * 4, px * 2);
+              }
+            } else if (isBot) {
+              if (isLeft) {
+                // Pedestal - 3D
+                ctx.fillStyle = pedHighlight;
+                ctx.fillRect(x, y, size, px * 2);
+                ctx.fillStyle = pedMid;
+                ctx.fillRect(x, y + px * 2, size, px * 4);
+                ctx.fillStyle = pedDark;
+                ctx.fillRect(x, y + px * 6, size, px * 2);
+                ctx.fillStyle = pedShadow;
+                ctx.fillRect(x, y + px * 8, size, px * 2);
+              } else {
+                // Pedestal right - shadow
+                ctx.fillStyle = pedLight;
+                ctx.fillRect(x, y, size, px * 2);
+                ctx.fillStyle = pedDark;
+                ctx.fillRect(x, y + px * 2, size, px * 4);
+                ctx.fillStyle = pedShadow;
+                ctx.fillRect(x, y + px * 6, size, px * 4);
+              }
+              // Grass
+              ctx.fillStyle = '#48a848';
+              ctx.fillRect(x, y + px * 10, size, px * 6);
+              ctx.fillStyle = isLeft ? '#68c868' : '#387838';
+              ctx.fillRect(x + px * 3, y + px * 11, px * 4, px * 2);
+              ctx.fillRect(x + px * 10, y + px * 12, px * 3, px * 2);
+            }
+          }
+        }
+        break;
+
+      // Work Statue (2025) - IT Support, seated human with headset
+      case TILE_STATUE_WORK_TL:
+      case TILE_STATUE_WORK_TR:
+      case TILE_STATUE_WORK_ML:
+      case TILE_STATUE_WORK_MR:
+      case TILE_STATUE_WORK_BL:
+      case TILE_STATUE_WORK_BR:
+        {
+          const px = 3;
+          const isLeft = tile === TILE_STATUE_WORK_TL || tile === TILE_STATUE_WORK_ML || tile === TILE_STATUE_WORK_BL;
+          const isTop = tile === TILE_STATUE_WORK_TL || tile === TILE_STATUE_WORK_TR;
+          const isMid = tile === TILE_STATUE_WORK_ML || tile === TILE_STATUE_WORK_MR;
+          const isBot = tile === TILE_STATUE_WORK_BL || tile === TILE_STATUE_WORK_BR;
+
+          // Background
+          ctx.fillStyle = state.isPixelMode ? '#d4a855' : '#d0a050';
+          ctx.fillRect(x, y, size, size);
+
+          // 3D cool gray-blue stone colors - light from top-left
+          const highlight = '#b0b8c8';  // brightest
+          const light = '#9098a8';
+          const mid = '#707888';
+          const dark = '#505868';
+          const shadow = '#383848';     // darkest
+          const pedHighlight = '#b8b8c0';
+          const pedLight = '#a0a0a8';
+          const pedMid = '#787888';
+          const pedDark = '#585868';
+          const pedShadow = '#404050';
+
+          if (state.isPixelMode) {
+            if (isTop) {
+              if (isLeft) {
+                // Headset band - 3D metallic
+                ctx.fillStyle = '#585860';
+                ctx.fillRect(x + px * 6, y + px * 2, px * 10, px);
+                ctx.fillStyle = '#303038';
+                ctx.fillRect(x + px * 6, y + px * 3, px * 10, px);
+                // Left earpiece - 3D
+                ctx.fillStyle = '#606068';
+                ctx.fillRect(x + px * 5, y + px * 3, px, px * 5);
+                ctx.fillStyle = '#484850';
+                ctx.fillRect(x + px * 6, y + px * 3, px * 2, px * 5);
+                ctx.fillStyle = '#303038';
+                ctx.fillRect(x + px * 7, y + px * 4, px, px * 3);
+                // Head - 3D spherical
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 8, y + px * 5, px * 8, px * 6);
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 9, y + px * 5, px * 5, px * 4);
+                ctx.fillStyle = highlight;
+                ctx.fillRect(x + px * 10, y + px * 6, px * 3, px * 2);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 14, y + px * 8, px * 2, px * 3);
+                ctx.fillRect(x + px * 9, y + px * 10, px * 6, px);
+                // Mic boom - 3D
+                ctx.fillStyle = '#505058';
+                ctx.fillRect(x + px * 4, y + px * 7, px * 4, px);
+                ctx.fillStyle = '#383840';
+                ctx.fillRect(x + px * 4, y + px * 8, px * 4, px);
+                ctx.fillStyle = '#606068';
+                ctx.fillRect(x + px * 3, y + px * 8, px, px * 3);
+                ctx.fillStyle = '#383840';
+                ctx.fillRect(x + px * 4, y + px * 9, px, px * 2);
+                // Neck - 3D cylinder
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 10, y + px * 11, px * 2, px * 3);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 12, y + px * 11, px * 2, px * 3);
+                // Shoulders - 3D curved
+                ctx.fillStyle = highlight;
+                ctx.fillRect(x + px * 6, y + px * 13, px * 10, px);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 6, y + px * 14, px * 10, px * 2);
+              } else {
+                // Right earpiece - shadow side
+                ctx.fillStyle = '#383840';
+                ctx.fillRect(x + px * 8, y + px * 3, px * 3, px * 5);
+                ctx.fillStyle = '#282830';
+                ctx.fillRect(x + px * 10, y + px * 4, px, px * 3);
+                // Head right - shadow side
+                ctx.fillStyle = dark;
+                ctx.fillRect(x, y + px * 5, px * 6, px * 6);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y + px * 5, px * 4, px * 5);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 5, y + px * 8, px, px * 3);
+                // Neck - shadow side
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 2, y + px * 11, px * 4, px * 3);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 5, y + px * 12, px, px * 2);
+                // Shoulders - shadow
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y + px * 13, px * 10, px);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x, y + px * 14, px * 10, px * 2);
+                // Flowing cloth - 3D folds
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 10, y + px * 10, px * 3, px * 6);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 13, y + px * 11, px * 2, px * 5);
+              }
+            } else if (isMid) {
+              if (isLeft) {
+                // Torso - 3D
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 6, y, px * 2, px * 8);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 8, y, px * 6, px * 8);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 14, y + px, px * 2, px * 6);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 9, y + px * 2, px * 4, px * 4);
+                // Left arm - 3D cylindrical
+                ctx.fillStyle = highlight;
+                ctx.fillRect(x + px * 2, y + px * 2, px, px * 4);
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 3, y + px * 2, px * 3, px * 4);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 6, y + px * 3, px, px * 3);
+                // Hand on keyboard - 3D
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px, y + px * 6, px, px * 3);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 2, y + px * 6, px * 3, px * 3);
+                // Lap - 3D
+                ctx.fillStyle = highlight;
+                ctx.fillRect(x + px * 6, y + px * 8, px * 2, px * 7);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 8, y + px * 8, px * 6, px * 8);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 14, y + px * 9, px * 2, px * 6);
+              } else {
+                // Torso right - shadow side
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y, px * 8, px * 8);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 6, y + px, px * 4, px * 6);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 3, y + px * 2, px * 3, px * 4);
+                // Right arm - 3D
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 9, y + px * 2, px * 4, px * 5);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 12, y + px * 3, px * 2, px * 4);
+                // Lap - shadow side
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y + px * 8, px * 8, px * 8);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 6, y + px * 9, px * 4, px * 6);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 3, y + px * 11, px * 4, px * 4);
+                // Monitor - 3D
+                ctx.fillStyle = '#484850';
+                ctx.fillRect(x + px * 12, y + px * 6, px * 4, px);
+                ctx.fillStyle = '#303038';
+                ctx.fillRect(x + px * 12, y + px * 7, px * 4, px * 5);
+                ctx.fillStyle = '#4080c0';
+                ctx.fillRect(x + px * 13, y + px * 8, px * 2, px * 2);
+              }
+            } else if (isBot) {
+              if (isLeft) {
+                // Pedestal - 3D stepped
+                ctx.fillStyle = pedHighlight;
+                ctx.fillRect(x + px * 3, y, px * 13, px);
+                ctx.fillStyle = pedLight;
+                ctx.fillRect(x + px * 3, y + px, px * 13, px * 2);
+                ctx.fillStyle = pedMid;
+                ctx.fillRect(x + px * 2, y + px * 3, px * 14, px);
+                ctx.fillStyle = pedDark;
+                ctx.fillRect(x + px * 2, y + px * 4, px * 14, px * 2);
+                ctx.fillStyle = pedHighlight;
+                ctx.fillRect(x, y + px * 6, size, px);
+                ctx.fillStyle = pedMid;
+                ctx.fillRect(x, y + px * 7, size, px * 3);
+                ctx.fillStyle = pedShadow;
+                ctx.fillRect(x, y + px * 10, size, px);
+                ctx.fillStyle = pedDark;
+                ctx.fillRect(x, y + px * 11, size, px * 2);
+                // Grass
+                ctx.fillStyle = '#48a848';
+                ctx.fillRect(x, y + px * 13, size, px * 3);
+                ctx.fillStyle = '#68c868';
+                ctx.fillRect(x + px * 2, y + px * 14, px * 3, px * 2);
+                ctx.fillRect(x + px * 10, y + px * 13, px * 4, px * 2);
+              } else {
+                // Pedestal right - shadow side
+                ctx.fillStyle = pedLight;
+                ctx.fillRect(x, y, px * 13, px);
+                ctx.fillStyle = pedMid;
+                ctx.fillRect(x, y + px, px * 13, px * 2);
+                ctx.fillStyle = pedDark;
+                ctx.fillRect(x, y + px * 3, px * 14, px * 3);
+                ctx.fillStyle = pedMid;
+                ctx.fillRect(x, y + px * 6, size, px);
+                ctx.fillStyle = pedDark;
+                ctx.fillRect(x, y + px * 7, size, px * 3);
+                ctx.fillStyle = pedShadow;
+                ctx.fillRect(x, y + px * 10, size, px * 3);
+                // Grass - shadowed
+                ctx.fillStyle = '#48a848';
+                ctx.fillRect(x, y + px * 13, size, px * 3);
+                ctx.fillStyle = '#387838';
+                ctx.fillRect(x + px * 4, y + px * 13, px * 3, px * 2);
+                ctx.fillRect(x + px * 12, y + px * 14, px * 3, px * 2);
+              }
+            }
+          } else {
+            // 8-bit mode - 3D shading
+            if (isTop) {
+              if (isLeft) {
+                // Headset - 3D metallic
+                ctx.fillStyle = '#585860';
+                ctx.fillRect(x + px * 5, y + px * 2, px * 11, px);
+                ctx.fillStyle = '#303038';
+                ctx.fillRect(x + px * 5, y + px * 3, px * 11, px * 2);
+                // Earpiece - 3D
+                ctx.fillStyle = '#505058';
+                ctx.fillRect(x + px * 4, y + px * 4, px, px * 5);
+                ctx.fillStyle = '#383840';
+                ctx.fillRect(x + px * 5, y + px * 4, px * 2, px * 5);
+                // Head - 3D
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 6, y + px * 5, px * 3, px * 10);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 9, y + px * 5, px * 5, px * 10);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 14, y + px * 6, px * 2, px * 9);
+                // Highlight
+                ctx.fillStyle = highlight;
+                ctx.fillRect(x + px * 7, y + px * 7, px * 2, px * 3);
+              } else {
+                // Earpiece right - shadow
+                ctx.fillStyle = '#282830';
+                ctx.fillRect(x + px * 8, y + px * 4, px * 3, px * 5);
+                // Head right - shadow side
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y + px * 5, px * 4, px * 10);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 4, y + px * 6, px * 4, px * 9);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 7, y + px * 7, px, px * 7);
+                // Flowing cloth
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 10, y + px * 8, px * 3, px * 8);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 13, y + px * 9, px * 2, px * 7);
+              }
+            } else if (isMid) {
+              if (isLeft) {
+                // Torso - 3D
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 4, y, px * 3, size);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 7, y, px * 6, size);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 13, y + px, px * 3, px * 14);
+              } else {
+                // Torso right - shadow side
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y, px * 6, size);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 6, y + px, px * 5, px * 14);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 10, y + px * 2, px * 2, px * 12);
+                // Monitor - 3D
+                ctx.fillStyle = '#484850';
+                ctx.fillRect(x + px * 12, y + px * 4, px * 4, px);
+                ctx.fillStyle = '#303038';
+                ctx.fillRect(x + px * 12, y + px * 5, px * 4, px * 5);
+                ctx.fillStyle = '#4080c0';
+                ctx.fillRect(x + px * 13, y + px * 6, px * 2, px * 2);
+              }
+            } else if (isBot) {
+              if (isLeft) {
+                // Pedestal - 3D
+                ctx.fillStyle = pedHighlight;
+                ctx.fillRect(x, y, size, px * 2);
+                ctx.fillStyle = pedMid;
+                ctx.fillRect(x, y + px * 2, size, px * 4);
+                ctx.fillStyle = pedDark;
+                ctx.fillRect(x, y + px * 6, size, px * 2);
+                ctx.fillStyle = pedShadow;
+                ctx.fillRect(x, y + px * 8, size, px * 2);
+              } else {
+                // Pedestal right - shadow
+                ctx.fillStyle = pedLight;
+                ctx.fillRect(x, y, size, px * 2);
+                ctx.fillStyle = pedDark;
+                ctx.fillRect(x, y + px * 2, size, px * 4);
+                ctx.fillStyle = pedShadow;
+                ctx.fillRect(x, y + px * 6, size, px * 4);
+              }
+              // Grass
+              ctx.fillStyle = '#48a848';
+              ctx.fillRect(x, y + px * 10, size, px * 6);
+              ctx.fillStyle = isLeft ? '#68c868' : '#387838';
+              ctx.fillRect(x + px * 3, y + px * 11, px * 4, px * 2);
+              ctx.fillRect(x + px * 10, y + px * 12, px * 3, px * 2);
+            }
+          }
+        }
+        break;
+
+      // Web Dev Statue (2020) - Developer seated with laptop
+      case TILE_STATUE_WEB_TL:
+      case TILE_STATUE_WEB_TR:
+      case TILE_STATUE_WEB_ML:
+      case TILE_STATUE_WEB_MR:
+      case TILE_STATUE_WEB_BL:
+      case TILE_STATUE_WEB_BR:
+        {
+          const px = 3;
+          const isLeft = tile === TILE_STATUE_WEB_TL || tile === TILE_STATUE_WEB_ML || tile === TILE_STATUE_WEB_BL;
+          const isTop = tile === TILE_STATUE_WEB_TL || tile === TILE_STATUE_WEB_TR;
+          const isMid = tile === TILE_STATUE_WEB_ML || tile === TILE_STATUE_WEB_MR;
+          const isBot = tile === TILE_STATUE_WEB_BL || tile === TILE_STATUE_WEB_BR;
+
+          // Background
+          ctx.fillStyle = state.isPixelMode ? '#d4a855' : '#d0a050';
+          ctx.fillRect(x, y, size, size);
+
+          // 3D dark gray stone colors - light from top-left
+          const highlight = '#a8a8b8';  // brightest
+          const light = '#888898';
+          const mid = '#686878';
+          const dark = '#484858';
+          const shadow = '#303040';     // darkest
+          const pedHighlight = '#a8a8b0';
+          const pedLight = '#909098';
+          const pedMid = '#707078';
+          const pedDark = '#505058';
+          const pedShadow = '#383840';
+
+          if (state.isPixelMode) {
+            if (isTop) {
+              if (isLeft) {
+                // Code symbol < floating - 3D glow
+                ctx.fillStyle = '#60e060';
+                ctx.fillRect(x + px * 2, y + px, px, px * 2);
+                ctx.fillStyle = '#40c040';
+                ctx.fillRect(x + px * 3, y + px, px, px * 2);
+                ctx.fillStyle = '#60e060';
+                ctx.fillRect(x, y + px * 3, px, px * 2);
+                ctx.fillStyle = '#40c040';
+                ctx.fillRect(x + px, y + px * 3, px, px * 2);
+                ctx.fillStyle = '#60e060';
+                ctx.fillRect(x + px * 2, y + px * 5, px, px * 2);
+                ctx.fillStyle = '#40c040';
+                ctx.fillRect(x + px * 3, y + px * 5, px, px * 2);
+                // Head - 3D spherical
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 8, y + px * 5, px * 8, px * 6);
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 9, y + px * 5, px * 5, px * 4);
+                ctx.fillStyle = highlight;
+                ctx.fillRect(x + px * 10, y + px * 6, px * 3, px * 2);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 14, y + px * 8, px * 2, px * 3);
+                ctx.fillRect(x + px * 9, y + px * 10, px * 6, px);
+                // Hair - 3D
+                ctx.fillStyle = '#383848';
+                ctx.fillRect(x + px * 8, y + px * 3, px * 7, px * 3);
+                ctx.fillStyle = '#282838';
+                ctx.fillRect(x + px * 13, y + px * 4, px * 2, px * 2);
+                // Neck - 3D cylinder
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 10, y + px * 11, px * 2, px * 3);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 12, y + px * 11, px * 2, px * 3);
+                // Shoulders - 3D curved
+                ctx.fillStyle = highlight;
+                ctx.fillRect(x + px * 6, y + px * 13, px * 10, px);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 6, y + px * 14, px * 10, px * 2);
+              } else {
+                // Code symbol > floating - 3D glow
+                ctx.fillStyle = '#60e060';
+                ctx.fillRect(x + px * 12, y + px, px, px * 2);
+                ctx.fillStyle = '#40c040';
+                ctx.fillRect(x + px * 13, y + px, px, px * 2);
+                ctx.fillStyle = '#60e060';
+                ctx.fillRect(x + px * 14, y + px * 3, px, px * 2);
+                ctx.fillStyle = '#40c040';
+                ctx.fillRect(x + px * 15, y + px * 3, px, px * 2);
+                ctx.fillStyle = '#60e060';
+                ctx.fillRect(x + px * 12, y + px * 5, px, px * 2);
+                ctx.fillStyle = '#40c040';
+                ctx.fillRect(x + px * 13, y + px * 5, px, px * 2);
+                // Head right - shadow side
+                ctx.fillStyle = dark;
+                ctx.fillRect(x, y + px * 5, px * 6, px * 6);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y + px * 5, px * 4, px * 5);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 5, y + px * 8, px, px * 3);
+                // Hair right - shadow
+                ctx.fillStyle = '#383848';
+                ctx.fillRect(x + px, y + px * 3, px * 5, px * 3);
+                ctx.fillStyle = '#282838';
+                ctx.fillRect(x + px * 5, y + px * 4, px, px * 2);
+                // Neck - shadow side
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 2, y + px * 11, px * 4, px * 3);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 5, y + px * 12, px, px * 2);
+                // Shoulders - shadow
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y + px * 13, px * 10, px);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x, y + px * 14, px * 10, px * 2);
+                // Flowing cloth - 3D folds
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 10, y + px * 10, px * 3, px * 6);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 13, y + px * 11, px * 2, px * 5);
+              }
+            } else if (isMid) {
+              if (isLeft) {
+                // Torso - 3D
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 6, y, px * 2, px * 8);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 8, y, px * 6, px * 8);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 14, y + px, px * 2, px * 6);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 9, y + px * 2, px * 4, px * 4);
+                // Left arm - 3D cylindrical
+                ctx.fillStyle = highlight;
+                ctx.fillRect(x + px * 2, y + px * 2, px, px * 4);
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 3, y + px * 2, px * 3, px * 4);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 6, y + px * 3, px, px * 3);
+                // Laptop - 3D
+                ctx.fillStyle = '#505860';
+                ctx.fillRect(x + px, y + px * 7, px * 7, px);
+                ctx.fillStyle = '#404850';
+                ctx.fillRect(x + px, y + px * 8, px * 7, px * 3);
+                ctx.fillStyle = '#303840';
+                ctx.fillRect(x + px * 6, y + px * 8, px * 2, px * 3);
+                // Screen glow
+                ctx.fillStyle = '#60e060';
+                ctx.fillRect(x + px * 2, y + px * 9, px, px);
+                ctx.fillStyle = '#40c040';
+                ctx.fillRect(x + px * 3, y + px * 9, px * 2, px);
+                // Lap - 3D
+                ctx.fillStyle = highlight;
+                ctx.fillRect(x + px * 6, y + px * 8, px * 2, px * 7);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 8, y + px * 8, px * 6, px * 8);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 14, y + px * 9, px * 2, px * 6);
+              } else {
+                // Torso right - shadow side
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y, px * 8, px * 8);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 6, y + px, px * 4, px * 6);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 3, y + px * 2, px * 3, px * 4);
+                // Right arm - 3D
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 9, y + px * 2, px * 4, px * 5);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 12, y + px * 3, px * 2, px * 4);
+                // Lap - shadow side
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y + px * 8, px * 8, px * 8);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 6, y + px * 9, px * 4, px * 6);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 3, y + px * 11, px * 4, px * 4);
+                // Globe/web - 3D
+                ctx.fillStyle = '#4888d0';
+                ctx.fillRect(x + px * 11, y + px * 8, px * 4, px);
+                ctx.fillStyle = '#3878c0';
+                ctx.fillRect(x + px * 11, y + px * 9, px * 4, px * 3);
+                ctx.fillStyle = '#68a8f0';
+                ctx.fillRect(x + px * 12, y + px * 9, px * 2, px);
+                ctx.fillStyle = '#285898';
+                ctx.fillRect(x + px * 14, y + px * 10, px, px * 2);
+              }
+            } else if (isBot) {
+              if (isLeft) {
+                // Pedestal - 3D stepped
+                ctx.fillStyle = pedHighlight;
+                ctx.fillRect(x + px * 3, y, px * 13, px);
+                ctx.fillStyle = pedLight;
+                ctx.fillRect(x + px * 3, y + px, px * 13, px * 2);
+                ctx.fillStyle = pedMid;
+                ctx.fillRect(x + px * 2, y + px * 3, px * 14, px);
+                ctx.fillStyle = pedDark;
+                ctx.fillRect(x + px * 2, y + px * 4, px * 14, px * 2);
+                ctx.fillStyle = pedHighlight;
+                ctx.fillRect(x, y + px * 6, size, px);
+                ctx.fillStyle = pedMid;
+                ctx.fillRect(x, y + px * 7, size, px * 3);
+                ctx.fillStyle = pedShadow;
+                ctx.fillRect(x, y + px * 10, size, px);
+                ctx.fillStyle = pedDark;
+                ctx.fillRect(x, y + px * 11, size, px * 2);
+                // Grass
+                ctx.fillStyle = '#48a848';
+                ctx.fillRect(x, y + px * 13, size, px * 3);
+                ctx.fillStyle = '#68c868';
+                ctx.fillRect(x + px * 2, y + px * 14, px * 3, px * 2);
+                ctx.fillRect(x + px * 10, y + px * 13, px * 4, px * 2);
+              } else {
+                // Pedestal right - shadow side
+                ctx.fillStyle = pedLight;
+                ctx.fillRect(x, y, px * 13, px);
+                ctx.fillStyle = pedMid;
+                ctx.fillRect(x, y + px, px * 13, px * 2);
+                ctx.fillStyle = pedDark;
+                ctx.fillRect(x, y + px * 3, px * 14, px * 3);
+                ctx.fillStyle = pedMid;
+                ctx.fillRect(x, y + px * 6, size, px);
+                ctx.fillStyle = pedDark;
+                ctx.fillRect(x, y + px * 7, size, px * 3);
+                ctx.fillStyle = pedShadow;
+                ctx.fillRect(x, y + px * 10, size, px * 3);
+                // Grass - shadowed
+                ctx.fillStyle = '#48a848';
+                ctx.fillRect(x, y + px * 13, size, px * 3);
+                ctx.fillStyle = '#387838';
+                ctx.fillRect(x + px * 4, y + px * 13, px * 3, px * 2);
+                ctx.fillRect(x + px * 12, y + px * 14, px * 3, px * 2);
+              }
+            }
+          } else {
+            // 8-bit mode - 3D shading
+            if (isTop) {
+              if (isLeft) {
+                // Code bracket < with glow
+                ctx.fillStyle = '#60e060';
+                ctx.fillRect(x, y + px * 2, px * 2, px * 5);
+                ctx.fillStyle = '#40c040';
+                ctx.fillRect(x + px * 2, y + px * 2, px * 2, px * 5);
+                // Head - 3D
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 6, y + px * 5, px * 3, px * 10);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 9, y + px * 5, px * 5, px * 10);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 14, y + px * 6, px * 2, px * 9);
+                // Hair - 3D
+                ctx.fillStyle = '#383848';
+                ctx.fillRect(x + px * 6, y + px * 4, px * 8, px * 3);
+                ctx.fillStyle = '#282838';
+                ctx.fillRect(x + px * 13, y + px * 5, px, px * 2);
+                // Highlight
+                ctx.fillStyle = highlight;
+                ctx.fillRect(x + px * 7, y + px * 7, px * 2, px * 3);
+              } else {
+                // Code bracket > with glow
+                ctx.fillStyle = '#60e060';
+                ctx.fillRect(x + px * 12, y + px * 2, px * 2, px * 5);
+                ctx.fillStyle = '#40c040';
+                ctx.fillRect(x + px * 14, y + px * 2, px * 2, px * 5);
+                // Head right - shadow side
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y + px * 5, px * 4, px * 10);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 4, y + px * 6, px * 4, px * 9);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 7, y + px * 7, px, px * 7);
+                // Hair - shadow
+                ctx.fillStyle = '#383848';
+                ctx.fillRect(x, y + px * 4, px * 6, px * 3);
+                ctx.fillStyle = '#282838';
+                ctx.fillRect(x + px * 5, y + px * 5, px, px * 2);
+                // Flowing cloth
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 10, y + px * 8, px * 3, px * 8);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 13, y + px * 9, px * 2, px * 7);
+              }
+            } else if (isMid) {
+              if (isLeft) {
+                // Torso - 3D
+                ctx.fillStyle = light;
+                ctx.fillRect(x + px * 4, y, px * 3, size);
+                ctx.fillStyle = mid;
+                ctx.fillRect(x + px * 7, y, px * 6, size);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 13, y + px, px * 3, px * 14);
+                // Laptop - 3D
+                ctx.fillStyle = '#505860';
+                ctx.fillRect(x + px, y + px * 5, px * 6, px);
+                ctx.fillStyle = '#404850';
+                ctx.fillRect(x + px, y + px * 6, px * 6, px * 4);
+                ctx.fillStyle = '#303840';
+                ctx.fillRect(x + px * 5, y + px * 6, px * 2, px * 4);
+                // Screen glow
+                ctx.fillStyle = '#60e060';
+                ctx.fillRect(x + px * 2, y + px * 7, px, px);
+                ctx.fillStyle = '#40c040';
+                ctx.fillRect(x + px * 3, y + px * 7, px, px);
+              } else {
+                // Torso right - shadow side
+                ctx.fillStyle = mid;
+                ctx.fillRect(x, y, px * 6, size);
+                ctx.fillStyle = dark;
+                ctx.fillRect(x + px * 6, y + px, px * 5, px * 14);
+                ctx.fillStyle = shadow;
+                ctx.fillRect(x + px * 10, y + px * 2, px * 2, px * 12);
+                // Globe - 3D
+                ctx.fillStyle = '#4888d0';
+                ctx.fillRect(x + px * 12, y + px * 6, px * 4, px);
+                ctx.fillStyle = '#3878c0';
+                ctx.fillRect(x + px * 12, y + px * 7, px * 4, px * 3);
+                ctx.fillStyle = '#68a8f0';
+                ctx.fillRect(x + px * 13, y + px * 7, px * 2, px);
+              }
+            } else if (isBot) {
+              if (isLeft) {
+                // Pedestal - 3D
+                ctx.fillStyle = pedHighlight;
+                ctx.fillRect(x, y, size, px * 2);
+                ctx.fillStyle = pedMid;
+                ctx.fillRect(x, y + px * 2, size, px * 4);
+                ctx.fillStyle = pedDark;
+                ctx.fillRect(x, y + px * 6, size, px * 2);
+                ctx.fillStyle = pedShadow;
+                ctx.fillRect(x, y + px * 8, size, px * 2);
+              } else {
+                // Pedestal right - shadow
+                ctx.fillStyle = pedLight;
+                ctx.fillRect(x, y, size, px * 2);
+                ctx.fillStyle = pedDark;
+                ctx.fillRect(x, y + px * 2, size, px * 4);
+                ctx.fillStyle = pedShadow;
+                ctx.fillRect(x, y + px * 6, size, px * 4);
+              }
+              // Grass
+              ctx.fillStyle = '#48a848';
+              ctx.fillRect(x, y + px * 10, size, px * 6);
+              ctx.fillStyle = isLeft ? '#68c868' : '#387838';
+              ctx.fillRect(x + px * 3, y + px * 11, px * 4, px * 2);
+              ctx.fillRect(x + px * 10, y + px * 12, px * 3, px * 2);
+            }
+          }
+        }
+        break;
+
       case TILE_SIGN:
         if (state.isPixelMode) {
           // Pokemon-style wooden sign
@@ -3097,6 +4451,89 @@ export const PokemonCanvas: React.FC = () => {
           ctx.fillText('!', x + size / 2, y + size / 2 - 6);
         }
         break;
+
+      // Building name signs
+      case TILE_SIGN_ABOUT:
+      case TILE_SIGN_PROJECTS:
+      case TILE_SIGN_SKILLS:
+        {
+          const signText = tile === TILE_SIGN_ABOUT ? "RYAN'S" :
+                          tile === TILE_SIGN_PROJECTS ? 'PROJECTS' : 'SKILLS';
+          const signText2 = tile === TILE_SIGN_ABOUT ? 'HOUSE' :
+                           tile === TILE_SIGN_PROJECTS ? 'GALLERY' : 'LAB';
+          const signColor = '#1f2937'; // Dark bold text for all signs
+
+          if (state.isPixelMode) {
+            const px = 3;
+
+            // Grass background for all signs (they're all on grass now)
+            ctx.fillStyle = '#7ec850';
+            ctx.fillRect(x, y, size, size);
+            // Grass texture
+            ctx.fillStyle = '#5eb040';
+            for (let gy = 0; gy < size; gy += 8) {
+              for (let gx = 0; gx < size; gx += 8) {
+                if ((gy / 8 + gx / 8) % 2 === 0) {
+                  ctx.fillRect(x + gx + 2, y + gy + 2, 4, 4);
+                }
+              }
+            }
+
+            // Wooden post (centered)
+            ctx.fillStyle = '#5c4033';
+            ctx.fillRect(x + 20, y + 28, px * 3, px * 7);
+            ctx.fillStyle = '#8b6914';
+            ctx.fillRect(x + 23, y + 28, px, px * 7);
+
+            // Sign board background (larger for text)
+            ctx.fillStyle = '#d4a574';
+            ctx.fillRect(x + 3, y + 3, size - 6, px * 9);
+
+            // Sign board border
+            ctx.fillStyle = '#5c4033';
+            ctx.fillRect(x + 3, y + 3, size - 6, px); // Top
+            ctx.fillRect(x + 3, y + 3 + px * 8, size - 6, px); // Bottom
+            ctx.fillRect(x + 3, y + 3, px, px * 9); // Left
+            ctx.fillRect(x + size - 6, y + 3, px, px * 9); // Right
+
+            // Inner board highlight
+            ctx.fillStyle = '#e8c89e';
+            ctx.fillRect(x + 6, y + 6, size - 12, px * 6);
+
+            // Sign text - pixel style
+            ctx.fillStyle = signColor;
+            ctx.font = 'bold 9px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText(signText, x + size / 2, y + 14);
+            ctx.fillText(signText2, x + size / 2, y + 23);
+          } else {
+            // 8-bit mode - grass background for all signs
+            ctx.fillStyle = COLORS.grass;
+            ctx.fillRect(x, y, size, size);
+
+            // Wooden post
+            ctx.fillStyle = '#78350f';
+            ctx.fillRect(x + size / 2 - 4, y + size / 2 + 4, 8, size / 2 - 4);
+
+            // Sign board
+            ctx.fillStyle = '#fbbf24';
+            ctx.fillRect(x + 4, y + 4, size - 8, size / 2 + 4);
+
+            // Sign border
+            ctx.strokeStyle = '#78350f';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(x + 4, y + 4, size - 8, size / 2 + 4);
+
+            // Text
+            ctx.fillStyle = signColor;
+            ctx.font = 'bold 8px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(signText, x + size / 2, y + 16);
+            ctx.fillText(signText2, x + size / 2, y + 26);
+          }
+        }
+        break;
+
       case TILE_FLOOR:
         if (state.isPixelMode) {
           // Pixel art checkered floor
@@ -3112,11 +4549,15 @@ export const PokemonCanvas: React.FC = () => {
           ctx.fillStyle = '#94a3b8';
           ctx.fillRect(x + 4, y + 4, 4, 4);
         } else {
-          ctx.fillStyle = COLORS.floor;
-          ctx.fillRect(x, y, size, size);
-          ctx.fillStyle = COLORS.floorDark;
-          ctx.fillRect(x, y, 2, size);
-          ctx.fillRect(x, y, size, 2);
+          // Classic 8-bit checkered floor
+          const px = 3;
+          for (let py = 0; py < 4; py++) {
+            for (let pxx = 0; pxx < 4; pxx++) {
+              const isLight = ((pxx + py + tileX + tileY) % 2) === 0;
+              ctx.fillStyle = isLight ? '#707888' : '#505868';
+              ctx.fillRect(x + pxx * px * 4, y + py * px * 4, px * 4, px * 4);
+            }
+          }
         }
         break;
       case TILE_EXIT_MAT:
@@ -3138,12 +4579,21 @@ export const PokemonCanvas: React.FC = () => {
           ctx.fillRect(x + 16, y + 32, 16, 8);
           ctx.fillRect(x + 20, y + 40, 8, 4);
         } else {
-          ctx.fillStyle = COLORS.exitMat;
+          // Classic 8-bit exit mat
+          const px = 3;
+          ctx.fillStyle = '#c02020';
           ctx.fillRect(x, y, size, size);
-          ctx.fillStyle = '#fef08a';
-          ctx.font = 'bold 10px monospace';
-          ctx.textAlign = 'center';
-          ctx.fillText('EXIT', x + size / 2, y + size / 2 + 4);
+          // Border
+          ctx.fillStyle = '#901818';
+          ctx.fillRect(x, y, size, px);
+          ctx.fillRect(x, y + size - px, size, px);
+          ctx.fillRect(x, y, px, size);
+          ctx.fillRect(x + size - px, y, px, size);
+          // Arrow
+          ctx.fillStyle = '#f8e848';
+          ctx.fillRect(x + px * 6, y + px * 3, px * 4, px * 6);
+          ctx.fillRect(x + px * 4, y + px * 8, px * 8, px * 3);
+          ctx.fillRect(x + px * 6, y + px * 11, px * 4, px * 2);
         }
         break;
       case TILE_EXHIBIT:
@@ -3170,15 +4620,20 @@ export const PokemonCanvas: React.FC = () => {
             ctx.fillRect(x + 28, y + 28, pxE, pxE);
           }
         } else {
-          ctx.fillStyle = COLORS.floor;
+          // Classic 8-bit exhibit pedestal
+          const px = 3;
+          // Floor
+          ctx.fillStyle = '#505868';
           ctx.fillRect(x, y, size, size);
-          ctx.fillStyle = COLORS.exhibit;
-          ctx.fillRect(x + 4, y + 4, size - 8, size - 8);
-          const pulse = Math.sin(frameCountRef.current * 0.1) * 0.2 + 0.8;
-          ctx.globalAlpha = pulse;
-          ctx.fillStyle = '#c4b5fd';
-          ctx.fillRect(x + 8, y + 8, size - 16, size - 16);
-          ctx.globalAlpha = 1;
+          // Pedestal base - dark
+          ctx.fillStyle = '#6020a0';
+          ctx.fillRect(x + px * 2, y + px * 2, px * 12, px * 12);
+          // Pedestal top - light
+          ctx.fillStyle = '#9040d0';
+          ctx.fillRect(x + px * 3, y + px * 3, px * 10, px * 10);
+          // Glowing item
+          ctx.fillStyle = '#d0b0f0';
+          ctx.fillRect(x + px * 5, y + px * 5, px * 6, px * 6);
         }
         break;
 
@@ -3187,34 +4642,53 @@ export const PokemonCanvas: React.FC = () => {
         // About building: Elegant picture frame on stand
         {
           const px = 3;
-          // Wooden floor background
-          ctx.fillStyle = '#c9a66b';
-          ctx.fillRect(x, y, size, size);
-          ctx.fillStyle = '#a67c52';
-          ctx.fillRect(x, y + 24, size, 1);
+          if (state.isPixelMode) {
+            // Wooden floor background
+            ctx.fillStyle = '#c9a66b';
+            ctx.fillRect(x, y, size, size);
+            ctx.fillStyle = '#a67c52';
+            ctx.fillRect(x, y + 24, size, 1);
 
-          // Easel/stand legs
-          ctx.fillStyle = '#5c3a21';
-          ctx.fillRect(x + 12, y + 30, px * 2, size - 30);
-          ctx.fillRect(x + 30, y + 30, px * 2, size - 30);
-          ctx.fillRect(x + 21, y + 36, px * 2, size - 36);
+            // Easel/stand legs
+            ctx.fillStyle = '#5c3a21';
+            ctx.fillRect(x + 12, y + 30, px * 2, size - 30);
+            ctx.fillRect(x + 30, y + 30, px * 2, size - 30);
+            ctx.fillRect(x + 21, y + 36, px * 2, size - 36);
 
-          // Picture frame (gold)
-          ctx.fillStyle = '#d4af37';
-          ctx.fillRect(x + 9, y + 6, px * 10, px * 9);
+            // Picture frame (gold)
+            ctx.fillStyle = '#d4af37';
+            ctx.fillRect(x + 9, y + 6, px * 10, px * 9);
 
-          // Picture inside (gradient sky)
-          ctx.fillStyle = '#1e3a5f';
-          ctx.fillRect(x + 12, y + 9, px * 8, px * 6);
+            // Picture inside (gradient sky)
+            ctx.fillStyle = '#1e3a5f';
+            ctx.fillRect(x + 12, y + 9, px * 8, px * 6);
 
-          // Picture content (portrait silhouette)
-          ctx.fillStyle = '#fcd34d';
-          ctx.fillRect(x + 18, y + 12, px * 3, px * 3);
+            // Picture content (portrait silhouette)
+            ctx.fillStyle = '#fcd34d';
+            ctx.fillRect(x + 18, y + 12, px * 3, px * 3);
 
-          // Frame shine
-          const shine = Math.sin(frameCountRef.current * 0.08) * 0.3 + 0.7;
-          ctx.fillStyle = `rgba(255, 215, 0, ${shine * 0.5})`;
-          ctx.fillRect(x + 9, y + 6, px * 2, px);
+            // Frame shine
+            const shine = Math.sin(frameCountRef.current * 0.08) * 0.3 + 0.7;
+            ctx.fillStyle = `rgba(255, 215, 0, ${shine * 0.5})`;
+            ctx.fillRect(x + 9, y + 6, px * 2, px);
+          } else {
+            // 8-bit mode - simple exhibit frame
+            ctx.fillStyle = '#c89858';
+            ctx.fillRect(x, y, size, size);
+            // Easel legs
+            ctx.fillStyle = '#705028';
+            ctx.fillRect(x + px * 4, y + px * 10, px * 2, px * 6);
+            ctx.fillRect(x + px * 10, y + px * 10, px * 2, px * 6);
+            // Frame
+            ctx.fillStyle = '#c0a030';
+            ctx.fillRect(x + px * 3, y + px * 2, px * 10, px * 8);
+            // Picture
+            ctx.fillStyle = '#304080';
+            ctx.fillRect(x + px * 4, y + px * 3, px * 8, px * 6);
+            // Portrait
+            ctx.fillStyle = '#e8c040';
+            ctx.fillRect(x + px * 6, y + px * 4, px * 4, px * 4);
+          }
         }
         break;
 
@@ -3222,41 +4696,61 @@ export const PokemonCanvas: React.FC = () => {
         // Projects building: Holographic monitor display
         {
           const px = 3;
-          // Metallic floor background
-          ctx.fillStyle = '#2d3444';
-          ctx.fillRect(x, y, size, size);
+          if (state.isPixelMode) {
+            // Metallic floor background
+            ctx.fillStyle = '#2d3444';
+            ctx.fillRect(x, y, size, size);
 
-          // Monitor stand base
-          ctx.fillStyle = '#1f2937';
-          ctx.fillRect(x + 12, y + 36, px * 8, px * 4);
-          ctx.fillStyle = '#374151';
-          ctx.fillRect(x + 18, y + 24, px * 4, px * 4);
+            // Monitor stand base
+            ctx.fillStyle = '#1f2937';
+            ctx.fillRect(x + 12, y + 36, px * 8, px * 4);
+            ctx.fillStyle = '#374151';
+            ctx.fillRect(x + 18, y + 24, px * 4, px * 4);
 
-          // Monitor frame (sleek black)
-          ctx.fillStyle = '#111827';
-          ctx.fillRect(x + 6, y + 3, size - 12, px * 8);
+            // Monitor frame (sleek black)
+            ctx.fillStyle = '#111827';
+            ctx.fillRect(x + 6, y + 3, size - 12, px * 8);
 
-          // Screen with animated code
-          const scanLine = (frameCountRef.current % 30) * 1.5;
-          ctx.fillStyle = '#0a1628';
-          ctx.fillRect(x + 9, y + 6, size - 18, px * 6);
+            // Screen with animated code
+            const scanLine = (frameCountRef.current % 30) * 1.5;
+            ctx.fillStyle = '#0a1628';
+            ctx.fillRect(x + 9, y + 6, size - 18, px * 6);
 
-          // Code/data visualization
-          ctx.fillStyle = '#39ff14';
-          ctx.fillRect(x + 12, y + 8, px * 4, px);
-          ctx.fillRect(x + 12, y + 11, px * 6, px);
-          ctx.fillRect(x + 12, y + 14, px * 3, px);
-          ctx.fillRect(x + 21, y + 8, px * 2, px * 3);
-          ctx.fillRect(x + 27, y + 11, px * 3, px);
+            // Code/data visualization
+            ctx.fillStyle = '#39ff14';
+            ctx.fillRect(x + 12, y + 8, px * 4, px);
+            ctx.fillRect(x + 12, y + 11, px * 6, px);
+            ctx.fillRect(x + 12, y + 14, px * 3, px);
+            ctx.fillRect(x + 21, y + 8, px * 2, px * 3);
+            ctx.fillRect(x + 27, y + 11, px * 3, px);
 
-          // Scan line effect
-          ctx.fillStyle = 'rgba(57, 255, 20, 0.3)';
-          ctx.fillRect(x + 9, y + 6 + (scanLine % 18), size - 18, 2);
+            // Scan line effect
+            ctx.fillStyle = 'rgba(57, 255, 20, 0.3)';
+            ctx.fillRect(x + 9, y + 6 + (scanLine % 18), size - 18, 2);
 
-          // Glow effect
-          const glow = Math.sin(frameCountRef.current * 0.1) * 0.2 + 0.6;
-          ctx.fillStyle = `rgba(57, 255, 20, ${glow * 0.15})`;
-          ctx.fillRect(x + 3, y, size - 6, px * 10);
+            // Glow effect
+            const glow = Math.sin(frameCountRef.current * 0.1) * 0.2 + 0.6;
+            ctx.fillStyle = `rgba(57, 255, 20, ${glow * 0.15})`;
+            ctx.fillRect(x + 3, y, size - 6, px * 10);
+          } else {
+            // 8-bit mode - simple exhibit monitor
+            ctx.fillStyle = '#303848';
+            ctx.fillRect(x, y, size, size);
+            // Stand
+            ctx.fillStyle = '#202830';
+            ctx.fillRect(x + px * 4, y + px * 12, px * 8, px * 4);
+            ctx.fillRect(x + px * 6, y + px * 8, px * 4, px * 4);
+            // Monitor frame
+            ctx.fillStyle = '#181820';
+            ctx.fillRect(x + px * 2, y + px, px * 12, px * 7);
+            // Screen
+            ctx.fillStyle = '#102030';
+            ctx.fillRect(x + px * 3, y + px * 2, px * 10, px * 5);
+            // Code lines
+            ctx.fillStyle = '#30e030';
+            ctx.fillRect(x + px * 4, y + px * 3, px * 4, px);
+            ctx.fillRect(x + px * 4, y + px * 5, px * 6, px);
+          }
         }
         break;
 
@@ -3264,49 +4758,70 @@ export const PokemonCanvas: React.FC = () => {
         // Skills building: Glowing skill orb on pedestal
         {
           const px = 3;
-          // Checkered floor background
-          const isLightOrb = ((Math.floor(x / size) + Math.floor(y / size)) % 2) === 0;
-          ctx.fillStyle = isLightOrb ? '#fef3c7' : '#fde68a';
-          ctx.fillRect(x, y, size, size);
+          if (state.isPixelMode) {
+            // Checkered floor background
+            const isLightOrb = ((Math.floor(x / size) + Math.floor(y / size)) % 2) === 0;
+            ctx.fillStyle = isLightOrb ? '#fef3c7' : '#fde68a';
+            ctx.fillRect(x, y, size, size);
 
-          // Pedestal (red Pokemon style)
-          ctx.fillStyle = '#991b1b';
-          ctx.fillRect(x + 12, y + 30, px * 8, px * 6);
-          ctx.fillStyle = '#dc2626';
-          ctx.fillRect(x + 12, y + 30, px * 8, px * 2);
+            // Pedestal (red Pokemon style)
+            ctx.fillStyle = '#991b1b';
+            ctx.fillRect(x + 12, y + 30, px * 8, px * 6);
+            ctx.fillStyle = '#dc2626';
+            ctx.fillRect(x + 12, y + 30, px * 8, px * 2);
 
-          // Pedestal top
-          ctx.fillStyle = '#fef3c7';
-          ctx.fillRect(x + 9, y + 27, px * 10, px * 2);
+            // Pedestal top
+            ctx.fillStyle = '#fef3c7';
+            ctx.fillRect(x + 9, y + 27, px * 10, px * 2);
 
-          // Glowing orb (animated)
-          const orbPulse = Math.sin(frameCountRef.current * 0.12) * 0.3 + 0.7;
-          const orbSize = 10 + Math.sin(frameCountRef.current * 0.1) * 2;
+            // Glowing orb (animated)
+            const orbPulse = Math.sin(frameCountRef.current * 0.12) * 0.3 + 0.7;
+            const orbSize = 10 + Math.sin(frameCountRef.current * 0.1) * 2;
 
-          // Outer glow
-          ctx.fillStyle = `rgba(236, 72, 153, ${orbPulse * 0.3})`;
-          ctx.beginPath();
-          ctx.arc(x + size / 2, y + 18, orbSize + 4, 0, Math.PI * 2);
-          ctx.fill();
+            // Outer glow
+            ctx.fillStyle = `rgba(236, 72, 153, ${orbPulse * 0.3})`;
+            ctx.beginPath();
+            ctx.arc(x + size / 2, y + 18, orbSize + 4, 0, Math.PI * 2);
+            ctx.fill();
 
-          // Main orb
-          ctx.fillStyle = `rgba(236, 72, 153, ${orbPulse})`;
-          ctx.beginPath();
-          ctx.arc(x + size / 2, y + 18, orbSize, 0, Math.PI * 2);
-          ctx.fill();
+            // Main orb
+            ctx.fillStyle = `rgba(236, 72, 153, ${orbPulse})`;
+            ctx.beginPath();
+            ctx.arc(x + size / 2, y + 18, orbSize, 0, Math.PI * 2);
+            ctx.fill();
 
-          // Inner shine
-          ctx.fillStyle = '#fdf4ff';
-          ctx.beginPath();
-          ctx.arc(x + size / 2 - 3, y + 15, 3, 0, Math.PI * 2);
-          ctx.fill();
+            // Inner shine
+            ctx.fillStyle = '#fdf4ff';
+            ctx.beginPath();
+            ctx.arc(x + size / 2 - 3, y + 15, 3, 0, Math.PI * 2);
+            ctx.fill();
 
-          // Sparkle particles
-          if (orbPulse > 0.8) {
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(x + 12, y + 9, px, px);
-            ctx.fillRect(x + 30, y + 12, px, px);
-            ctx.fillRect(x + 18, y + 24, px, px);
+            // Sparkle particles
+            if (orbPulse > 0.8) {
+              ctx.fillStyle = '#ffffff';
+              ctx.fillRect(x + 12, y + 9, px, px);
+              ctx.fillRect(x + 30, y + 12, px, px);
+              ctx.fillRect(x + 18, y + 24, px, px);
+            }
+          } else {
+            // 8-bit mode - simple exhibit orb
+            const isLightOrb = ((Math.floor(x / size) + Math.floor(y / size)) % 2) === 0;
+            ctx.fillStyle = isLightOrb ? '#f8e8c0' : '#e8d8a0';
+            ctx.fillRect(x, y, size, size);
+            // Pedestal
+            ctx.fillStyle = '#a02020';
+            ctx.fillRect(x + px * 4, y + px * 10, px * 8, px * 6);
+            ctx.fillStyle = '#d03030';
+            ctx.fillRect(x + px * 4, y + px * 10, px * 8, px * 2);
+            // Pedestal top
+            ctx.fillStyle = '#f8e8c0';
+            ctx.fillRect(x + px * 3, y + px * 9, px * 10, px);
+            // Orb (simple square)
+            ctx.fillStyle = '#e060a0';
+            ctx.fillRect(x + px * 5, y + px * 3, px * 6, px * 5);
+            // Shine
+            ctx.fillStyle = '#f8c0e0';
+            ctx.fillRect(x + px * 6, y + px * 4, px * 2, px * 2);
           }
         }
         break;
@@ -3509,7 +5024,7 @@ export const PokemonCanvas: React.FC = () => {
         const pxFence = 3;
 
         // Grass background
-        ctx.fillStyle = state.isPixelMode ? '#7ec850' : COLORS.grass;
+        ctx.fillStyle = state.isPixelMode ? '#7ec850' : '#58c858';
         ctx.fillRect(x, y, size, size);
 
         // Fence posts (vertical)
@@ -3559,7 +5074,7 @@ export const PokemonCanvas: React.FC = () => {
         {
           const px = 3;
           // Grass background
-          ctx.fillStyle = state.isPixelMode ? '#7ec850' : COLORS.grass;
+          ctx.fillStyle = state.isPixelMode ? '#7ec850' : '#58c858';
           ctx.fillRect(x, y, size, size);
 
           if (state.isPixelMode) {
@@ -3593,10 +5108,20 @@ export const PokemonCanvas: React.FC = () => {
             ctx.fillRect(x + 27, y + 15, px * 2, px);
             ctx.fillRect(x + 12, y + 30, px * 2, px);
           } else {
-            ctx.fillStyle = COLORS.tree;
-            ctx.beginPath();
-            ctx.arc(x + size, y + size, size * 0.9, Math.PI, Math.PI * 1.5);
-            ctx.fill();
+            // Classic 8-bit oak canopy top-left - blocky with 3 colors
+            const px = 3;
+            // Dark outline
+            ctx.fillStyle = '#185a18';
+            ctx.fillRect(x + px * 4, y + px * 2, px * 12, px * 14);
+            // Main fill - bright green
+            ctx.fillStyle = '#30a830';
+            ctx.fillRect(x + px * 5, y + px * 3, px * 11, px * 12);
+            // Highlight
+            ctx.fillStyle = '#58d858';
+            ctx.fillRect(x + px * 6, y + px * 4, px * 6, px * 3);
+            // Bright spot
+            ctx.fillStyle = '#88f888';
+            ctx.fillRect(x + px * 7, y + px * 5, px * 2, px * 2);
           }
         }
         break;
@@ -3605,7 +5130,7 @@ export const PokemonCanvas: React.FC = () => {
         // Top-right canopy of big oak tree
         {
           const px = 3;
-          ctx.fillStyle = state.isPixelMode ? '#7ec850' : COLORS.grass;
+          ctx.fillStyle = state.isPixelMode ? '#7ec850' : '#58c858';
           ctx.fillRect(x, y, size, size);
 
           if (state.isPixelMode) {
@@ -3637,10 +5162,20 @@ export const PokemonCanvas: React.FC = () => {
             ctx.fillRect(x + 12, y + 21, px * 2, px * 2);
             ctx.fillRect(x + 18, y + 15, px * 2, px);
           } else {
-            ctx.fillStyle = COLORS.tree;
-            ctx.beginPath();
-            ctx.arc(x, y + size, size * 0.9, Math.PI * 1.5, 0);
-            ctx.fill();
+            // Classic 8-bit oak canopy top-right - blocky with 3 colors
+            const px = 3;
+            // Dark outline
+            ctx.fillStyle = '#185a18';
+            ctx.fillRect(x, y + px * 2, px * 12, px * 14);
+            // Main fill
+            ctx.fillStyle = '#30a830';
+            ctx.fillRect(x, y + px * 3, px * 11, px * 12);
+            // Highlight
+            ctx.fillStyle = '#58d858';
+            ctx.fillRect(x + px * 4, y + px * 4, px * 6, px * 3);
+            // Bright spot
+            ctx.fillStyle = '#88f888';
+            ctx.fillRect(x + px * 6, y + px * 5, px * 2, px * 2);
           }
         }
         break;
@@ -3649,7 +5184,7 @@ export const PokemonCanvas: React.FC = () => {
         // Bottom-left of oak tree (trunk left + canopy bottom)
         {
           const px = 3;
-          ctx.fillStyle = state.isPixelMode ? '#7ec850' : COLORS.grass;
+          ctx.fillStyle = state.isPixelMode ? '#7ec850' : '#58c858';
           ctx.fillRect(x, y, size, size);
 
           if (state.isPixelMode) {
@@ -3681,10 +5216,23 @@ export const PokemonCanvas: React.FC = () => {
             ctx.fillStyle = '#5c3a21';
             ctx.fillRect(x + 30, y + size - 6, px * 2, px * 2);
           } else {
-            ctx.fillStyle = COLORS.tree;
-            ctx.fillRect(x + 6, y, size - 6, size / 3);
-            ctx.fillStyle = COLORS.treeTrunk;
-            ctx.fillRect(x + size - 15, y + size / 3, 12, size * 2 / 3);
+            // Classic 8-bit oak trunk left
+            const px = 3;
+            // Lower canopy - dark
+            ctx.fillStyle = '#185a18';
+            ctx.fillRect(x + px * 2, y, px * 14, px * 6);
+            // Lower canopy - main
+            ctx.fillStyle = '#30a830';
+            ctx.fillRect(x + px * 3, y, px * 12, px * 4);
+            // Trunk - dark
+            ctx.fillStyle = '#4a2810';
+            ctx.fillRect(x + px * 11, y + px * 4, px * 5, px * 12);
+            // Trunk - main
+            ctx.fillStyle = '#6a4020';
+            ctx.fillRect(x + px * 12, y + px * 4, px * 3, px * 12);
+            // Trunk - highlight
+            ctx.fillStyle = '#8a5830';
+            ctx.fillRect(x + px * 13, y + px * 6, px * 1, px * 8);
           }
         }
         break;
@@ -3693,7 +5241,7 @@ export const PokemonCanvas: React.FC = () => {
         // Bottom-right of oak tree (trunk right + canopy bottom)
         {
           const px = 3;
-          ctx.fillStyle = state.isPixelMode ? '#7ec850' : COLORS.grass;
+          ctx.fillStyle = state.isPixelMode ? '#7ec850' : '#58c858';
           ctx.fillRect(x, y, size, size);
 
           if (state.isPixelMode) {
@@ -3725,10 +5273,23 @@ export const PokemonCanvas: React.FC = () => {
             ctx.fillStyle = '#5c3a21';
             ctx.fillRect(x + 12, y + size - 6, px * 2, px * 2);
           } else {
-            ctx.fillStyle = COLORS.tree;
-            ctx.fillRect(x, y, size - 6, size / 3);
-            ctx.fillStyle = COLORS.treeTrunk;
-            ctx.fillRect(x + 3, y + size / 3, 12, size * 2 / 3);
+            // Classic 8-bit oak trunk right
+            const px = 3;
+            // Lower canopy - dark
+            ctx.fillStyle = '#185a18';
+            ctx.fillRect(x, y, px * 14, px * 6);
+            // Lower canopy - main
+            ctx.fillStyle = '#30a830';
+            ctx.fillRect(x, y, px * 12, px * 4);
+            // Trunk - dark
+            ctx.fillStyle = '#4a2810';
+            ctx.fillRect(x, y + px * 4, px * 5, px * 12);
+            // Trunk - main
+            ctx.fillStyle = '#6a4020';
+            ctx.fillRect(x + px, y + px * 4, px * 3, px * 12);
+            // Trunk - highlight
+            ctx.fillStyle = '#8a5830';
+            ctx.fillRect(x + px * 2, y + px * 6, px * 1, px * 8);
           }
         }
         break;
@@ -3738,7 +5299,7 @@ export const PokemonCanvas: React.FC = () => {
         // Top part of pine tree
         {
           const px = 3;
-          ctx.fillStyle = state.isPixelMode ? '#7ec850' : COLORS.grass;
+          ctx.fillStyle = state.isPixelMode ? '#7ec850' : '#58c858';
           ctx.fillRect(x, y, size, size);
 
           if (state.isPixelMode) {
@@ -3780,13 +5341,27 @@ export const PokemonCanvas: React.FC = () => {
             ctx.fillRect(x + 18, y + 18, px * 2, px);
             ctx.fillRect(x + 15, y + 27, px * 2, px);
           } else {
-            ctx.fillStyle = COLORS.tree;
-            ctx.beginPath();
-            ctx.moveTo(x + size / 2, y);
-            ctx.lineTo(x + size, y + size);
-            ctx.lineTo(x, y + size);
-            ctx.closePath();
-            ctx.fill();
+            // Classic 8-bit pine top - triangular layers
+            const px = 3;
+            // Dark green outline
+            ctx.fillStyle = '#186028';
+            // Top triangle
+            ctx.fillRect(x + px * 6, y + px * 2, px * 4, px * 2);
+            ctx.fillRect(x + px * 5, y + px * 4, px * 6, px * 2);
+            ctx.fillRect(x + px * 4, y + px * 6, px * 8, px * 2);
+            // Middle triangle
+            ctx.fillRect(x + px * 3, y + px * 8, px * 10, px * 3);
+            ctx.fillRect(x + px * 2, y + px * 11, px * 12, px * 3);
+            // Main fill
+            ctx.fillStyle = '#28a048';
+            ctx.fillRect(x + px * 6, y + px * 3, px * 3, px * 2);
+            ctx.fillRect(x + px * 5, y + px * 5, px * 5, px * 2);
+            ctx.fillRect(x + px * 4, y + px * 9, px * 7, px * 2);
+            ctx.fillRect(x + px * 3, y + px * 12, px * 9, px * 2);
+            // Highlight
+            ctx.fillStyle = '#50c868';
+            ctx.fillRect(x + px * 6, y + px * 4, px * 2, px);
+            ctx.fillRect(x + px * 5, y + px * 10, px * 2, px);
           }
         }
         break;
@@ -3795,7 +5370,7 @@ export const PokemonCanvas: React.FC = () => {
         // Bottom part of pine tree (trunk + lower branches)
         {
           const px = 3;
-          ctx.fillStyle = state.isPixelMode ? '#7ec850' : COLORS.grass;
+          ctx.fillStyle = state.isPixelMode ? '#7ec850' : '#58c858';
           ctx.fillRect(x, y, size, size);
 
           if (state.isPixelMode) {
@@ -3836,15 +5411,29 @@ export const PokemonCanvas: React.FC = () => {
             ctx.fillRect(x + 15, y + size - 6, px * 2, px * 2);
             ctx.fillRect(x + 27, y + size - 6, px * 2, px * 2);
           } else {
-            ctx.fillStyle = COLORS.tree;
-            ctx.beginPath();
-            ctx.moveTo(x + size / 2, y - size / 2);
-            ctx.lineTo(x + size, y + size / 2);
-            ctx.lineTo(x, y + size / 2);
-            ctx.closePath();
-            ctx.fill();
-            ctx.fillStyle = COLORS.treeTrunk;
-            ctx.fillRect(x + size / 2 - 6, y + size / 2, 12, size / 2);
+            // Classic 8-bit pine bottom - lower triangle + trunk
+            const px = 3;
+            // Bottom branches - dark
+            ctx.fillStyle = '#186028';
+            ctx.fillRect(x + px * 1, y, px * 14, px * 3);
+            ctx.fillRect(x + px * 2, y + px * 3, px * 12, px * 2);
+            ctx.fillRect(x + px * 3, y + px * 5, px * 10, px * 2);
+            // Main fill
+            ctx.fillStyle = '#28a048';
+            ctx.fillRect(x + px * 2, y + px, px * 12, px * 2);
+            ctx.fillRect(x + px * 3, y + px * 4, px * 10, px * 2);
+            // Highlight
+            ctx.fillStyle = '#50c868';
+            ctx.fillRect(x + px * 5, y + px * 2, px * 3, px);
+            // Trunk - dark
+            ctx.fillStyle = '#4a2810';
+            ctx.fillRect(x + px * 6, y + px * 7, px * 4, px * 9);
+            // Trunk - main
+            ctx.fillStyle = '#6a4020';
+            ctx.fillRect(x + px * 7, y + px * 7, px * 2, px * 9);
+            // Trunk - highlight
+            ctx.fillStyle = '#8a5830';
+            ctx.fillRect(x + px * 8, y + px * 8, px, px * 6);
           }
         }
         break;
@@ -3855,7 +5444,7 @@ export const PokemonCanvas: React.FC = () => {
           const px = 3;
 
           // Grass background
-          ctx.fillStyle = state.isPixelMode ? '#7ec850' : COLORS.grass;
+          ctx.fillStyle = state.isPixelMode ? '#7ec850' : '#58c858';
           ctx.fillRect(x, y, size, size);
 
           if (state.isPixelMode) {
@@ -3888,15 +5477,22 @@ export const PokemonCanvas: React.FC = () => {
             ctx.fillRect(x + 18, y + 15, px, px);
             ctx.fillRect(x + 27, y + 21, px, px);
           } else {
-            // Simple bush for non-pixel mode
-            ctx.fillStyle = '#166534';
-            ctx.beginPath();
-            ctx.arc(x + size / 2, y + size / 2 + 6, size / 2.5, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = '#22c55e';
-            ctx.beginPath();
-            ctx.arc(x + size / 2 - 4, y + size / 2 + 2, size / 3.5, 0, Math.PI * 2);
-            ctx.fill();
+            // Classic 8-bit bush - simple round shape
+            const px = 3;
+            // Dark outline
+            ctx.fillStyle = '#186028';
+            ctx.fillRect(x + px * 4, y + px * 5, px * 8, px * 8);
+            ctx.fillRect(x + px * 3, y + px * 6, px * 10, px * 6);
+            // Main fill
+            ctx.fillStyle = '#30a830';
+            ctx.fillRect(x + px * 4, y + px * 6, px * 8, px * 6);
+            ctx.fillRect(x + px * 5, y + px * 5, px * 6, px * 8);
+            // Highlight
+            ctx.fillStyle = '#58d858';
+            ctx.fillRect(x + px * 5, y + px * 6, px * 3, px * 2);
+            // Bright spot
+            ctx.fillStyle = '#88f888';
+            ctx.fillRect(x + px * 6, y + px * 7, px, px);
           }
         }
         break;
@@ -3905,24 +5501,47 @@ export const PokemonCanvas: React.FC = () => {
       case TILE_BOOKSHELF:
         {
           const px = 3;
-          // Warm wallpaper background
-          ctx.fillStyle = '#f5f0e6';
-          ctx.fillRect(x, y, size, size);
-          // Bookshelf frame (dark wood) - fills most of the tile
-          ctx.fillStyle = '#5c3a21';
-          ctx.fillRect(x + 3, y + 3, size - 6, size - 6);
-          // Shelves
-          ctx.fillStyle = '#8b5a2b';
-          ctx.fillRect(x + 6, y + 12, size - 12, px);
-          ctx.fillRect(x + 6, y + 27, size - 12, px);
-          ctx.fillRect(x + 6, y + 42, size - 12, px);
-          // Books (colorful spines)
-          const bookColors = ['#ef4444', '#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#ec4899'];
-          for (let i = 0; i < 6; i++) {
-            ctx.fillStyle = bookColors[i % bookColors.length];
-            ctx.fillRect(x + 6 + i * 5, y + 6, px + 1, px * 2);
-            ctx.fillRect(x + 6 + i * 5, y + 15, px + 1, px * 4);
-            ctx.fillRect(x + 6 + i * 5, y + 30, px + 1, px * 4);
+          if (state.isPixelMode) {
+            // Warm wallpaper background
+            ctx.fillStyle = '#f5f0e6';
+            ctx.fillRect(x, y, size, size);
+            // Bookshelf frame (dark wood) - fills most of the tile
+            ctx.fillStyle = '#5c3a21';
+            ctx.fillRect(x + 3, y + 3, size - 6, size - 6);
+            // Shelves
+            ctx.fillStyle = '#8b5a2b';
+            ctx.fillRect(x + 6, y + 12, size - 12, px);
+            ctx.fillRect(x + 6, y + 27, size - 12, px);
+            ctx.fillRect(x + 6, y + 42, size - 12, px);
+            // Books (colorful spines)
+            const bookColors = ['#ef4444', '#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#ec4899'];
+            for (let i = 0; i < 6; i++) {
+              ctx.fillStyle = bookColors[i % bookColors.length];
+              ctx.fillRect(x + 6 + i * 5, y + 6, px + 1, px * 2);
+              ctx.fillRect(x + 6 + i * 5, y + 15, px + 1, px * 4);
+              ctx.fillRect(x + 6 + i * 5, y + 30, px + 1, px * 4);
+            }
+          } else {
+            // 8-bit mode - simpler bookshelf
+            ctx.fillStyle = '#e8e0d0';
+            ctx.fillRect(x, y, size, size);
+            // Bookshelf frame
+            ctx.fillStyle = '#5a3820';
+            ctx.fillRect(x + px, y + px, px * 14, px * 14);
+            // Shelves
+            ctx.fillStyle = '#8a5830';
+            ctx.fillRect(x + px * 2, y + px * 5, px * 12, px);
+            ctx.fillRect(x + px * 2, y + px * 10, px * 12, px);
+            // Books - 3 colors
+            ctx.fillStyle = '#d03030';
+            ctx.fillRect(x + px * 3, y + px * 2, px * 2, px * 3);
+            ctx.fillRect(x + px * 3, y + px * 6, px * 2, px * 4);
+            ctx.fillStyle = '#3060c0';
+            ctx.fillRect(x + px * 6, y + px * 2, px * 2, px * 3);
+            ctx.fillRect(x + px * 6, y + px * 6, px * 2, px * 4);
+            ctx.fillStyle = '#30a030';
+            ctx.fillRect(x + px * 9, y + px * 2, px * 2, px * 3);
+            ctx.fillRect(x + px * 9, y + px * 6, px * 2, px * 4);
           }
         }
         break;
@@ -3930,157 +5549,249 @@ export const PokemonCanvas: React.FC = () => {
       case TILE_DESK:
         {
           const px = 3;
-          // Wooden floor background
-          ctx.fillStyle = '#c9a66b';
-          ctx.fillRect(x, y, size, size);
-          ctx.fillStyle = '#a67c52';
-          ctx.fillRect(x, y + 12, size, 1);
-          ctx.fillRect(x, y + 24, size, 1);
-          ctx.fillRect(x, y + 36, size, 1);
-          // Desk surface (wood)
-          ctx.fillStyle = '#8b5a2b';
-          ctx.fillRect(x + 3, y + 18, size - 6, px * 4);
-          // Desk top highlight
-          ctx.fillStyle = '#a67c52';
-          ctx.fillRect(x + 3, y + 18, size - 6, px);
-          // Desk legs
-          ctx.fillStyle = '#5c3a21';
-          ctx.fillRect(x + 6, y + 30, px * 2, size - 30);
-          ctx.fillRect(x + size - 12, y + 30, px * 2, size - 30);
-          // Small lamp on desk
-          ctx.fillStyle = '#fcd34d';
-          ctx.fillRect(x + 12, y + 9, px * 3, px * 3);
-          ctx.fillStyle = '#374151';
-          ctx.fillRect(x + 13, y + 12, px * 2, px * 2);
+          if (state.isPixelMode) {
+            // Wooden floor background
+            ctx.fillStyle = '#c9a66b';
+            ctx.fillRect(x, y, size, size);
+            ctx.fillStyle = '#a67c52';
+            ctx.fillRect(x, y + 12, size, 1);
+            ctx.fillRect(x, y + 24, size, 1);
+            ctx.fillRect(x, y + 36, size, 1);
+            // Desk surface (wood)
+            ctx.fillStyle = '#8b5a2b';
+            ctx.fillRect(x + 3, y + 18, size - 6, px * 4);
+            // Desk top highlight
+            ctx.fillStyle = '#a67c52';
+            ctx.fillRect(x + 3, y + 18, size - 6, px);
+            // Desk legs
+            ctx.fillStyle = '#5c3a21';
+            ctx.fillRect(x + 6, y + 30, px * 2, size - 30);
+            ctx.fillRect(x + size - 12, y + 30, px * 2, size - 30);
+            // Small lamp on desk
+            ctx.fillStyle = '#fcd34d';
+            ctx.fillRect(x + 12, y + 9, px * 3, px * 3);
+            ctx.fillStyle = '#374151';
+            ctx.fillRect(x + 13, y + 12, px * 2, px * 2);
+          } else {
+            // 8-bit mode - simple desk
+            ctx.fillStyle = '#c0a060';
+            ctx.fillRect(x, y, size, size);
+            // Desk
+            ctx.fillStyle = '#6a4020';
+            ctx.fillRect(x + px, y + px * 6, px * 14, px * 4);
+            ctx.fillStyle = '#8a5830';
+            ctx.fillRect(x + px * 2, y + px * 6, px * 12, px * 2);
+            // Legs
+            ctx.fillStyle = '#5a3018';
+            ctx.fillRect(x + px * 2, y + px * 10, px * 2, px * 6);
+            ctx.fillRect(x + px * 12, y + px * 10, px * 2, px * 6);
+          }
         }
         break;
 
       case TILE_PLANT_POT:
         {
           const px = 3;
-          // Wooden floor background
-          ctx.fillStyle = '#c9a66b';
-          ctx.fillRect(x, y, size, size);
-          ctx.fillStyle = '#a67c52';
-          ctx.fillRect(x, y + 12, size, 1);
-          ctx.fillRect(x, y + 24, size, 1);
-          ctx.fillRect(x, y + 36, size, 1);
-          // Pot (terracotta)
-          ctx.fillStyle = '#b45309';
-          ctx.fillRect(x + 12, y + 30, px * 8, px * 5);
-          ctx.fillStyle = '#d97706';
-          ctx.fillRect(x + 12, y + 30, px * 8, px);
-          // Plant leaves
-          ctx.fillStyle = '#22c55e';
-          ctx.fillRect(x + 18, y + 12, px * 2, px * 6);
-          ctx.fillRect(x + 12, y + 15, px * 3, px * 4);
-          ctx.fillRect(x + 27, y + 15, px * 3, px * 4);
-          ctx.fillRect(x + 15, y + 9, px * 3, px * 3);
-          ctx.fillRect(x + 24, y + 9, px * 3, px * 3);
-          // Leaf highlights
-          ctx.fillStyle = '#4ade80';
-          ctx.fillRect(x + 13, y + 16, px, px * 2);
-          ctx.fillRect(x + 28, y + 16, px, px * 2);
+          if (state.isPixelMode) {
+            // Wooden floor background
+            ctx.fillStyle = '#c9a66b';
+            ctx.fillRect(x, y, size, size);
+            ctx.fillStyle = '#a67c52';
+            ctx.fillRect(x, y + 12, size, 1);
+            ctx.fillRect(x, y + 24, size, 1);
+            ctx.fillRect(x, y + 36, size, 1);
+            // Pot (terracotta)
+            ctx.fillStyle = '#b45309';
+            ctx.fillRect(x + 12, y + 30, px * 8, px * 5);
+            ctx.fillStyle = '#d97706';
+            ctx.fillRect(x + 12, y + 30, px * 8, px);
+            // Plant leaves
+            ctx.fillStyle = '#22c55e';
+            ctx.fillRect(x + 18, y + 12, px * 2, px * 6);
+            ctx.fillRect(x + 12, y + 15, px * 3, px * 4);
+            ctx.fillRect(x + 27, y + 15, px * 3, px * 4);
+            ctx.fillRect(x + 15, y + 9, px * 3, px * 3);
+            ctx.fillRect(x + 24, y + 9, px * 3, px * 3);
+            // Leaf highlights
+            ctx.fillStyle = '#4ade80';
+            ctx.fillRect(x + 13, y + 16, px, px * 2);
+            ctx.fillRect(x + 28, y + 16, px, px * 2);
+          } else {
+            // 8-bit mode - simple plant pot
+            ctx.fillStyle = '#c89858';
+            ctx.fillRect(x, y, size, size);
+            // Pot
+            ctx.fillStyle = '#b05010';
+            ctx.fillRect(x + px * 4, y + px * 10, px * 8, px * 6);
+            // Plant
+            ctx.fillStyle = '#30a030';
+            ctx.fillRect(x + px * 6, y + px * 4, px * 4, px * 6);
+            ctx.fillRect(x + px * 4, y + px * 5, px * 3, px * 4);
+            ctx.fillRect(x + px * 9, y + px * 5, px * 3, px * 4);
+          }
         }
         break;
 
       case TILE_COUCH:
         {
           const px = 3;
-          // Wooden floor background
-          ctx.fillStyle = '#c9a66b';
-          ctx.fillRect(x, y, size, size);
-          ctx.fillStyle = '#a67c52';
-          ctx.fillRect(x, y + 36, size, 1);
-          // Couch back
-          ctx.fillStyle = '#7c3aed';
-          ctx.fillRect(x + 3, y + 6, size - 6, px * 6);
-          // Couch seat
-          ctx.fillStyle = '#8b5cf6';
-          ctx.fillRect(x + 3, y + 18, size - 6, px * 6);
-          // Couch arms
-          ctx.fillStyle = '#6d28d9';
-          ctx.fillRect(x + 3, y + 12, px * 3, px * 8);
-          ctx.fillRect(x + size - 12, y + 12, px * 3, px * 8);
-          // Cushion details
-          ctx.fillStyle = '#a78bfa';
-          ctx.fillRect(x + 15, y + 9, px * 5, px * 3);
+          if (state.isPixelMode) {
+            // Wooden floor background
+            ctx.fillStyle = '#c9a66b';
+            ctx.fillRect(x, y, size, size);
+            ctx.fillStyle = '#a67c52';
+            ctx.fillRect(x, y + 36, size, 1);
+            // Couch back
+            ctx.fillStyle = '#7c3aed';
+            ctx.fillRect(x + 3, y + 6, size - 6, px * 6);
+            // Couch seat
+            ctx.fillStyle = '#8b5cf6';
+            ctx.fillRect(x + 3, y + 18, size - 6, px * 6);
+            // Couch arms
+            ctx.fillStyle = '#6d28d9';
+            ctx.fillRect(x + 3, y + 12, px * 3, px * 8);
+            ctx.fillRect(x + size - 12, y + 12, px * 3, px * 8);
+            // Cushion details
+            ctx.fillStyle = '#a78bfa';
+            ctx.fillRect(x + 15, y + 9, px * 5, px * 3);
+          } else {
+            // 8-bit mode - simple couch
+            ctx.fillStyle = '#c89858';
+            ctx.fillRect(x, y, size, size);
+            // Couch back
+            ctx.fillStyle = '#7030a0';
+            ctx.fillRect(x + px, y + px * 2, px * 14, px * 5);
+            // Couch seat
+            ctx.fillStyle = '#9050c0';
+            ctx.fillRect(x + px, y + px * 7, px * 14, px * 5);
+            // Arms
+            ctx.fillStyle = '#602080';
+            ctx.fillRect(x + px, y + px * 4, px * 3, px * 7);
+            ctx.fillRect(x + px * 12, y + px * 4, px * 3, px * 7);
+          }
         }
         break;
 
       case TILE_CARPET:
         {
           const px = 3;
-          // Carpet base (warm beige)
-          ctx.fillStyle = '#d4a574';
-          ctx.fillRect(x, y, size, size);
-          // Carpet pattern
-          ctx.fillStyle = '#b8956e';
-          ctx.fillRect(x + 6, y + 6, px * 2, px * 2);
-          ctx.fillRect(x + 24, y + 6, px * 2, px * 2);
-          ctx.fillRect(x + 6, y + 24, px * 2, px * 2);
-          ctx.fillRect(x + 24, y + 24, px * 2, px * 2);
-          ctx.fillRect(x + 15, y + 15, px * 6, px * 6);
-          // Border hint
-          ctx.fillStyle = '#a67c52';
-          ctx.fillRect(x, y, size, px);
-          ctx.fillRect(x, y + size - px, size, px);
+          if (state.isPixelMode) {
+            // Carpet base (warm beige)
+            ctx.fillStyle = '#d4a574';
+            ctx.fillRect(x, y, size, size);
+            // Carpet pattern
+            ctx.fillStyle = '#b8956e';
+            ctx.fillRect(x + 6, y + 6, px * 2, px * 2);
+            ctx.fillRect(x + 24, y + 6, px * 2, px * 2);
+            ctx.fillRect(x + 6, y + 24, px * 2, px * 2);
+            ctx.fillRect(x + 24, y + 24, px * 2, px * 2);
+            ctx.fillRect(x + 15, y + 15, px * 6, px * 6);
+            // Border hint
+            ctx.fillStyle = '#a67c52';
+            ctx.fillRect(x, y, size, px);
+            ctx.fillRect(x, y + size - px, size, px);
+          } else {
+            // 8-bit mode - simple carpet
+            ctx.fillStyle = '#d09858';
+            ctx.fillRect(x, y, size, size);
+            // Pattern
+            ctx.fillStyle = '#b08040';
+            ctx.fillRect(x + px * 2, y + px * 2, px * 4, px * 4);
+            ctx.fillRect(x + px * 10, y + px * 10, px * 4, px * 4);
+            // Border
+            ctx.fillStyle = '#a07030';
+            ctx.fillRect(x, y, size, px);
+            ctx.fillRect(x, y + px * 15, size, px);
+          }
         }
         break;
 
       case TILE_LAMP:
         {
           const px = 3;
-          // Wooden floor background
-          ctx.fillStyle = '#c9a66b';
-          ctx.fillRect(x, y, size, size);
-          ctx.fillStyle = '#a67c52';
-          ctx.fillRect(x, y + 12, size, 1);
-          ctx.fillRect(x, y + 24, size, 1);
-          ctx.fillRect(x, y + 36, size, 1);
-          // Lamp pole
-          ctx.fillStyle = '#374151';
-          ctx.fillRect(x + 21, y + 18, px * 2, size - 18);
-          // Lamp shade
-          ctx.fillStyle = '#fef3c7';
-          ctx.fillRect(x + 12, y + 6, px * 8, px * 5);
-          // Lamp glow
-          ctx.fillStyle = '#fcd34d';
-          ctx.fillRect(x + 15, y + 9, px * 5, px * 2);
-          // Lamp base
-          ctx.fillStyle = '#1f2937';
-          ctx.fillRect(x + 15, y + size - 6, px * 6, px * 2);
+          if (state.isPixelMode) {
+            // Wooden floor background
+            ctx.fillStyle = '#c9a66b';
+            ctx.fillRect(x, y, size, size);
+            ctx.fillStyle = '#a67c52';
+            ctx.fillRect(x, y + 12, size, 1);
+            ctx.fillRect(x, y + 24, size, 1);
+            ctx.fillRect(x, y + 36, size, 1);
+            // Lamp pole
+            ctx.fillStyle = '#374151';
+            ctx.fillRect(x + 21, y + 18, px * 2, size - 18);
+            // Lamp shade
+            ctx.fillStyle = '#fef3c7';
+            ctx.fillRect(x + 12, y + 6, px * 8, px * 5);
+            // Lamp glow
+            ctx.fillStyle = '#fcd34d';
+            ctx.fillRect(x + 15, y + 9, px * 5, px * 2);
+            // Lamp base
+            ctx.fillStyle = '#1f2937';
+            ctx.fillRect(x + 15, y + size - 6, px * 6, px * 2);
+          } else {
+            // 8-bit mode - simple lamp
+            ctx.fillStyle = '#c89858';
+            ctx.fillRect(x, y, size, size);
+            // Pole
+            ctx.fillStyle = '#404858';
+            ctx.fillRect(x + px * 7, y + px * 6, px * 2, px * 10);
+            // Shade
+            ctx.fillStyle = '#f8e8a0';
+            ctx.fillRect(x + px * 4, y + px * 2, px * 8, px * 4);
+            // Glow
+            ctx.fillStyle = '#f8d040';
+            ctx.fillRect(x + px * 5, y + px * 3, px * 6, px * 2);
+            // Base
+            ctx.fillStyle = '#303848';
+            ctx.fillRect(x + px * 5, y + px * 14, px * 6, px * 2);
+          }
         }
         break;
 
       case TILE_PICTURE_FRAME:
         {
           const px = 3;
-          // Warm wallpaper background
-          ctx.fillStyle = '#f5f0e6';
-          ctx.fillRect(x, y, size, size);
-          // Wallpaper stripes
-          ctx.fillStyle = '#ebe5d9';
-          ctx.fillRect(x + 6, y, px, size);
-          ctx.fillRect(x + 18, y, px, size);
-          ctx.fillRect(x + 30, y, px, size);
-          ctx.fillRect(x + 42, y, px, size);
-          // Wainscoting at bottom
-          ctx.fillStyle = '#8b5a2b';
-          ctx.fillRect(x, y + 30, size, size - 30);
-          ctx.fillStyle = '#5c3a21';
-          ctx.fillRect(x, y + 27, size, px * 2);
-          // Frame (gold)
-          ctx.fillStyle = '#d4af37';
-          ctx.fillRect(x + 9, y + 9, px * 10, px * 10);
-          // Picture inside
-          ctx.fillStyle = '#1e3a5f';
-          ctx.fillRect(x + 12, y + 12, px * 8, px * 7);
-          // Simple landscape
-          ctx.fillStyle = '#4ade80';
-          ctx.fillRect(x + 12, y + 24, px * 8, px * 3);
-          ctx.fillStyle = '#fcd34d';
-          ctx.fillRect(x + 27, y + 15, px * 2, px * 2);
+          if (state.isPixelMode) {
+            // Warm wallpaper background
+            ctx.fillStyle = '#f5f0e6';
+            ctx.fillRect(x, y, size, size);
+            // Wallpaper stripes
+            ctx.fillStyle = '#ebe5d9';
+            ctx.fillRect(x + 6, y, px, size);
+            ctx.fillRect(x + 18, y, px, size);
+            ctx.fillRect(x + 30, y, px, size);
+            ctx.fillRect(x + 42, y, px, size);
+            // Wainscoting at bottom
+            ctx.fillStyle = '#8b5a2b';
+            ctx.fillRect(x, y + 30, size, size - 30);
+            ctx.fillStyle = '#5c3a21';
+            ctx.fillRect(x, y + 27, size, px * 2);
+            // Frame (gold)
+            ctx.fillStyle = '#d4af37';
+            ctx.fillRect(x + 9, y + 9, px * 10, px * 10);
+            // Picture inside
+            ctx.fillStyle = '#1e3a5f';
+            ctx.fillRect(x + 12, y + 12, px * 8, px * 7);
+            // Simple landscape
+            ctx.fillStyle = '#4ade80';
+            ctx.fillRect(x + 12, y + 24, px * 8, px * 3);
+            ctx.fillStyle = '#fcd34d';
+            ctx.fillRect(x + 27, y + 15, px * 2, px * 2);
+          } else {
+            // 8-bit mode - simple picture frame
+            ctx.fillStyle = '#e8e0d0';
+            ctx.fillRect(x, y, size, size);
+            // Wainscoting
+            ctx.fillStyle = '#986838';
+            ctx.fillRect(x, y + px * 10, size, px * 6);
+            // Frame
+            ctx.fillStyle = '#c0a030';
+            ctx.fillRect(x + px * 3, y + px * 3, px * 10, px * 6);
+            // Picture
+            ctx.fillStyle = '#304080';
+            ctx.fillRect(x + px * 4, y + px * 4, px * 8, px * 4);
+          }
         }
         break;
 
@@ -4088,33 +5799,52 @@ export const PokemonCanvas: React.FC = () => {
       case TILE_COMPUTER:
         {
           const px = 3;
-          // Metallic floor background
-          ctx.fillStyle = '#2d3444';
-          ctx.fillRect(x, y, size, size);
-          ctx.fillStyle = '#3d4555';
-          ctx.fillRect(x + 15, y + 39, 6, 6);
-          ctx.fillRect(x + 33, y + 39, 6, 6);
-          // Desk
-          ctx.fillStyle = '#374151';
-          ctx.fillRect(x + 3, y + 30, size - 6, px * 5);
-          // Monitor frame
-          ctx.fillStyle = '#1f2937';
-          ctx.fillRect(x + 9, y + 6, px * 10, px * 8);
-          // Screen (glowing)
-          const glow = Math.sin(frameCountRef.current * 0.1) * 0.2 + 0.8;
-          ctx.fillStyle = `rgba(57, 255, 20, ${glow})`;
-          ctx.fillRect(x + 12, y + 9, px * 8, px * 5);
-          // Code lines on screen
-          ctx.fillStyle = '#39ff14';
-          ctx.fillRect(x + 13, y + 10, px * 4, px);
-          ctx.fillRect(x + 13, y + 13, px * 6, px);
-          ctx.fillRect(x + 13, y + 16, px * 3, px);
-          // Keyboard
-          ctx.fillStyle = '#1f2937';
-          ctx.fillRect(x + 12, y + 33, px * 8, px * 3);
-          ctx.fillStyle = '#374151';
-          for (let i = 0; i < 6; i++) {
-            ctx.fillRect(x + 13 + i * 3, y + 34, px - 1, px);
+          if (state.isPixelMode) {
+            // Metallic floor background
+            ctx.fillStyle = '#2d3444';
+            ctx.fillRect(x, y, size, size);
+            ctx.fillStyle = '#3d4555';
+            ctx.fillRect(x + 15, y + 39, 6, 6);
+            ctx.fillRect(x + 33, y + 39, 6, 6);
+            // Desk
+            ctx.fillStyle = '#374151';
+            ctx.fillRect(x + 3, y + 30, size - 6, px * 5);
+            // Monitor frame
+            ctx.fillStyle = '#1f2937';
+            ctx.fillRect(x + 9, y + 6, px * 10, px * 8);
+            // Screen (glowing)
+            const glow = Math.sin(frameCountRef.current * 0.1) * 0.2 + 0.8;
+            ctx.fillStyle = `rgba(57, 255, 20, ${glow})`;
+            ctx.fillRect(x + 12, y + 9, px * 8, px * 5);
+            // Code lines on screen
+            ctx.fillStyle = '#39ff14';
+            ctx.fillRect(x + 13, y + 10, px * 4, px);
+            ctx.fillRect(x + 13, y + 13, px * 6, px);
+            ctx.fillRect(x + 13, y + 16, px * 3, px);
+            // Keyboard
+            ctx.fillStyle = '#1f2937';
+            ctx.fillRect(x + 12, y + 33, px * 8, px * 3);
+            ctx.fillStyle = '#374151';
+            for (let i = 0; i < 6; i++) {
+              ctx.fillRect(x + 13 + i * 3, y + 34, px - 1, px);
+            }
+          } else {
+            // 8-bit mode - simple computer
+            ctx.fillStyle = '#303848';
+            ctx.fillRect(x, y, size, size);
+            // Desk
+            ctx.fillStyle = '#404858';
+            ctx.fillRect(x + px, y + px * 10, px * 14, px * 4);
+            // Monitor - dark frame
+            ctx.fillStyle = '#202830';
+            ctx.fillRect(x + px * 3, y + px * 2, px * 10, px * 7);
+            // Screen - green
+            ctx.fillStyle = '#30e030';
+            ctx.fillRect(x + px * 4, y + px * 3, px * 8, px * 5);
+            // Code lines
+            ctx.fillStyle = '#20a020';
+            ctx.fillRect(x + px * 5, y + px * 4, px * 4, px);
+            ctx.fillRect(x + px * 5, y + px * 6, px * 6, px);
           }
         }
         break;
@@ -4122,30 +5852,47 @@ export const PokemonCanvas: React.FC = () => {
       case TILE_SERVER_RACK:
         {
           const px = 3;
-          // Dark industrial wall background
-          ctx.fillStyle = '#1a1f2e';
-          ctx.fillRect(x, y, size, size);
-          // Panel pattern
-          ctx.fillStyle = '#252b3b';
-          ctx.fillRect(x + 1, y + 1, size - 2, size - 2);
-          // Server cabinet
-          ctx.fillStyle = '#1f2937';
-          ctx.fillRect(x + 3, y + 3, size - 6, size - 6);
-          // Server units
-          for (let i = 0; i < 4; i++) {
-            ctx.fillStyle = '#374151';
-            ctx.fillRect(x + 6, y + 6 + i * 10, size - 12, px * 3);
-            // Blinking lights
-            const lightOn = (frameCountRef.current + i * 10) % 30 < 15;
-            ctx.fillStyle = lightOn ? '#39ff14' : '#064e3b';
-            ctx.fillRect(x + 9, y + 8 + i * 10, px, px);
-            ctx.fillStyle = '#3b82f6';
-            ctx.fillRect(x + 15, y + 8 + i * 10, px, px);
-          }
-          // Ventilation
-          ctx.fillStyle = '#111827';
-          for (let i = 0; i < 3; i++) {
-            ctx.fillRect(x + 24 + i * 4, y + 9, px, px * 10);
+          if (state.isPixelMode) {
+            // Dark industrial wall background
+            ctx.fillStyle = '#1a1f2e';
+            ctx.fillRect(x, y, size, size);
+            // Panel pattern
+            ctx.fillStyle = '#252b3b';
+            ctx.fillRect(x + 1, y + 1, size - 2, size - 2);
+            // Server cabinet
+            ctx.fillStyle = '#1f2937';
+            ctx.fillRect(x + 3, y + 3, size - 6, size - 6);
+            // Server units
+            for (let i = 0; i < 4; i++) {
+              ctx.fillStyle = '#374151';
+              ctx.fillRect(x + 6, y + 6 + i * 10, size - 12, px * 3);
+              // Blinking lights
+              const lightOn = (frameCountRef.current + i * 10) % 30 < 15;
+              ctx.fillStyle = lightOn ? '#39ff14' : '#064e3b';
+              ctx.fillRect(x + 9, y + 8 + i * 10, px, px);
+              ctx.fillStyle = '#3b82f6';
+              ctx.fillRect(x + 15, y + 8 + i * 10, px, px);
+            }
+            // Ventilation
+            ctx.fillStyle = '#111827';
+            for (let i = 0; i < 3; i++) {
+              ctx.fillRect(x + 24 + i * 4, y + 9, px, px * 10);
+            }
+          } else {
+            // 8-bit mode - simple server rack
+            ctx.fillStyle = '#202838';
+            ctx.fillRect(x, y, size, size);
+            // Cabinet frame
+            ctx.fillStyle = '#303848';
+            ctx.fillRect(x + px * 2, y + px, px * 12, px * 14);
+            // Server units (3 boxes)
+            for (let i = 0; i < 3; i++) {
+              ctx.fillStyle = '#404858';
+              ctx.fillRect(x + px * 3, y + px * 2 + i * px * 4, px * 10, px * 3);
+              // Simple LED
+              ctx.fillStyle = '#30e030';
+              ctx.fillRect(x + px * 4, y + px * 3 + i * px * 4, px, px);
+            }
           }
         }
         break;
@@ -4153,93 +5900,155 @@ export const PokemonCanvas: React.FC = () => {
       case TILE_MONITOR_WALL:
         {
           const px = 3;
-          // Dark industrial wall background
-          ctx.fillStyle = '#1a1f2e';
-          ctx.fillRect(x, y, size, size);
-          // Panel pattern
-          ctx.fillStyle = '#252b3b';
-          ctx.fillRect(x + 1, y + 1, size - 2, size - 2);
-          // Large monitor frame
-          ctx.fillStyle = '#111827';
-          ctx.fillRect(x + 3, y + 6, size - 6, size - 15);
-          // Screen
-          ctx.fillStyle = '#1e3a5f';
-          ctx.fillRect(x + 6, y + 9, size - 12, size - 21);
-          // Data visualization
-          ctx.fillStyle = '#39ff14';
-          ctx.fillRect(x + 9, y + 12, px * 2, px * 6);
-          ctx.fillRect(x + 15, y + 15, px * 2, px * 5);
-          ctx.fillRect(x + 21, y + 9, px * 2, px * 8);
-          ctx.fillRect(x + 27, y + 18, px * 2, px * 4);
-          // Title bar
-          ctx.fillStyle = '#3b82f6';
-          ctx.fillRect(x + 6, y + 9, size - 12, px);
+          if (state.isPixelMode) {
+            // Dark industrial wall background
+            ctx.fillStyle = '#1a1f2e';
+            ctx.fillRect(x, y, size, size);
+            // Panel pattern
+            ctx.fillStyle = '#252b3b';
+            ctx.fillRect(x + 1, y + 1, size - 2, size - 2);
+            // Large monitor frame
+            ctx.fillStyle = '#111827';
+            ctx.fillRect(x + 3, y + 6, size - 6, size - 15);
+            // Screen
+            ctx.fillStyle = '#1e3a5f';
+            ctx.fillRect(x + 6, y + 9, size - 12, size - 21);
+            // Data visualization
+            ctx.fillStyle = '#39ff14';
+            ctx.fillRect(x + 9, y + 12, px * 2, px * 6);
+            ctx.fillRect(x + 15, y + 15, px * 2, px * 5);
+            ctx.fillRect(x + 21, y + 9, px * 2, px * 8);
+            ctx.fillRect(x + 27, y + 18, px * 2, px * 4);
+            // Title bar
+            ctx.fillStyle = '#3b82f6';
+            ctx.fillRect(x + 6, y + 9, size - 12, px);
+          } else {
+            // 8-bit mode - simple wall monitor
+            ctx.fillStyle = '#202838';
+            ctx.fillRect(x, y, size, size);
+            // Monitor frame
+            ctx.fillStyle = '#181820';
+            ctx.fillRect(x + px * 2, y + px * 2, px * 12, px * 10);
+            // Screen
+            ctx.fillStyle = '#2040a0';
+            ctx.fillRect(x + px * 3, y + px * 3, px * 10, px * 8);
+            // Simple bar chart
+            ctx.fillStyle = '#30e030';
+            ctx.fillRect(x + px * 4, y + px * 7, px * 2, px * 3);
+            ctx.fillRect(x + px * 7, y + px * 5, px * 2, px * 5);
+            ctx.fillRect(x + px * 10, y + px * 6, px * 2, px * 4);
+          }
         }
         break;
 
       case TILE_LAB_FLOOR:
         {
           const px = 3;
-          // Metallic floor base
-          ctx.fillStyle = '#2d3444';
-          ctx.fillRect(x, y, size, size);
-          // Diamond plate pattern
-          ctx.fillStyle = '#3d4555';
-          ctx.fillRect(x + 3, y + 3, 6, 6);
-          ctx.fillRect(x + 15, y + 15, 6, 6);
-          ctx.fillRect(x + 27, y + 27, 6, 6);
-          ctx.fillRect(x + 39, y + 3, 6, 6);
-          ctx.fillRect(x + 3, y + 39, 6, 6);
-          // Grid lines
-          ctx.fillStyle = '#1e2430';
-          ctx.fillRect(x, y, size, 1);
-          ctx.fillRect(x, y, 1, size);
-          // Subtle glow spots
-          ctx.fillStyle = 'rgba(57, 255, 20, 0.08)';
-          ctx.fillRect(x + 18, y + 18, px * 4, px * 4);
+          if (state.isPixelMode) {
+            // Metallic floor base
+            ctx.fillStyle = '#2d3444';
+            ctx.fillRect(x, y, size, size);
+            // Diamond plate pattern
+            ctx.fillStyle = '#3d4555';
+            ctx.fillRect(x + 3, y + 3, 6, 6);
+            ctx.fillRect(x + 15, y + 15, 6, 6);
+            ctx.fillRect(x + 27, y + 27, 6, 6);
+            ctx.fillRect(x + 39, y + 3, 6, 6);
+            ctx.fillRect(x + 3, y + 39, 6, 6);
+            // Grid lines
+            ctx.fillStyle = '#1e2430';
+            ctx.fillRect(x, y, size, 1);
+            ctx.fillRect(x, y, 1, size);
+            // Subtle glow spots
+            ctx.fillStyle = 'rgba(57, 255, 20, 0.08)';
+            ctx.fillRect(x + 18, y + 18, px * 4, px * 4);
+          } else {
+            // 8-bit mode - simple metal floor
+            ctx.fillStyle = '#303848';
+            ctx.fillRect(x, y, size, size);
+            // Grid pattern
+            ctx.fillStyle = '#404858';
+            ctx.fillRect(x + px * 2, y + px * 2, px * 4, px * 4);
+            ctx.fillRect(x + px * 10, y + px * 10, px * 4, px * 4);
+            // Border
+            ctx.fillStyle = '#202830';
+            ctx.fillRect(x, y, size, px);
+            ctx.fillRect(x, y, px, size);
+          }
         }
         break;
 
       case TILE_DESK_TECH:
         {
           const px = 3;
-          // Metallic floor background
-          ctx.fillStyle = '#2d3444';
-          ctx.fillRect(x, y, size, size);
-          ctx.fillStyle = '#3d4555';
-          ctx.fillRect(x + 15, y + 3, 6, 6);
-          // Tech desk surface
-          ctx.fillStyle = '#374151';
-          ctx.fillRect(x, y + 21, size, px * 5);
-          ctx.fillStyle = '#4b5563';
-          ctx.fillRect(x, y + 21, size, px);
-          // LED strip
-          ctx.fillStyle = '#39ff14';
-          ctx.fillRect(x + 3, y + 33, size - 6, px);
-          // Desk legs
-          ctx.fillStyle = '#1f2937';
-          ctx.fillRect(x + 6, y + 36, px * 2, size - 36);
-          ctx.fillRect(x + size - 12, y + 36, px * 2, size - 36);
+          if (state.isPixelMode) {
+            // Metallic floor background
+            ctx.fillStyle = '#2d3444';
+            ctx.fillRect(x, y, size, size);
+            ctx.fillStyle = '#3d4555';
+            ctx.fillRect(x + 15, y + 3, 6, 6);
+            // Tech desk surface
+            ctx.fillStyle = '#374151';
+            ctx.fillRect(x, y + 21, size, px * 5);
+            ctx.fillStyle = '#4b5563';
+            ctx.fillRect(x, y + 21, size, px);
+            // LED strip
+            ctx.fillStyle = '#39ff14';
+            ctx.fillRect(x + 3, y + 33, size - 6, px);
+            // Desk legs
+            ctx.fillStyle = '#1f2937';
+            ctx.fillRect(x + 6, y + 36, px * 2, size - 36);
+            ctx.fillRect(x + size - 12, y + 36, px * 2, size - 36);
+          } else {
+            // 8-bit mode - simple tech desk
+            ctx.fillStyle = '#303848';
+            ctx.fillRect(x, y, size, size);
+            // Desk surface
+            ctx.fillStyle = '#404858';
+            ctx.fillRect(x, y + px * 7, size, px * 5);
+            // LED strip
+            ctx.fillStyle = '#30e030';
+            ctx.fillRect(x + px, y + px * 11, px * 14, px);
+            // Legs
+            ctx.fillStyle = '#202830';
+            ctx.fillRect(x + px * 2, y + px * 12, px * 2, px * 4);
+            ctx.fillRect(x + px * 12, y + px * 12, px * 2, px * 4);
+          }
         }
         break;
 
       case TILE_CABLE_FLOOR:
         {
           const px = 3;
-          // Metallic floor background
-          ctx.fillStyle = '#2d3444';
-          ctx.fillRect(x, y, size, size);
-          // Cable channels
-          ctx.fillStyle = '#111827';
-          ctx.fillRect(x + 6, y, px * 3, size);
-          ctx.fillRect(x + 24, y, px * 3, size);
-          // Cables (colorful)
-          ctx.fillStyle = '#3b82f6';
-          ctx.fillRect(x + 7, y + 6, px, size - 12);
-          ctx.fillStyle = '#22c55e';
-          ctx.fillRect(x + 25, y + 3, px, size - 6);
-          ctx.fillStyle = '#f59e0b';
-          ctx.fillRect(x + 10, y + 12, px, size - 24);
+          if (state.isPixelMode) {
+            // Metallic floor background
+            ctx.fillStyle = '#2d3444';
+            ctx.fillRect(x, y, size, size);
+            // Cable channels
+            ctx.fillStyle = '#111827';
+            ctx.fillRect(x + 6, y, px * 3, size);
+            ctx.fillRect(x + 24, y, px * 3, size);
+            // Cables (colorful)
+            ctx.fillStyle = '#3b82f6';
+            ctx.fillRect(x + 7, y + 6, px, size - 12);
+            ctx.fillStyle = '#22c55e';
+            ctx.fillRect(x + 25, y + 3, px, size - 6);
+            ctx.fillStyle = '#f59e0b';
+            ctx.fillRect(x + 10, y + 12, px, size - 24);
+          } else {
+            // 8-bit mode - simple cable floor
+            ctx.fillStyle = '#303848';
+            ctx.fillRect(x, y, size, size);
+            // Cable channels
+            ctx.fillStyle = '#202830';
+            ctx.fillRect(x + px * 2, y, px * 3, size);
+            ctx.fillRect(x + px * 10, y, px * 3, size);
+            // Cables
+            ctx.fillStyle = '#4080c0';
+            ctx.fillRect(x + px * 3, y + px * 2, px, px * 12);
+            ctx.fillStyle = '#30e030';
+            ctx.fillRect(x + px * 11, y + px * 3, px, px * 10);
+          }
         }
         break;
 
@@ -4247,52 +6056,90 @@ export const PokemonCanvas: React.FC = () => {
       case TILE_COUNTER:
         {
           const px = 3;
-          // Checkered floor background
-          const isLightC = ((Math.floor(x / size) + Math.floor(y / size)) % 2) === 0;
-          ctx.fillStyle = isLightC ? '#fef3c7' : '#fde68a';
-          ctx.fillRect(x, y, size, size);
-          // Counter front
-          ctx.fillStyle = '#dc2626';
-          ctx.fillRect(x, y + 12, size, size - 12);
-          // Counter top
-          ctx.fillStyle = '#fef3c7';
-          ctx.fillRect(x, y + 12, size, px * 2);
-          // White accent stripe
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(x, y + 21, size, px * 2);
-          // Pokeball logo hint
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(x + 18, y + 27, px * 4, px * 4);
-          ctx.fillStyle = '#111827';
-          ctx.fillRect(x + 19, y + 29, px * 2, px);
+          if (state.isPixelMode) {
+            // Checkered floor background
+            const isLightC = ((Math.floor(x / size) + Math.floor(y / size)) % 2) === 0;
+            ctx.fillStyle = isLightC ? '#fef3c7' : '#fde68a';
+            ctx.fillRect(x, y, size, size);
+            // Counter front
+            ctx.fillStyle = '#dc2626';
+            ctx.fillRect(x, y + 12, size, size - 12);
+            // Counter top
+            ctx.fillStyle = '#fef3c7';
+            ctx.fillRect(x, y + 12, size, px * 2);
+            // White accent stripe
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(x, y + 21, size, px * 2);
+            // Pokeball logo hint
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(x + 18, y + 27, px * 4, px * 4);
+            ctx.fillStyle = '#111827';
+            ctx.fillRect(x + 19, y + 29, px * 2, px);
+          } else {
+            // 8-bit mode - simple counter
+            ctx.fillStyle = '#f8e8c8';
+            ctx.fillRect(x, y, size, size);
+            // Counter front
+            ctx.fillStyle = '#d03030';
+            ctx.fillRect(x, y + px * 4, size, px * 12);
+            // Counter top
+            ctx.fillStyle = '#f8f8f8';
+            ctx.fillRect(x, y + px * 4, size, px * 2);
+            // White stripe
+            ctx.fillStyle = '#f8f8f8';
+            ctx.fillRect(x, y + px * 8, size, px * 2);
+          }
         }
         break;
 
       case TILE_HEALING_MACHINE:
         {
           const px = 3;
-          // Pokemon Center wall background
-          ctx.fillStyle = '#fef9f3';
-          ctx.fillRect(x, y, size, size);
-          // Red accent at top
-          ctx.fillStyle = '#dc2626';
-          ctx.fillRect(x, y, size, px * 3);
-          // Machine base
-          ctx.fillStyle = '#dc2626';
-          ctx.fillRect(x + 6, y + 18, size - 12, size - 18);
-          // Machine top
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(x + 6, y + 6, size - 12, px * 5);
-          // Healing orb (animated)
-          const pulse = Math.sin(frameCountRef.current * 0.15) * 0.3 + 0.7;
-          ctx.fillStyle = `rgba(236, 72, 153, ${pulse})`;
-          ctx.beginPath();
-          ctx.arc(x + size / 2, y + 12, 6, 0, Math.PI * 2);
-          ctx.fill();
-          // Pokeball slots
-          ctx.fillStyle = '#ffffff';
-          for (let i = 0; i < 3; i++) {
-            ctx.fillRect(x + 10 + i * 10, y + 24, px * 2, px * 2);
+          if (state.isPixelMode) {
+            // Pokemon Center wall background
+            ctx.fillStyle = '#fef9f3';
+            ctx.fillRect(x, y, size, size);
+            // Red accent at top
+            ctx.fillStyle = '#dc2626';
+            ctx.fillRect(x, y, size, px * 3);
+            // Machine base
+            ctx.fillStyle = '#dc2626';
+            ctx.fillRect(x + 6, y + 18, size - 12, size - 18);
+            // Machine top
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(x + 6, y + 6, size - 12, px * 5);
+            // Healing orb (animated)
+            const pulse = Math.sin(frameCountRef.current * 0.15) * 0.3 + 0.7;
+            ctx.fillStyle = `rgba(236, 72, 153, ${pulse})`;
+            ctx.beginPath();
+            ctx.arc(x + size / 2, y + 12, 6, 0, Math.PI * 2);
+            ctx.fill();
+            // Pokeball slots
+            ctx.fillStyle = '#ffffff';
+            for (let i = 0; i < 3; i++) {
+              ctx.fillRect(x + 10 + i * 10, y + 24, px * 2, px * 2);
+            }
+          } else {
+            // 8-bit mode - simple healing machine
+            ctx.fillStyle = '#f8f0e8';
+            ctx.fillRect(x, y, size, size);
+            // Red top strip
+            ctx.fillStyle = '#d03030';
+            ctx.fillRect(x, y, size, px * 3);
+            // Machine body
+            ctx.fillStyle = '#d03030';
+            ctx.fillRect(x + px * 2, y + px * 6, px * 12, px * 10);
+            // White top
+            ctx.fillStyle = '#f8f8f8';
+            ctx.fillRect(x + px * 2, y + px * 3, px * 12, px * 4);
+            // Healing orb
+            ctx.fillStyle = '#f060a0';
+            ctx.fillRect(x + px * 6, y + px * 4, px * 4, px * 2);
+            // Pokeball slots
+            ctx.fillStyle = '#f8f8f8';
+            ctx.fillRect(x + px * 4, y + px * 9, px * 2, px * 2);
+            ctx.fillRect(x + px * 7, y + px * 9, px * 2, px * 2);
+            ctx.fillRect(x + px * 10, y + px * 9, px * 2, px * 2);
           }
         }
         break;
@@ -4300,56 +6147,101 @@ export const PokemonCanvas: React.FC = () => {
       case TILE_PC_STATION:
         {
           const px = 3;
-          // Pokemon Center wall background
-          ctx.fillStyle = '#fef9f3';
-          ctx.fillRect(x, y, size, size);
-          // Red accent at top
-          ctx.fillStyle = '#dc2626';
-          ctx.fillRect(x, y, size, px * 3);
-          // PC unit
-          ctx.fillStyle = '#dc2626';
-          ctx.fillRect(x + 9, y + 6, px * 10, size - 12);
-          // Screen
-          ctx.fillStyle = '#1e3a5f';
-          ctx.fillRect(x + 12, y + 9, px * 8, px * 8);
-          // Screen content (storage boxes)
-          ctx.fillStyle = '#60a5fa';
-          for (let i = 0; i < 2; i++) {
-            for (let j = 0; j < 3; j++) {
-              ctx.fillRect(x + 14 + j * 6, y + 11 + i * 6, px + 1, px + 1);
+          if (state.isPixelMode) {
+            // Pokemon Center wall background
+            ctx.fillStyle = '#fef9f3';
+            ctx.fillRect(x, y, size, size);
+            // Red accent at top
+            ctx.fillStyle = '#dc2626';
+            ctx.fillRect(x, y, size, px * 3);
+            // PC unit
+            ctx.fillStyle = '#dc2626';
+            ctx.fillRect(x + 9, y + 6, px * 10, size - 12);
+            // Screen
+            ctx.fillStyle = '#1e3a5f';
+            ctx.fillRect(x + 12, y + 9, px * 8, px * 8);
+            // Screen content (storage boxes)
+            ctx.fillStyle = '#60a5fa';
+            for (let i = 0; i < 2; i++) {
+              for (let j = 0; j < 3; j++) {
+                ctx.fillRect(x + 14 + j * 6, y + 11 + i * 6, px + 1, px + 1);
+              }
             }
+            // Keyboard area
+            ctx.fillStyle = '#991b1b';
+            ctx.fillRect(x + 12, y + 33, px * 8, px * 3);
+          } else {
+            // 8-bit mode - simple PC station
+            ctx.fillStyle = '#f8f0e8';
+            ctx.fillRect(x, y, size, size);
+            // Red top strip
+            ctx.fillStyle = '#d03030';
+            ctx.fillRect(x, y, size, px * 3);
+            // PC unit
+            ctx.fillStyle = '#d03030';
+            ctx.fillRect(x + px * 3, y + px * 3, px * 10, px * 12);
+            // Screen
+            ctx.fillStyle = '#2040a0';
+            ctx.fillRect(x + px * 4, y + px * 4, px * 8, px * 6);
+            // Storage boxes
+            ctx.fillStyle = '#6090d0';
+            ctx.fillRect(x + px * 5, y + px * 5, px * 2, px * 2);
+            ctx.fillRect(x + px * 8, y + px * 5, px * 2, px * 2);
+            ctx.fillRect(x + px * 5, y + px * 8, px * 2, px);
+            // Keyboard
+            ctx.fillStyle = '#a02020';
+            ctx.fillRect(x + px * 4, y + px * 11, px * 8, px * 3);
           }
-          // Keyboard area
-          ctx.fillStyle = '#991b1b';
-          ctx.fillRect(x + 12, y + 33, px * 8, px * 3);
         }
         break;
 
       case TILE_POKEBALL_DISPLAY:
         {
           const px = 3;
-          // Pokemon Center wall background
-          ctx.fillStyle = '#fef9f3';
-          ctx.fillRect(x, y, size, size);
-          // Red accent at top
-          ctx.fillStyle = '#dc2626';
-          ctx.fillRect(x, y, size, px * 3);
-          // Display shelf
-          ctx.fillStyle = '#dc2626';
-          ctx.fillRect(x + 6, y + 9, size - 12, size - 12);
-          // Shelf levels
-          ctx.fillStyle = '#991b1b';
-          ctx.fillRect(x + 9, y + 18, size - 18, px);
-          ctx.fillRect(x + 9, y + 30, size - 18, px);
-          // Pokeballs
-          const ballColors = ['#ef4444', '#3b82f6', '#fbbf24'];
-          for (let i = 0; i < 3; i++) {
-            ctx.fillStyle = ballColors[i];
-            ctx.beginPath();
-            ctx.arc(x + 15 + i * 8, y + 14, 3, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(x + 14 + i * 8, y + 14, px, px);
+          if (state.isPixelMode) {
+            // Pokemon Center wall background
+            ctx.fillStyle = '#fef9f3';
+            ctx.fillRect(x, y, size, size);
+            // Red accent at top
+            ctx.fillStyle = '#dc2626';
+            ctx.fillRect(x, y, size, px * 3);
+            // Display shelf
+            ctx.fillStyle = '#dc2626';
+            ctx.fillRect(x + 6, y + 9, size - 12, size - 12);
+            // Shelf levels
+            ctx.fillStyle = '#991b1b';
+            ctx.fillRect(x + 9, y + 18, size - 18, px);
+            ctx.fillRect(x + 9, y + 30, size - 18, px);
+            // Pokeballs
+            const ballColors = ['#ef4444', '#3b82f6', '#fbbf24'];
+            for (let i = 0; i < 3; i++) {
+              ctx.fillStyle = ballColors[i];
+              ctx.beginPath();
+              ctx.arc(x + 15 + i * 8, y + 14, 3, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.fillStyle = '#ffffff';
+              ctx.fillRect(x + 14 + i * 8, y + 14, px, px);
+            }
+          } else {
+            // 8-bit mode - simple pokeball display
+            ctx.fillStyle = '#f8f0e8';
+            ctx.fillRect(x, y, size, size);
+            // Red top strip
+            ctx.fillStyle = '#d03030';
+            ctx.fillRect(x, y, size, px * 3);
+            // Display case
+            ctx.fillStyle = '#d03030';
+            ctx.fillRect(x + px * 2, y + px * 4, px * 12, px * 10);
+            // Shelf
+            ctx.fillStyle = '#a02020';
+            ctx.fillRect(x + px * 3, y + px * 8, px * 10, px);
+            // Pokeballs (simple squares)
+            ctx.fillStyle = '#e04040';
+            ctx.fillRect(x + px * 4, y + px * 5, px * 2, px * 2);
+            ctx.fillStyle = '#4080d0';
+            ctx.fillRect(x + px * 7, y + px * 5, px * 2, px * 2);
+            ctx.fillStyle = '#e0b030';
+            ctx.fillRect(x + px * 10, y + px * 5, px * 2, px * 2);
           }
         }
         break;
@@ -4357,34 +6249,58 @@ export const PokemonCanvas: React.FC = () => {
       case TILE_TILE_FLOOR:
         {
           const px = 3;
-          // Checkered tile floor
-          const isLight = ((Math.floor(x / size) + Math.floor(y / size)) % 2) === 0;
-          ctx.fillStyle = isLight ? '#fef3c7' : '#fde68a';
-          ctx.fillRect(x, y, size, size);
-          // Subtle grid
-          ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-          ctx.fillRect(x, y, size, px);
-          ctx.fillRect(x, y, px, size);
+          if (state.isPixelMode) {
+            // Checkered tile floor
+            const isLight = ((Math.floor(x / size) + Math.floor(y / size)) % 2) === 0;
+            ctx.fillStyle = isLight ? '#fef3c7' : '#fde68a';
+            ctx.fillRect(x, y, size, size);
+            // Subtle grid
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(x, y, size, px);
+            ctx.fillRect(x, y, px, size);
+          } else {
+            // 8-bit mode - simple checkered floor
+            const isLight = ((Math.floor(x / size) + Math.floor(y / size)) % 2) === 0;
+            ctx.fillStyle = isLight ? '#f8e8c0' : '#e8d8a0';
+            ctx.fillRect(x, y, size, size);
+          }
         }
         break;
 
       case TILE_BENCH:
         {
           const px = 3;
-          // Checkered floor background
-          const isLightB = ((Math.floor(x / size) + Math.floor(y / size)) % 2) === 0;
-          ctx.fillStyle = isLightB ? '#fef3c7' : '#fde68a';
-          ctx.fillRect(x, y, size, size);
-          // Bench seat
-          ctx.fillStyle = '#dc2626';
-          ctx.fillRect(x + 3, y + 21, size - 6, px * 4);
-          // Bench back
-          ctx.fillStyle = '#991b1b';
-          ctx.fillRect(x + 3, y + 12, size - 6, px * 3);
-          // Legs
-          ctx.fillStyle = '#374151';
-          ctx.fillRect(x + 6, y + 33, px * 2, size - 33);
-          ctx.fillRect(x + size - 12, y + 33, px * 2, size - 33);
+          if (state.isPixelMode) {
+            // Checkered floor background
+            const isLightB = ((Math.floor(x / size) + Math.floor(y / size)) % 2) === 0;
+            ctx.fillStyle = isLightB ? '#fef3c7' : '#fde68a';
+            ctx.fillRect(x, y, size, size);
+            // Bench seat
+            ctx.fillStyle = '#dc2626';
+            ctx.fillRect(x + 3, y + 21, size - 6, px * 4);
+            // Bench back
+            ctx.fillStyle = '#991b1b';
+            ctx.fillRect(x + 3, y + 12, size - 6, px * 3);
+            // Legs
+            ctx.fillStyle = '#374151';
+            ctx.fillRect(x + 6, y + 33, px * 2, size - 33);
+            ctx.fillRect(x + size - 12, y + 33, px * 2, size - 33);
+          } else {
+            // 8-bit mode - simple bench
+            const isLightB = ((Math.floor(x / size) + Math.floor(y / size)) % 2) === 0;
+            ctx.fillStyle = isLightB ? '#f8e8c0' : '#e8d8a0';
+            ctx.fillRect(x, y, size, size);
+            // Bench seat
+            ctx.fillStyle = '#d03030';
+            ctx.fillRect(x + px, y + px * 7, px * 14, px * 4);
+            // Bench back
+            ctx.fillStyle = '#a02020';
+            ctx.fillRect(x + px, y + px * 4, px * 14, px * 3);
+            // Legs
+            ctx.fillStyle = '#404858';
+            ctx.fillRect(x + px * 2, y + px * 11, px * 2, px * 5);
+            ctx.fillRect(x + px * 12, y + px * 11, px * 2, px * 5);
+          }
         }
         break;
 
@@ -4392,59 +6308,82 @@ export const PokemonCanvas: React.FC = () => {
       case TILE_WALL_HOME:
         {
           const px = 3;
-          // Warm wallpaper background (cream/beige)
-          ctx.fillStyle = '#f5f0e6';
-          ctx.fillRect(x, y, size, size);
+          if (state.isPixelMode) {
+            // Warm wallpaper background (cream/beige)
+            ctx.fillStyle = '#f5f0e6';
+            ctx.fillRect(x, y, size, size);
 
-          // Wallpaper pattern (subtle stripes)
-          ctx.fillStyle = '#ebe5d9';
-          ctx.fillRect(x + 6, y, px, size);
-          ctx.fillRect(x + 18, y, px, size);
-          ctx.fillRect(x + 30, y, px, size);
-          ctx.fillRect(x + 42, y, px, size);
+            // Wallpaper pattern (subtle stripes)
+            ctx.fillStyle = '#ebe5d9';
+            ctx.fillRect(x + 6, y, px, size);
+            ctx.fillRect(x + 18, y, px, size);
+            ctx.fillRect(x + 30, y, px, size);
+            ctx.fillRect(x + 42, y, px, size);
 
-          // Wainscoting (wood paneling at bottom)
-          ctx.fillStyle = '#8b5a2b';
-          ctx.fillRect(x, y + 30, size, size - 30);
+            // Wainscoting (wood paneling at bottom)
+            ctx.fillStyle = '#8b5a2b';
+            ctx.fillRect(x, y + 30, size, size - 30);
 
-          // Wainscoting detail lines
-          ctx.fillStyle = '#a67c52';
-          ctx.fillRect(x, y + 30, size, px);
-          ctx.fillRect(x + 12, y + 33, px, size - 36);
-          ctx.fillRect(x + 33, y + 33, px, size - 36);
+            // Wainscoting detail lines
+            ctx.fillStyle = '#a67c52';
+            ctx.fillRect(x, y + 30, size, px);
+            ctx.fillRect(x + 12, y + 33, px, size - 36);
+            ctx.fillRect(x + 33, y + 33, px, size - 36);
 
-          // Chair rail (dividing line)
-          ctx.fillStyle = '#5c3a21';
-          ctx.fillRect(x, y + 27, size, px * 2);
-          ctx.fillStyle = '#a67c52';
-          ctx.fillRect(x, y + 27, size, px);
+            // Chair rail (dividing line)
+            ctx.fillStyle = '#5c3a21';
+            ctx.fillRect(x, y + 27, size, px * 2);
+            ctx.fillStyle = '#a67c52';
+            ctx.fillRect(x, y + 27, size, px);
+          } else {
+            // 8-bit mode - simple home wall
+            ctx.fillStyle = '#e8e0d0';
+            ctx.fillRect(x, y, size, size);
+            // Wainscoting
+            ctx.fillStyle = '#986838';
+            ctx.fillRect(x, y + px * 10, size, px * 6);
+            // Divider
+            ctx.fillStyle = '#705028';
+            ctx.fillRect(x, y + px * 9, size, px);
+          }
         }
         break;
 
       case TILE_FLOOR_WOOD:
         {
           const px = 3;
-          // Hardwood floor base
-          ctx.fillStyle = '#c9a66b';
-          ctx.fillRect(x, y, size, size);
+          if (state.isPixelMode) {
+            // Hardwood floor base
+            ctx.fillStyle = '#c9a66b';
+            ctx.fillRect(x, y, size, size);
 
-          // Wood plank pattern
-          const plankHeight = 12;
-          for (let py = 0; py < size; py += plankHeight) {
-            // Plank divider line
-            ctx.fillStyle = '#a67c52';
-            ctx.fillRect(x, y + py, size, 1);
+            // Wood plank pattern
+            const plankHeight = 12;
+            for (let py = 0; py < size; py += plankHeight) {
+              // Plank divider line
+              ctx.fillStyle = '#a67c52';
+              ctx.fillRect(x, y + py, size, 1);
 
-            // Wood grain (subtle)
-            ctx.fillStyle = '#d4b87a';
-            ctx.fillRect(x + 6, y + py + 3, px * 4, px);
-            ctx.fillRect(x + 24, y + py + 6, px * 5, px);
-            ctx.fillRect(x + 12, y + py + 9, px * 3, px);
+              // Wood grain (subtle)
+              ctx.fillStyle = '#d4b87a';
+              ctx.fillRect(x + 6, y + py + 3, px * 4, px);
+              ctx.fillRect(x + 24, y + py + 6, px * 5, px);
+              ctx.fillRect(x + 12, y + py + 9, px * 3, px);
+            }
+
+            // Subtle edge shadow
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(x, y, px, size);
+          } else {
+            // 8-bit mode - simple wood floor
+            ctx.fillStyle = '#c89858';
+            ctx.fillRect(x, y, size, size);
+            // Plank lines
+            ctx.fillStyle = '#a07040';
+            ctx.fillRect(x, y + px * 4, size, px);
+            ctx.fillRect(x, y + px * 8, size, px);
+            ctx.fillRect(x, y + px * 12, size, px);
           }
-
-          // Subtle edge shadow
-          ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-          ctx.fillRect(x, y, px, size);
         }
         break;
 
@@ -4452,56 +6391,85 @@ export const PokemonCanvas: React.FC = () => {
       case TILE_WALL_LAB:
         {
           const px = 3;
-          // Dark industrial wall base
-          ctx.fillStyle = '#1a1f2e';
-          ctx.fillRect(x, y, size, size);
+          if (state.isPixelMode) {
+            // Dark industrial wall base
+            ctx.fillStyle = '#1a1f2e';
+            ctx.fillRect(x, y, size, size);
 
-          // Metal panel pattern
-          ctx.fillStyle = '#252b3b';
-          ctx.fillRect(x + 3, y + 3, size - 6, size - 6);
+            // Metal panel pattern
+            ctx.fillStyle = '#252b3b';
+            ctx.fillRect(x + 3, y + 3, size - 6, size - 6);
 
-          // Panel lines (rivets/seams)
-          ctx.fillStyle = '#0f1219';
-          ctx.fillRect(x, y + 15, size, px);
-          ctx.fillRect(x, y + 33, size, px);
-          ctx.fillRect(x + 24, y, px, size);
+            // Panel lines (rivets/seams)
+            ctx.fillStyle = '#0f1219';
+            ctx.fillRect(x, y + 15, size, px);
+            ctx.fillRect(x, y + 33, size, px);
+            ctx.fillRect(x + 24, y, px, size);
 
-          // Tech accent lights
-          ctx.fillStyle = '#39ff14';
-          ctx.fillRect(x + 6, y + 6, px, px);
-          ctx.fillRect(x + 6, y + 39, px, px);
+            // Tech accent lights
+            ctx.fillStyle = '#39ff14';
+            ctx.fillRect(x + 6, y + 6, px, px);
+            ctx.fillRect(x + 6, y + 39, px, px);
 
-          // Subtle glow
-          ctx.fillStyle = 'rgba(57, 255, 20, 0.1)';
-          ctx.fillRect(x + 3, y + 3, px * 3, px * 3);
+            // Subtle glow
+            ctx.fillStyle = 'rgba(57, 255, 20, 0.1)';
+            ctx.fillRect(x + 3, y + 3, px * 3, px * 3);
+          } else {
+            // 8-bit mode - simple lab wall
+            ctx.fillStyle = '#202838';
+            ctx.fillRect(x, y, size, size);
+            // Panel
+            ctx.fillStyle = '#303848';
+            ctx.fillRect(x + px, y + px, px * 14, px * 14);
+            // Seams
+            ctx.fillStyle = '#181820';
+            ctx.fillRect(x, y + px * 8, size, px);
+            // LED
+            ctx.fillStyle = '#30e030';
+            ctx.fillRect(x + px * 2, y + px * 2, px, px);
+          }
         }
         break;
 
       case TILE_FLOOR_METAL:
         {
           const px = 3;
-          // Metallic floor base
-          ctx.fillStyle = '#2d3444';
-          ctx.fillRect(x, y, size, size);
+          if (state.isPixelMode) {
+            // Metallic floor base
+            ctx.fillStyle = '#2d3444';
+            ctx.fillRect(x, y, size, size);
 
-          // Diamond plate pattern
-          ctx.fillStyle = '#3d4555';
-          for (let py = 0; py < size; py += 12) {
-            for (let px2 = 0; px2 < size; px2 += 12) {
-              ctx.fillRect(x + px2 + 3, y + py + 3, 6, 6);
+            // Diamond plate pattern
+            ctx.fillStyle = '#3d4555';
+            for (let py = 0; py < size; py += 12) {
+              for (let px2 = 0; px2 < size; px2 += 12) {
+                ctx.fillRect(x + px2 + 3, y + py + 3, 6, 6);
+              }
             }
+
+            // Grid lines
+            ctx.fillStyle = '#1e2430';
+            ctx.fillRect(x, y, size, 1);
+            ctx.fillRect(x, y, 1, size);
+            ctx.fillRect(x + 24, y, 1, size);
+            ctx.fillRect(x, y + 24, size, 1);
+
+            // Subtle green glow reflection
+            ctx.fillStyle = 'rgba(57, 255, 20, 0.05)';
+            ctx.fillRect(x + 12, y + 12, px * 4, px * 4);
+          } else {
+            // 8-bit mode - simple metal floor
+            ctx.fillStyle = '#303848';
+            ctx.fillRect(x, y, size, size);
+            // Grid pattern
+            ctx.fillStyle = '#404858';
+            ctx.fillRect(x + px * 2, y + px * 2, px * 4, px * 4);
+            ctx.fillRect(x + px * 10, y + px * 10, px * 4, px * 4);
+            // Border lines
+            ctx.fillStyle = '#202830';
+            ctx.fillRect(x, y, size, px);
+            ctx.fillRect(x, y, px, size);
           }
-
-          // Grid lines
-          ctx.fillStyle = '#1e2430';
-          ctx.fillRect(x, y, size, 1);
-          ctx.fillRect(x, y, 1, size);
-          ctx.fillRect(x + 24, y, 1, size);
-          ctx.fillRect(x, y + 24, size, 1);
-
-          // Subtle green glow reflection
-          ctx.fillStyle = 'rgba(57, 255, 20, 0.05)';
-          ctx.fillRect(x + 12, y + 12, px * 4, px * 4);
         }
         break;
 
@@ -4509,81 +6477,365 @@ export const PokemonCanvas: React.FC = () => {
       case TILE_WALL_POKECENTER:
         {
           const px = 3;
-          // White upper wall
-          ctx.fillStyle = '#fef9f3';
-          ctx.fillRect(x, y, size, size);
+          if (state.isPixelMode) {
+            // White upper wall
+            ctx.fillStyle = '#fef9f3';
+            ctx.fillRect(x, y, size, size);
 
-          // Red accent stripe at top
-          ctx.fillStyle = '#dc2626';
-          ctx.fillRect(x, y, size, px * 3);
+            // Red accent stripe at top
+            ctx.fillStyle = '#dc2626';
+            ctx.fillRect(x, y, size, px * 3);
 
-          // Pokeball logo pattern (subtle)
-          ctx.fillStyle = '#fee2e2';
-          ctx.fillRect(x + 15, y + 18, px * 6, px * 6);
+            // Pokeball logo pattern (subtle)
+            ctx.fillStyle = '#fee2e2';
+            ctx.fillRect(x + 15, y + 18, px * 6, px * 6);
 
-          // Red bottom accent
-          ctx.fillStyle = '#dc2626';
-          ctx.fillRect(x, y + size - px * 4, size, px * 4);
+            // Red bottom accent
+            ctx.fillStyle = '#dc2626';
+            ctx.fillRect(x, y + size - px * 4, size, px * 4);
 
-          // White stripe on red
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(x, y + size - px * 3, size, px);
+            // White stripe on red
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(x, y + size - px * 3, size, px);
 
-          // Subtle shadow line
-          ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-          ctx.fillRect(x, y + 9, size, 1);
+            // Subtle shadow line
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(x, y + 9, size, 1);
+          } else {
+            // 8-bit mode - simple Pokemon Center wall
+            ctx.fillStyle = '#f8f0e8';
+            ctx.fillRect(x, y, size, size);
+            // Red top stripe
+            ctx.fillStyle = '#d03030';
+            ctx.fillRect(x, y, size, px * 3);
+            // Red bottom stripe
+            ctx.fillStyle = '#d03030';
+            ctx.fillRect(x, y + px * 12, size, px * 4);
+            // White stripe
+            ctx.fillStyle = '#f8f8f8';
+            ctx.fillRect(x, y + px * 13, size, px);
+          }
         }
         break;
     }
   }, [state.currentMap, state.isPixelMode]);
 
-  // Draw NPC
+  // Draw NPC - Gen 4 Pokemon style
   const drawNPC = useCallback((ctx: CanvasRenderingContext2D, npc: NPC, screenX: number, screenY: number) => {
     const x = screenX;
     const y = screenY;
     const size = SCALED_TILE;
 
+    // Shadow under NPC
     ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
     ctx.beginPath();
     ctx.ellipse(x + size / 2, y + size - 4, 14, 5, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    const bodyColors: Record<string, string> = {
-      guide: '#3b82f6',
-      professor: '#8b5cf6',
-      developer: '#10b981',
-      scientist: '#f59e0b',
+    if (state.isPixelMode) {
+      // ========== GEN 4 POKEMON STYLE (Pixel Mode) ==========
+      const px = 3;
+
+      // NPC color schemes based on type
+      const npcStyles: Record<string, {
+      hair: string;
+      hairHighlight: string;
+      outfit: string;
+      outfitDark: string;
+      outfitLight: string;
+      accessory: string;
+      pants: string;
+    }> = {
+      guide: {
+        hair: '#654321',        // Brown hair
+        hairHighlight: '#8B6914',
+        outfit: '#3b82f6',      // Blue uniform
+        outfitDark: '#1e40af',
+        outfitLight: '#60a5fa',
+        accessory: '#fbbf24',   // Gold badge
+        pants: '#1e3a8a',
+      },
+      professor: {
+        hair: '#4a4a4a',        // Gray hair
+        hairHighlight: '#6b6b6b',
+        outfit: '#f5f5f5',      // White lab coat
+        outfitDark: '#d4d4d4',
+        outfitLight: '#ffffff',
+        accessory: '#8b5cf6',   // Purple tie
+        pants: '#374151',
+      },
+      developer: {
+        hair: '#1a1a2e',        // Dark hair
+        hairHighlight: '#2d2d44',
+        outfit: '#10b981',      // Green hoodie
+        outfitDark: '#059669',
+        outfitLight: '#34d399',
+        accessory: '#1f2937',   // Dark logo
+        pants: '#1f2937',
+      },
+      scientist: {
+        hair: '#b91c1c',        // Red hair
+        hairHighlight: '#dc2626',
+        outfit: '#f5f5f5',      // White coat
+        outfitDark: '#d4d4d4',
+        outfitLight: '#ffffff',
+        accessory: '#f59e0b',   // Orange goggles
+        pants: '#374151',
+      },
     };
 
-    ctx.fillStyle = bodyColors[npc.sprite] || '#6b7280';
-    ctx.fillRect(x + 10, y + 18, size - 20, size - 24);
+    const style = npcStyles[npc.sprite] || npcStyles.guide;
+    const colors = {
+      skin: '#ffd5b8',
+      skinShadow: '#e8b89a',
+      outline: '#111827',
+    };
 
-    ctx.fillStyle = '#fcd34d';
+    // Shadow under NPC
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
     ctx.beginPath();
-    ctx.arc(x + size / 2, y + 16, 12, 0, Math.PI * 2);
+    ctx.ellipse(x + 24, y + 46, 10, 4, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = '#1f2937';
-    const eyeOffsets = { up: [[-4, -2], [4, -2]], down: [[-4, 2], [4, 2]], left: [[-5, 0], [-1, 0]], right: [[1, 0], [5, 0]] };
-    eyeOffsets[npc.direction].forEach(([ox, oy]) => {
-      ctx.beginPath();
-      ctx.arc(x + size / 2 + ox, y + 14 + oy, 2, 0, Math.PI * 2);
-      ctx.fill();
-    });
+    // Idle animation (subtle bounce)
+    const idleBounce = Math.sin(frameCountRef.current * 0.05) * 1;
 
-    const playerDist = Math.abs(state.playerPosition.tileX - npc.position.tileX) + Math.abs(state.playerPosition.tileY - npc.position.tileY);
-    if (playerDist <= 2) {
-      const bob = Math.sin(frameCountRef.current * 0.1) * 2;
-      ctx.fillStyle = '#fff';
-      ctx.beginPath();
-      ctx.ellipse(x + size / 2, y - 8 + bob, 12, 8, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#1f2937';
-      ctx.font = 'bold 12px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('...', x + size / 2, y - 4 + bob);
+    if (npc.direction === 'down') {
+      // === NPC FACING DOWN ===
+      // Hair
+      ctx.fillStyle = style.hair;
+      ctx.fillRect(x + 15, y + 3 + idleBounce, 18, 7 * px);
+      ctx.fillStyle = style.hairHighlight;
+      ctx.fillRect(x + 18, y + 6 + idleBounce, 12, px);
+
+      // Face
+      ctx.fillStyle = colors.skin;
+      ctx.fillRect(x + 15, y + 15 + idleBounce, 18, 4 * px);
+      ctx.fillStyle = colors.skinShadow;
+      ctx.fillRect(x + 15, y + 24 + idleBounce, 18, px);
+
+      // Eyes
+      ctx.fillStyle = colors.outline;
+      ctx.fillRect(x + 18, y + 18 + idleBounce, 2 * px, px);
+      ctx.fillRect(x + 27, y + 18 + idleBounce, 2 * px, px);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x + 18, y + 18 + idleBounce, px, px);
+      ctx.fillRect(x + 27, y + 18 + idleBounce, px, px);
+
+      // Outfit
+      ctx.fillStyle = style.outfit;
+      ctx.fillRect(x + 12, y + 27, 24, 6 * px);
+      ctx.fillStyle = style.outfitDark;
+      ctx.fillRect(x + 12, y + 27, px * 2, 6 * px);
+      ctx.fillRect(x + 30, y + 27, px * 2, 6 * px);
+      // Accessory/detail
+      ctx.fillStyle = style.accessory;
+      ctx.fillRect(x + 21, y + 30, 6, 3 * px);
+
+      // Arms
+      ctx.fillStyle = style.outfit;
+      ctx.fillRect(x + 9, y + 30, px, 4 * px);
+      ctx.fillRect(x + 36, y + 30, px, 4 * px);
+      ctx.fillStyle = colors.skin;
+      ctx.fillRect(x + 9, y + 42, px, px);
+      ctx.fillRect(x + 36, y + 42, px, px);
+
+      // Pants
+      ctx.fillStyle = style.pants;
+      ctx.fillRect(x + 15, y + 45, 7, 2 * px);
+      ctx.fillRect(x + 26, y + 45, 7, 2 * px);
+
+      // Shoes
+      ctx.fillStyle = colors.outline;
+      ctx.fillRect(x + 15, y + 51, 7, px);
+      ctx.fillRect(x + 26, y + 51, 7, px);
+
+    } else if (npc.direction === 'up') {
+      // === NPC FACING UP ===
+      // Hair (back)
+      ctx.fillStyle = style.hair;
+      ctx.fillRect(x + 15, y + 3 + idleBounce, 18, 9 * px);
+      ctx.fillStyle = style.hairHighlight;
+      ctx.fillRect(x + 18, y + 9 + idleBounce, 12, px);
+
+      // Neck
+      ctx.fillStyle = colors.skin;
+      ctx.fillRect(x + 21, y + 27, 6, px);
+
+      // Outfit back
+      ctx.fillStyle = style.outfit;
+      ctx.fillRect(x + 12, y + 27, 24, 6 * px);
+      ctx.fillStyle = style.outfitDark;
+      ctx.fillRect(x + 12, y + 27, px * 2, 6 * px);
+      ctx.fillRect(x + 30, y + 27, px * 2, 6 * px);
+      ctx.fillStyle = style.outfitLight;
+      ctx.fillRect(x + 18, y + 33, 12, 2 * px);
+
+      // Arms
+      ctx.fillStyle = style.outfit;
+      ctx.fillRect(x + 9, y + 30, px, 4 * px);
+      ctx.fillRect(x + 36, y + 30, px, 4 * px);
+      ctx.fillStyle = colors.skin;
+      ctx.fillRect(x + 9, y + 42, px, px);
+      ctx.fillRect(x + 36, y + 42, px, px);
+
+      // Pants
+      ctx.fillStyle = style.pants;
+      ctx.fillRect(x + 15, y + 45, 7, 2 * px);
+      ctx.fillRect(x + 26, y + 45, 7, 2 * px);
+
+      // Shoes
+      ctx.fillStyle = colors.outline;
+      ctx.fillRect(x + 15, y + 51, 7, px);
+      ctx.fillRect(x + 26, y + 51, 7, px);
+
+    } else if (npc.direction === 'left') {
+      // === NPC FACING LEFT ===
+      // Hair
+      ctx.fillStyle = style.hair;
+      ctx.fillRect(x + 15, y + 3 + idleBounce, 15, 8 * px);
+      ctx.fillRect(x + 12, y + 9 + idleBounce, px, 4 * px);
+
+      // Face
+      ctx.fillStyle = colors.skin;
+      ctx.fillRect(x + 12, y + 15 + idleBounce, 15, 4 * px);
+      ctx.fillStyle = colors.skinShadow;
+      ctx.fillRect(x + 12, y + 24 + idleBounce, 12, px);
+
+      // Eye
+      ctx.fillStyle = colors.outline;
+      ctx.fillRect(x + 15, y + 18 + idleBounce, 2 * px, px);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x + 15, y + 18 + idleBounce, px, px);
+
+      // Outfit
+      ctx.fillStyle = style.outfit;
+      ctx.fillRect(x + 15, y + 27, 15, 6 * px);
+      ctx.fillStyle = style.outfitDark;
+      ctx.fillRect(x + 15, y + 27, px, 6 * px);
+      ctx.fillStyle = style.accessory;
+      ctx.fillRect(x + 27, y + 30, px * 2, 3 * px);
+
+      // Arm
+      ctx.fillStyle = style.outfit;
+      ctx.fillRect(x + 12, y + 30, px, 4 * px);
+      ctx.fillStyle = colors.skin;
+      ctx.fillRect(x + 12, y + 42, px, px);
+
+      // Pants
+      ctx.fillStyle = style.pants;
+      ctx.fillRect(x + 18, y + 45, 12, 2 * px);
+
+      // Shoes
+      ctx.fillStyle = colors.outline;
+      ctx.fillRect(x + 18, y + 51, 12, px);
+
+    } else {
+      // === NPC FACING RIGHT ===
+      // Hair
+      ctx.fillStyle = style.hair;
+      ctx.fillRect(x + 18, y + 3 + idleBounce, 15, 8 * px);
+      ctx.fillRect(x + 33, y + 9 + idleBounce, px, 4 * px);
+
+      // Face
+      ctx.fillStyle = colors.skin;
+      ctx.fillRect(x + 21, y + 15 + idleBounce, 15, 4 * px);
+      ctx.fillStyle = colors.skinShadow;
+      ctx.fillRect(x + 24, y + 24 + idleBounce, 12, px);
+
+      // Eye
+      ctx.fillStyle = colors.outline;
+      ctx.fillRect(x + 27, y + 18 + idleBounce, 2 * px, px);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x + 30, y + 18 + idleBounce, px, px);
+
+      // Outfit
+      ctx.fillStyle = style.outfit;
+      ctx.fillRect(x + 18, y + 27, 15, 6 * px);
+      ctx.fillStyle = style.outfitDark;
+      ctx.fillRect(x + 30, y + 27, px, 6 * px);
+      ctx.fillStyle = style.accessory;
+      ctx.fillRect(x + 18, y + 30, px * 2, 3 * px);
+
+      // Arm
+      ctx.fillStyle = style.outfit;
+      ctx.fillRect(x + 33, y + 30, px, 4 * px);
+      ctx.fillStyle = colors.skin;
+      ctx.fillRect(x + 33, y + 42, px, px);
+
+      // Pants
+      ctx.fillStyle = style.pants;
+      ctx.fillRect(x + 18, y + 45, 12, 2 * px);
+
+      // Shoes
+      ctx.fillStyle = colors.outline;
+      ctx.fillRect(x + 18, y + 51, 12, px);
     }
-  }, [state.playerPosition]);
+
+    // Speech indicator when player is nearby (pixel mode)
+      const playerDist = Math.abs(state.playerPosition.tileX - npc.position.tileX) + Math.abs(state.playerPosition.tileY - npc.position.tileY);
+      if (playerDist <= 2) {
+        const bob = Math.sin(frameCountRef.current * 0.1) * 2;
+        // Speech bubble - pixel art style
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(x + 18, y - 12 + bob, 12, 9);
+        ctx.fillRect(x + 15, y - 9 + bob, 18, 3);
+        // Bubble tail
+        ctx.fillRect(x + 21, y - 3 + bob, 6, 3);
+        // Dots
+        ctx.fillStyle = '#374151';
+        ctx.fillRect(x + 18, y - 8 + bob, 2, 2);
+        ctx.fillRect(x + 22, y - 8 + bob, 2, 2);
+        ctx.fillRect(x + 26, y - 8 + bob, 2, 2);
+      }
+    } else {
+      // ========== ORIGINAL SIMPLE STYLE (8-bit Mode) ==========
+      const bodyColors: Record<string, string> = {
+        guide: '#3b82f6',
+        professor: '#8b5cf6',
+        developer: '#10b981',
+        scientist: '#f59e0b',
+      };
+
+      // Body
+      ctx.fillStyle = bodyColors[npc.sprite] || '#6b7280';
+      ctx.fillRect(x + 10, y + 18, size - 20, size - 24);
+
+      // Head
+      ctx.fillStyle = '#fcd34d';
+      ctx.beginPath();
+      ctx.arc(x + size / 2, y + 16, 12, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Eyes based on direction
+      ctx.fillStyle = '#1f2937';
+      const eyeOffsets: Record<Direction, number[][]> = {
+        up: [[-4, -2], [4, -2]],
+        down: [[-4, 2], [4, 2]],
+        left: [[-5, 0], [-1, 0]],
+        right: [[1, 0], [5, 0]]
+      };
+      eyeOffsets[npc.direction].forEach(([ox, oy]) => {
+        ctx.beginPath();
+        ctx.arc(x + size / 2 + ox, y + 14 + oy, 2, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Speech indicator when player is nearby
+      const playerDist = Math.abs(state.playerPosition.tileX - npc.position.tileX) + Math.abs(state.playerPosition.tileY - npc.position.tileY);
+      if (playerDist <= 2) {
+        const bob = Math.sin(frameCountRef.current * 0.1) * 2;
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.ellipse(x + size / 2, y - 8 + bob, 12, 8, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#1f2937';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('...', x + size / 2, y - 4 + bob);
+      }
+    }
+  }, [state.playerPosition, state.isPixelMode]);
 
   // Draw player
   const drawPlayer = useCallback((ctx: CanvasRenderingContext2D, screenX: number, screenY: number, direction: Direction, isMoving: boolean) => {
@@ -4591,41 +6843,339 @@ export const PokemonCanvas: React.FC = () => {
     const y = screenY;
     const size = SCALED_TILE;
 
+    // Shadow under character
     ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
     ctx.beginPath();
     ctx.ellipse(x + size / 2, y + size - 4, 14, 5, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = '#ef4444';
-    ctx.fillRect(x + 10, y + 18, size - 20, size - 24);
+    if (state.isPixelMode) {
+      // ========== GEN 4 POKEMON STYLE (Pixel Mode) ==========
+      const px = 3;
+      const colors = {
+        hair: '#1a1a2e',
+        hairHighlight: '#2d2d44',
+        skin: '#ffd5b8',
+        skinShadow: '#e8b89a',
+        hatRed: '#dc2626',
+        hatRedDark: '#991b1b',
+        hatWhite: '#f5f5f5',
+        jacket: '#1e40af',
+        jacketDark: '#1e3a8a',
+        jacketLight: '#3b82f6',
+        shirt: '#fafafa',
+        pants: '#374151',
+        pantsDark: '#1f2937',
+        shoes: '#ef4444',
+        shoesDark: '#b91c1c',
+        outline: '#111827',
+      };
 
-    ctx.fillStyle = '#fcd34d';
-    ctx.beginPath();
-    ctx.arc(x + size / 2, y + 16, 12, 0, Math.PI * 2);
-    ctx.fill();
+      const walkFrame = isMoving ? Math.floor(walkFrameRef.current / 8) % 4 : 0;
 
-    ctx.fillStyle = '#1f2937';
-    ctx.beginPath();
-    ctx.arc(x + size / 2, y + 10, 10, Math.PI, 0);
-    ctx.fill();
+      // Draw based on direction
+      if (direction === 'down') {
+      // === FACING DOWN (front view) ===
+      // Hair back
+      ctx.fillStyle = colors.hair;
+      ctx.fillRect(x + 15, y + 3, 18, 6 * px);
 
-    const eyeOffsets = { up: [[-4, -2], [4, -2]], down: [[-4, 2], [4, 2]], left: [[-5, 0], [-1, 0]], right: [[1, 0], [5, 0]] };
-    eyeOffsets[direction].forEach(([ox, oy]) => {
-      ctx.beginPath();
-      ctx.arc(x + size / 2 + ox, y + 14 + oy, 2, 0, Math.PI * 2);
-      ctx.fill();
-    });
+      // Hat
+      ctx.fillStyle = colors.hatRed;
+      ctx.fillRect(x + 12, y + 0, 24, 4 * px);
+      ctx.fillStyle = colors.hatRedDark;
+      ctx.fillRect(x + 12, y + 9, 24, px);
+      ctx.fillStyle = colors.hatWhite;
+      ctx.fillRect(x + 15, y + 0, 18, px);
+      // Hat bill
+      ctx.fillStyle = colors.hatRedDark;
+      ctx.fillRect(x + 9, y + 12, 30, px);
 
-    ctx.fillStyle = '#1e40af';
-    if (isMoving) {
-      const legOffset = Math.sin(walkFrameRef.current * 0.3) * 4;
-      ctx.fillRect(x + 14 + legOffset, y + size - 10, 8, 10);
-      ctx.fillRect(x + size - 22 - legOffset, y + size - 10, 8, 10);
+      // Face
+      ctx.fillStyle = colors.skin;
+      ctx.fillRect(x + 15, y + 15, 18, 5 * px);
+      ctx.fillStyle = colors.skinShadow;
+      ctx.fillRect(x + 15, y + 27, 18, px);
+
+      // Eyes
+      ctx.fillStyle = colors.outline;
+      ctx.fillRect(x + 18, y + 18, 2 * px, px);
+      ctx.fillRect(x + 27, y + 18, 2 * px, px);
+      // Eye shine
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x + 18, y + 18, px, px);
+      ctx.fillRect(x + 27, y + 18, px, px);
+
+      // Mouth
+      ctx.fillStyle = colors.skinShadow;
+      ctx.fillRect(x + 22, y + 24, 4, px);
+
+      // Jacket
+      ctx.fillStyle = colors.jacket;
+      ctx.fillRect(x + 12, y + 30, 24, 5 * px);
+      ctx.fillStyle = colors.jacketDark;
+      ctx.fillRect(x + 12, y + 30, px * 2, 5 * px);
+      ctx.fillRect(x + 30, y + 30, px * 2, 5 * px);
+      // White stripe
+      ctx.fillStyle = colors.shirt;
+      ctx.fillRect(x + 21, y + 30, 6, 4 * px);
+
+      // Arms
+      ctx.fillStyle = colors.jacket;
+      ctx.fillRect(x + 9, y + 30, px, 4 * px);
+      ctx.fillRect(x + 36, y + 30, px, 4 * px);
+      ctx.fillStyle = colors.skin;
+      ctx.fillRect(x + 9, y + 42, px, px);
+      ctx.fillRect(x + 36, y + 42, px, px);
+
+      // Pants
+      ctx.fillStyle = colors.pants;
+      ctx.fillRect(x + 15, y + 45, 7, 2 * px);
+      ctx.fillRect(x + 26, y + 45, 7, 2 * px);
+
+      // Shoes
+      ctx.fillStyle = colors.shoes;
+      if (walkFrame === 1 || walkFrame === 3) {
+        ctx.fillRect(x + 14, y + 51, 8, px);
+        ctx.fillRect(x + 28, y + 48, 8, px);
+      } else if (walkFrame === 2) {
+        ctx.fillRect(x + 14, y + 48, 8, px);
+        ctx.fillRect(x + 28, y + 51, 8, px);
+      } else {
+        ctx.fillRect(x + 15, y + 51, 7, px);
+        ctx.fillRect(x + 26, y + 51, 7, px);
+      }
+
+    } else if (direction === 'up') {
+      // === FACING UP (back view) ===
+      // Hair
+      ctx.fillStyle = colors.hair;
+      ctx.fillRect(x + 15, y + 3, 18, 9 * px);
+      ctx.fillStyle = colors.hairHighlight;
+      ctx.fillRect(x + 18, y + 6, 12, px);
+
+      // Hat
+      ctx.fillStyle = colors.hatRed;
+      ctx.fillRect(x + 12, y + 0, 24, 4 * px);
+      ctx.fillStyle = colors.hatRedDark;
+      ctx.fillRect(x + 12, y + 9, 24, px);
+      ctx.fillStyle = colors.hatWhite;
+      ctx.fillRect(x + 21, y + 3, 6, 2 * px); // Back logo
+
+      // Neck
+      ctx.fillStyle = colors.skin;
+      ctx.fillRect(x + 21, y + 27, 6, px);
+
+      // Jacket back
+      ctx.fillStyle = colors.jacket;
+      ctx.fillRect(x + 12, y + 30, 24, 5 * px);
+      ctx.fillStyle = colors.jacketDark;
+      ctx.fillRect(x + 12, y + 30, px * 2, 5 * px);
+      ctx.fillRect(x + 30, y + 30, px * 2, 5 * px);
+      // Back design
+      ctx.fillStyle = colors.jacketLight;
+      ctx.fillRect(x + 18, y + 33, 12, 3 * px);
+
+      // Arms
+      ctx.fillStyle = colors.jacket;
+      ctx.fillRect(x + 9, y + 30, px, 4 * px);
+      ctx.fillRect(x + 36, y + 30, px, 4 * px);
+      ctx.fillStyle = colors.skin;
+      ctx.fillRect(x + 9, y + 42, px, px);
+      ctx.fillRect(x + 36, y + 42, px, px);
+
+      // Pants
+      ctx.fillStyle = colors.pants;
+      ctx.fillRect(x + 15, y + 45, 7, 2 * px);
+      ctx.fillRect(x + 26, y + 45, 7, 2 * px);
+
+      // Shoes
+      ctx.fillStyle = colors.shoes;
+      if (walkFrame === 1 || walkFrame === 3) {
+        ctx.fillRect(x + 14, y + 51, 8, px);
+        ctx.fillRect(x + 28, y + 48, 8, px);
+      } else if (walkFrame === 2) {
+        ctx.fillRect(x + 14, y + 48, 8, px);
+        ctx.fillRect(x + 28, y + 51, 8, px);
+      } else {
+        ctx.fillRect(x + 15, y + 51, 7, px);
+        ctx.fillRect(x + 26, y + 51, 7, px);
+      }
+
+    } else if (direction === 'left') {
+      // === FACING LEFT (side view) ===
+      // Hair
+      ctx.fillStyle = colors.hair;
+      ctx.fillRect(x + 15, y + 3, 15, 8 * px);
+      ctx.fillRect(x + 12, y + 9, px, 5 * px);
+
+      // Hat
+      ctx.fillStyle = colors.hatRed;
+      ctx.fillRect(x + 12, y + 0, 21, 4 * px);
+      ctx.fillStyle = colors.hatRedDark;
+      ctx.fillRect(x + 9, y + 9, 24, px);
+      // Hat bill pointing left
+      ctx.fillRect(x + 3, y + 12, 12, px);
+
+      // Face
+      ctx.fillStyle = colors.skin;
+      ctx.fillRect(x + 12, y + 15, 15, 5 * px);
+      ctx.fillStyle = colors.skinShadow;
+      ctx.fillRect(x + 12, y + 27, 12, px);
+
+      // Eye (left side - one eye visible)
+      ctx.fillStyle = colors.outline;
+      ctx.fillRect(x + 15, y + 18, 2 * px, px);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x + 15, y + 18, px, px);
+
+      // Jacket
+      ctx.fillStyle = colors.jacket;
+      ctx.fillRect(x + 15, y + 30, 15, 5 * px);
+      ctx.fillStyle = colors.jacketDark;
+      ctx.fillRect(x + 15, y + 30, px, 5 * px);
+      ctx.fillStyle = colors.shirt;
+      ctx.fillRect(x + 27, y + 30, px * 2, 4 * px);
+
+      // Arm
+      ctx.fillStyle = colors.jacket;
+      ctx.fillRect(x + 12, y + 33, px, 3 * px);
+      ctx.fillStyle = colors.skin;
+      ctx.fillRect(x + 12, y + 42, px, px);
+
+      // Pants
+      ctx.fillStyle = colors.pants;
+      if (walkFrame === 1) {
+        ctx.fillRect(x + 18, y + 45, 6, 2 * px);
+        ctx.fillRect(x + 24, y + 45, 6, px);
+      } else if (walkFrame === 2 || walkFrame === 0) {
+        ctx.fillRect(x + 18, y + 45, 12, 2 * px);
+      } else {
+        ctx.fillRect(x + 18, y + 45, 6, px);
+        ctx.fillRect(x + 24, y + 45, 6, 2 * px);
+      }
+
+      // Shoes
+      ctx.fillStyle = colors.shoes;
+      if (walkFrame === 1) {
+        ctx.fillRect(x + 15, y + 51, 8, px);
+        ctx.fillRect(x + 27, y + 48, 6, px);
+      } else if (walkFrame === 3) {
+        ctx.fillRect(x + 15, y + 48, 8, px);
+        ctx.fillRect(x + 27, y + 51, 6, px);
+      } else {
+        ctx.fillRect(x + 18, y + 51, 12, px);
+      }
+
     } else {
-      ctx.fillRect(x + 16, y + size - 10, 8, 10);
-      ctx.fillRect(x + size - 24, y + size - 10, 8, 10);
+      // === FACING RIGHT (side view) ===
+      // Hair
+      ctx.fillStyle = colors.hair;
+      ctx.fillRect(x + 18, y + 3, 15, 8 * px);
+      ctx.fillRect(x + 33, y + 9, px, 5 * px);
+
+      // Hat
+      ctx.fillStyle = colors.hatRed;
+      ctx.fillRect(x + 15, y + 0, 21, 4 * px);
+      ctx.fillStyle = colors.hatRedDark;
+      ctx.fillRect(x + 15, y + 9, 24, px);
+      // Hat bill pointing right
+      ctx.fillRect(x + 33, y + 12, 12, px);
+
+      // Face
+      ctx.fillStyle = colors.skin;
+      ctx.fillRect(x + 21, y + 15, 15, 5 * px);
+      ctx.fillStyle = colors.skinShadow;
+      ctx.fillRect(x + 24, y + 27, 12, px);
+
+      // Eye (right side - one eye visible)
+      ctx.fillStyle = colors.outline;
+      ctx.fillRect(x + 27, y + 18, 2 * px, px);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x + 30, y + 18, px, px);
+
+      // Jacket
+      ctx.fillStyle = colors.jacket;
+      ctx.fillRect(x + 18, y + 30, 15, 5 * px);
+      ctx.fillStyle = colors.jacketDark;
+      ctx.fillRect(x + 30, y + 30, px, 5 * px);
+      ctx.fillStyle = colors.shirt;
+      ctx.fillRect(x + 18, y + 30, px * 2, 4 * px);
+
+      // Arm
+      ctx.fillStyle = colors.jacket;
+      ctx.fillRect(x + 33, y + 33, px, 3 * px);
+      ctx.fillStyle = colors.skin;
+      ctx.fillRect(x + 33, y + 42, px, px);
+
+      // Pants
+      ctx.fillStyle = colors.pants;
+      if (walkFrame === 1) {
+        ctx.fillRect(x + 24, y + 45, 6, 2 * px);
+        ctx.fillRect(x + 18, y + 45, 6, px);
+      } else if (walkFrame === 2 || walkFrame === 0) {
+        ctx.fillRect(x + 18, y + 45, 12, 2 * px);
+      } else {
+        ctx.fillRect(x + 24, y + 45, 6, px);
+        ctx.fillRect(x + 18, y + 45, 6, 2 * px);
+      }
+
+      // Shoes
+      ctx.fillStyle = colors.shoes;
+      if (walkFrame === 1) {
+        ctx.fillRect(x + 27, y + 51, 8, px);
+        ctx.fillRect(x + 15, y + 48, 6, px);
+      } else if (walkFrame === 3) {
+        ctx.fillRect(x + 27, y + 48, 8, px);
+        ctx.fillRect(x + 15, y + 51, 6, px);
+      } else {
+        ctx.fillRect(x + 18, y + 51, 12, px);
+      }
     }
-  }, []);
+    } else {
+      // ========== ORIGINAL SIMPLE STYLE (8-bit Mode) ==========
+      // Body
+      ctx.fillStyle = '#ef4444';
+      ctx.fillRect(x + 10, y + 18, size - 20, size - 24);
+
+      // Head
+      ctx.fillStyle = '#fcd34d';
+      ctx.beginPath();
+      ctx.arc(x + size / 2, y + 16, 12, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Hair
+      ctx.fillStyle = '#1f2937';
+      ctx.beginPath();
+      ctx.arc(x + size / 2, y + 10, 10, Math.PI, 0);
+      ctx.fill();
+
+      // Eyes based on direction
+      const eyeOffsets: Record<Direction, number[][]> = {
+        up: [[-4, -2], [4, -2]],
+        down: [[-4, 2], [4, 2]],
+        left: [[-5, 0], [-1, 0]],
+        right: [[1, 0], [5, 0]]
+      };
+      ctx.fillStyle = '#1f2937';
+      eyeOffsets[direction].forEach(([ox, oy]) => {
+        ctx.beginPath();
+        ctx.arc(x + size / 2 + ox, y + 14 + oy, 2, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Legs with walking animation
+      ctx.fillStyle = '#1e40af';
+      if (isMoving) {
+        const legOffset = Math.sin(walkFrameRef.current * 0.3) * 4;
+        ctx.fillRect(x + 14 + legOffset, y + size - 10, 8, 10);
+        ctx.fillRect(x + size - 22 - legOffset, y + size - 10, 8, 10);
+      } else {
+        ctx.fillRect(x + 16, y + size - 10, 8, 10);
+        ctx.fillRect(x + size - 24, y + size - 10, 8, 10);
+      }
+    }
+  }, [state.isPixelMode]);
 
   // Draw collectible
   const drawCollectible = useCallback((ctx: CanvasRenderingContext2D, collectible: PokemonCollectible, screenX: number, screenY: number, frameCount: number) => {
@@ -5006,6 +7556,48 @@ export const PokemonCanvas: React.FC = () => {
             if (collectScreenX > -SCALED_TILE && collectScreenX < CANVAS_WIDTH && collectScreenY > -SCALED_TILE && collectScreenY < CANVAS_HEIGHT) {
               drawCollectible(ctx, collectible, collectScreenX, collectScreenY, frameCountRef.current);
             }
+          }
+        }
+
+        // Draw small white arrows above interactable career statues (same style as building interiors)
+        const bounceOffset = Math.sin(frameCountRef.current * 0.05) * 3;
+        const statuePositions = [
+          { x: 28.5, y: 5 },   // Education statue center
+          { x: 31.5, y: 5 },   // Work statue center
+          { x: 34.5, y: 5 },   // Web Dev statue center
+        ];
+
+        for (const statue of statuePositions) {
+          const statueScreenX = offsetX > 0
+            ? offsetX + statue.x * SCALED_TILE
+            : statue.x * SCALED_TILE - cameraX;
+          const statueScreenY = offsetY > 0
+            ? offsetY + statue.y * SCALED_TILE
+            : statue.y * SCALED_TILE - cameraY;
+
+          // Only draw if on screen
+          if (statueScreenX > -SCALED_TILE && statueScreenX < CANVAS_WIDTH &&
+              statueScreenY > -SCALED_TILE && statueScreenY < CANVAS_HEIGHT) {
+            const arrowX = statueScreenX;
+            const arrowY = statueScreenY - 8 + bounceOffset;
+
+            // Arrow shadow
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+            ctx.beginPath();
+            ctx.moveTo(arrowX, arrowY + 14);
+            ctx.lineTo(arrowX - 6, arrowY + 4);
+            ctx.lineTo(arrowX + 6, arrowY + 4);
+            ctx.closePath();
+            ctx.fill();
+
+            // Arrow body (white)
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.moveTo(arrowX, arrowY + 12);
+            ctx.lineTo(arrowX - 5, arrowY + 3);
+            ctx.lineTo(arrowX + 5, arrowY + 3);
+            ctx.closePath();
+            ctx.fill();
           }
         }
       }

@@ -105,6 +105,8 @@ export const TimelineHallway: React.FC = () => {
           event={event}
           position={[hallwayX, 0, startZ + index * spacing]}
           isFirst={index === 0}
+          index={index}
+          totalCount={events.length}
         />
       ))}
 

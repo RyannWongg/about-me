@@ -6,14 +6,20 @@ interface TimelineMarkerProps {
   event: TimelineEvent;
   position: [number, number, number];
   isFirst?: boolean;
+  index?: number;
+  totalCount?: number;
 }
 
 export const TimelineMarker: React.FC<TimelineMarkerProps> = ({
   event,
   position,
   isFirst = false,
+  index = 0,
+  totalCount = 1,
 }) => {
   const iconColor = event.type === 'education' ? '#39ff14' : '#3b82f6';
+  // Older cards (higher index) should have higher z-index to appear on top
+  const zIndex = (index + 1) * 1000;
 
   return (
     <group position={position}>
@@ -73,7 +79,7 @@ export const TimelineMarker: React.FC<TimelineMarkerProps> = ({
         center
         distanceFactor={6}
         transform
-        zIndexRange={[0, 5000]}
+        zIndexRange={[zIndex, zIndex + 100]}
         style={{ pointerEvents: 'none' }}
       >
         <div

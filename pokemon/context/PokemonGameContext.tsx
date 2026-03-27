@@ -61,7 +61,7 @@ const initialCollectibles: PokemonCollectible[] = [
   { id: 'explorer', name: 'Explorer Badge', position: { tileX: 3, tileY: 20 }, collected: false, sprite: 'badge-explorer' },
   { id: 'coder', name: 'Coder Badge', position: { tileX: 37, tileY: 10 }, collected: false, sprite: 'badge-coder' },
   { id: 'scholar', name: 'Scholar Badge', position: { tileX: 15, tileY: 3 }, collected: false, sprite: 'badge-scholar' },
-  { id: 'master', name: 'Master Badge', position: { tileX: 37, tileY: 25 }, collected: false, sprite: 'badge-master' },
+  { id: 'master', name: 'Master Badge', position: { tileX: 35, tileY: 26 }, collected: false, sprite: 'badge-master' },
   { id: 'rare-candy', name: 'Rare Candy', position: { tileX: 3, tileY: 10 }, collected: false, sprite: 'rare-candy' },
 ];
 

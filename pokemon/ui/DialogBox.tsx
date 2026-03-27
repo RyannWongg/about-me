@@ -102,15 +102,15 @@ export const DialogBox: React.FC = () => {
           </div>
         )}
 
-        {/* Avatar */}
+        {/* Avatar - positioned inside the box on the left */}
         {currentMessage.avatar && (
-          <div className="absolute -left-12 top-1/2 -translate-y-1/2 w-16 h-16 bg-slate-200 border-4 border-slate-800 rounded-lg flex items-center justify-center text-3xl">
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 bg-slate-200 border-3 border-slate-800 rounded-lg flex items-center justify-center text-2xl shrink-0">
             {currentMessage.avatar}
           </div>
         )}
 
-        {/* Message text */}
-        <p className="font-mono text-sm text-slate-800 leading-relaxed min-h-[3rem] pt-2">
+        {/* Message text - add left margin when avatar is present */}
+        <p className={`font-mono text-sm text-slate-800 leading-relaxed min-h-[3rem] pt-2 ${currentMessage.avatar ? 'ml-14' : ''}`}>
           {displayedText}
           {isTyping && <span className="animate-pulse">▌</span>}
         </p>
